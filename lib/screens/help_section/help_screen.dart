@@ -73,7 +73,7 @@ class _ContactScreenState extends State<ContactScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
-              width: isMobile ? double.infinity : 400, // ডেস্কটপে নির্দিষ্ট প্রস্থ
+              width: isMobile ? double.infinity : 600, // ডেস্কটপে নির্দিষ্ট প্রস্থ
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

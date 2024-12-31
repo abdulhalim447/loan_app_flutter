@@ -18,7 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
   bool passwordVisible = false;
   bool confirmPasswordVisible = false;
   bool isLoading = false; // New variable to manage loading state
-  String countryCode = "+880"; // Default country code
+  String countryCode = "+91"; // Default country code
 
   @override
   void initState() {
@@ -189,11 +189,11 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: CountryCodePicker(
                         onChanged: (country) {
                           setState(() {
-                            countryCode = country.dialCode ?? "+880";
+                            countryCode = country.dialCode ?? "+91";
                           });
                         },
-                        initialSelection: 'BD',
-                        favorite: ['+880', 'BD'],
+                        initialSelection: 'IN',
+                        favorite: ['+91', 'IN'],
                         showCountryOnly: false,
                         showOnlyCountryWhenClosed: false,
                         alignLeft: false,

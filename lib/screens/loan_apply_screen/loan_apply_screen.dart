@@ -4,6 +4,8 @@ import 'package:world_bank_loan/screens/home_section/home_page.dart';
 import 'dart:convert';
 import '../../auth/saved_login/user_session.dart';
 import '../../slider/home_screen_slider.dart';
+import 'dart:math';
+
 
 class LoanApplicationScreen extends StatefulWidget {
   @override
@@ -30,12 +32,13 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   int selectedLoanTerm = 12;
   bool isLoading = false;
 
-  // Installment হিসাব ফাংশন
   double calculateInstallment(int loanAmount, int term) {
-    double totalInterest = loanAmount * interestRate / 100 * term / 12;
+    double totalInterest = loanAmount * interestRate / 100 * term; // Apply interest monthly
     double totalAmount = loanAmount + totalInterest;
     return totalAmount / term;
   }
+
+
 
   // API সাবমিট ফাংশন
   Future<void> submitLoanApplication() async {
@@ -49,7 +52,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
       return;
     }
 
-    final apiUrl = 'https://wbli.org/api/loans';
+    final apiUrl = 'https://wbli.org/api/loans'; 
     final loanData = {
       'amount': selectedLoanAmount.toString(),
       'interest_rate': interestRate.toString(),
@@ -92,7 +95,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('বিশ্ব ব্যাংক খাতে স্বাগতম!'),
+        title: Text('Welcome to World Bank App'),
         backgroundColor: Colors.red,
       ),
       body: isLoading
@@ -121,7 +124,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                 selectedLoanAmount = 0; // Reset selection
                               }),
                               child: Chip(
-                                label: Text('$term মাস'),
+                                label: Text('$term month'),
                                 backgroundColor: selectedLoanTerm == term
                                     ? Colors.red
                                     : Colors.grey[300],
@@ -177,7 +180,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '৳${loanAmounts[index]}',
+                                    '₹${loanAmounts[index]}',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -187,7 +190,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '৳${installment.toStringAsFixed(2)} / $selectedLoanTerm মাস',
+                                    '₹${installment.toStringAsFixed(2)} / $selectedLoanTerm month',
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: isSelected
@@ -217,7 +220,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
                             ),
-                            child: Text('জমা দিন',
+                            child: Text('Submit',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18)),
                           ),

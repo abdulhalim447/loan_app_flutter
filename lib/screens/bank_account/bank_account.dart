@@ -137,36 +137,45 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Bank Account'),
       ),
-      body: SingleChildScrollView(
-        child: isLoading
-            ? Center(child: CircularProgressIndicator()) // Show loading spinner
-            : SingleChildScrollView(
-                padding: EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionTitle('Your bank details'),
-                      SizedBox(height: 16.0),
-                      _buildTextField(
-                          'Account Holder Name', accountHolderController),
-                      SizedBox(height: 8.0),
-                      _buildTextField('Bank Name', bankNameController),
-                      SizedBox(height: 8.0),
-                      _buildTextField('Account Number', accountNumberController,keyboardType: TextInputType.number),
-                      SizedBox(height: 8.0),
-                      _buildTextField('IFC Code', ifcCode),
-                      SizedBox(height: 16.0),
-                      _buildSaveButton(),
-                    ],
-                  ),
+      body: Center(
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: SingleChildScrollView(
+            child: isLoading
+                ? Center(
+              child: CircularProgressIndicator(), // Show loading spinner
+            )
+                : SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle('Your bank details'),
+                    SizedBox(height: 16.0),
+                    _buildTextField('Account Holder Name', accountHolderController),
+                    SizedBox(height: 8.0),
+                    _buildTextField('Bank Name', bankNameController),
+                    SizedBox(height: 8.0),
+                    _buildTextField('Account Number', accountNumberController,
+                        keyboardType: TextInputType.number),
+                    SizedBox(height: 8.0),
+                    _buildTextField('IFC Code', ifcCode),
+                    SizedBox(height: 16.0),
+                    _buildSaveButton(),
+                  ],
                 ),
               ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -183,15 +192,11 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
   }
 
   // TextField Widget
-  // TextField Widget
-  Widget _buildTextField(
-      String label,
-      TextEditingController controller, {
-        TextInputType keyboardType = TextInputType.text, // Default to TextInputType.text
-      }) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      {TextInputType keyboardType = TextInputType.text}) {
     return TextFormField(
       controller: controller,
-      keyboardType: keyboardType, // Use the parameter here
+      keyboardType: keyboardType,
       enabled: isEditable, // Set field editable based on bankStatus
       decoration: InputDecoration(
         labelText: label,
@@ -206,7 +211,6 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
     );
   }
 
-
   // Save Button Widget
   Widget _buildSaveButton() {
     return SizedBox(
@@ -214,11 +218,10 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       child: ElevatedButton(
         onPressed: isEditable
             ? () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  // Call the save bank details method if form is valid
-                  _saveBankDetails();
-                }
-              }
+          if (_formKey.currentState?.validate() ?? false) {
+            _saveBankDetails();
+          }
+        }
             : null, // Disable button if not editable
         child: Text('Save'),
       ),

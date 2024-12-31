@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool passwordVisible = false;
-  String countryCode = "+880"; // Default country code
+  String countryCode = "+91"; // Default country code
   bool isLoading = false; // Flag for loading state
 
   @override
@@ -117,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -128,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Container(
             constraints: BoxConstraints(
-              maxWidth: screenWidth > 600
+              maxWidth: screenWidth > 400
                   ? 400
                   : double.infinity, // Fixed width for larger screens
             ),
@@ -174,11 +175,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: CountryCodePicker(
                         onChanged: (country) {
                           setState(() {
-                            countryCode = country.dialCode ?? "+880";
+                            countryCode = country.dialCode ?? "+91";
                           });
                         },
-                        initialSelection: 'BD',
-                        favorite: ['+880', 'BD'],
+                        initialSelection: 'IN',
+                        favorite: ['+91', 'IN'],
                         showCountryOnly: false,
                         showOnlyCountryWhenClosed: false,
                         alignLeft: false,

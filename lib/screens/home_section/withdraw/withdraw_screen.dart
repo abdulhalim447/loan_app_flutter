@@ -96,7 +96,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   }
 
   // Function to pick an image from the gallery or camera
-  Future<void> _pickImage() async {
+  /*Future<void> _pickImage() async {
     final XFile? pickedFile =
     await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -154,42 +154,51 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Error: $e")));
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    // Responsive layout design
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isMobile = screenWidth < 600;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Withdraw", style: TextStyle(fontSize: 20)),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: EdgeInsets.all(16),
-        children: [
-          BalanceSection(balance: balance, loan: loan),
-          SizedBox(height: 8),
-          Text('Details', style: TextStyle(color: Colors.black)),
-          BankDetails(
-            bankName: bankName,
-            account: account,
-            bankUser: bankUser,
-            ifc_code: ifc,
+      body: Center(
+        child: Container(
+          width: isMobile ? double.infinity : 600,
+          child: ListView(
+            padding: EdgeInsets.all(16),
+            children: [
+              BalanceSection(balance: balance, loan: loan),
+              SizedBox(height: 8),
+              Text('Details', style: TextStyle(color: Colors.black)),
+              BankDetails(
+                bankName: bankName,
+                account: account,
+                bankUser: bankUser,
+                ifc_code: ifc,
+              ),
+              NoteSection(message: message),
+              AdminBankDetailsSection(
+                bankName: adminBankName,
+                accountNumber: adminAccountNumber,
+                ifc: adminIfc,
+                upi: adminUpi,
+                adminAccountName: adminAccountName,
+              ),
+              TakaSection(fee: fee),
+              TransactionScreenshot(
+                imagePath: imagePath,
+                status: status,
+                onSuccess: _fetchWithdrawDetails,
+              ),
+            ],
           ),
-          NoteSection(message: message),
-          AdminBankDetailsSection(
-            bankName: adminBankName,
-            accountNumber: adminAccountNumber,
-            ifc: adminIfc,
-            upi: adminUpi,
-            adminAccountName: adminAccountName,
-          ),
-          TakaSection(fee: fee),
-          TransactionScreenshot(
-            imagePath: imagePath,
-            status: status,
-            onSuccess: _fetchWithdrawDetails,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -381,10 +390,10 @@ class AdminBankDetailsSection extends StatelessWidget {
 
   AdminBankDetailsSection(
       {this.bankName,
-        this.accountNumber,
-        this.ifc,
-        this.upi,
-        required this.adminAccountName});
+      this.accountNumber,
+      this.ifc,
+      this.upi,
+      required this.adminAccountName});
 
   @override
   Widget build(BuildContext context) {
@@ -397,9 +406,7 @@ class AdminBankDetailsSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade300,
-              blurRadius: 6,
-              offset: Offset(2, 2))
+              color: Colors.grey.shade300, blurRadius: 6, offset: Offset(2, 2))
         ],
       ),
       child: Column(
@@ -444,9 +451,7 @@ class TakaSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade300,
-              blurRadius: 6,
-              offset: Offset(2, 2)),
+              color: Colors.grey.shade300, blurRadius: 6, offset: Offset(2, 2)),
         ],
       ),
       child: Row(
@@ -484,9 +489,7 @@ class NoteSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade300,
-              blurRadius: 6,
-              offset: Offset(2, 2)),
+              color: Colors.grey.shade300, blurRadius: 6, offset: Offset(2, 2)),
         ],
       ),
       child: Row(
@@ -557,7 +560,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
 
       // Add headers (if necessary, e.g., Authorization)
       String? token =
-      await UserSession.getToken(); // Get token from UserSession
+          await UserSession.getToken(); // Get token from UserSession
       // Add headers
       request.headers.addAll({
         'Authorization': 'Bearer $token',
@@ -616,11 +619,11 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
             ),
             child: widget.status != 1 && _selectedImage == null
                 ? Center(
-              child: Text(
-                "Tap to select an image",
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-            )
+                    child: Text(
+                      "Tap to select an image",
+                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
+                  )
                 : null,
           ),
         ),
@@ -635,17 +638,17 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
                   : _submitImage,
               child: _isUploading
                   ? SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              )
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                   : Text(
-                "Submit Screenshot",
-                style: TextStyle(color: Colors.white),
-              ),
+                      "Submit Screenshot",
+                      style: TextStyle(color: Colors.white),
+                    ),
             ),
           ),
         ),

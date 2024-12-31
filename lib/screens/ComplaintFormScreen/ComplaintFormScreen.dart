@@ -4,8 +4,6 @@ import 'dart:convert';
 
 import '../../auth/saved_login/user_session.dart';
 
-
-
 class ComplaintFormScreen extends StatefulWidget {
   @override
   _ComplaintFormScreenState createState() => _ComplaintFormScreenState();
@@ -71,27 +69,34 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Complain'),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTextField('Your number', yourNameController),
-              SizedBox(height: 8.0),
-              _buildTextField('Website', websiteController),
-              SizedBox(height: 8.0),
-              _buildTextField('Service number', providerNameController),
-              SizedBox(height: 8.0),
-              _buildTextField('Loss details', totalDamageController),
-              SizedBox(height: 16.0),
-              _buildSubmitButton(),
-            ],
+      body: Center(
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTextField('Your number', yourNameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Website', websiteController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Service number', providerNameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Loss details', totalDamageController),
+                  SizedBox(height: 16.0),
+                  _buildSubmitButton(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

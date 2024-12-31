@@ -79,8 +79,8 @@ class _CardScreenState extends State<CardScreen> {
               children: [
                 // Credit Card with Text Overlay
                 Container(
-                  height: isMobile ? 150 : 200, // মোবাইলে হাইট কমানো
-                  width: isMobile ? double.infinity : 400, // ডেস্কটপে নির্দিষ্ট প্রস্থ
+                  height: isMobile ? 200 : 200, // মোবাইলে হাইট কমানো
+                  width: isMobile ? double.infinity : 600, // ডেস্কটপে নির্দিষ্ট প্রস্থ
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
                   ),
@@ -99,9 +99,9 @@ class _CardScreenState extends State<CardScreen> {
                       // Card Holder Name
                       Positioned(
                         left: 20,
-                        bottom: isMobile ? 15 : 25, // মোবাইলে পজিশন সামঞ্জস্য
+                        bottom: isMobile ? 55: 65, // মোবাইলে পজিশন সামঞ্জস্য
                         child: Text(
-                          "Card Holder\n$cardHolderName",
+                          "Card Holder:  $cardHolderName",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class _CardScreenState extends State<CardScreen> {
                       // Account Number
                       Positioned(
                         left: 20,
-                        bottom: isMobile ? 35 : 65,
+                        bottom: isMobile ? 30 : 65,
                         child: Text(
                           "$cardNumber",
                           style: TextStyle(
@@ -125,7 +125,7 @@ class _CardScreenState extends State<CardScreen> {
                       // Validity Date
                       Positioned(
                         right: 20,
-                        bottom: isMobile ? 30 : 50,
+                        bottom: isMobile ? 40 : 50,
                         child: Text(
                           "Valid Till\n$validity",
                           textAlign: TextAlign.right,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:world_bank_loan/auth/LoginScreen.dart';
 import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
-
-
 import '../../auth/saved_login/user_session.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,29 +38,34 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Spacer(),
-              Image.network(
-                'https://yt3.googleusercontent.com/ytc/AIdro_k0v2FHYr_czhsvCDN6LNxuaWY1c0osMWV2ZOSmsZC8GNk=s900-c-k-c0x00ffffff-no-rj',
-                height: 100,
-                width: 100,
-              ),
-              Spacer(),
-              CircularProgressIndicator(),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Version 1.0.0",
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Image.network(
+                  'https://yt3.googleusercontent.com/ytc/AIdro_k0v2FHYr_czhsvCDN6LNxuaWY1c0osMWV2ZOSmsZC8GNk=s900-c-k-c0x00ffffff-no-rj',
+                  height: 100,
+                  width: 100,
+                ),
+                const Spacer(),
+                const CircularProgressIndicator(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Version 1.0.0",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
           ),
         ),
       ),

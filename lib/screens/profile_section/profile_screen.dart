@@ -6,12 +6,13 @@ import 'package:http/http.dart' as http; // Import http package
 import 'package:world_bank_loan/auth/LoginScreen.dart';
 import 'package:world_bank_loan/screens/ComplaintFormScreen/ComplaintFormScreen.dart';
 import 'package:world_bank_loan/screens/change_password/change_password.dart';
+import 'package:world_bank_loan/screens/data_delete_screen/data_delete_screen.dart';
 import 'package:world_bank_loan/screens/personal_information/personal_information.dart';
+import 'package:world_bank_loan/screens/privacy_policy_screen/privacy_policy_screen.dart';
 import 'package:world_bank_loan/screens/terms_and_condition/terms_and_condition.dart';
 import '../../auth/saved_login/user_session.dart';
 import '../AboutMeScreen/AboutMeScreen.dart';
 import '../bank_account/bank_account.dart';
-
 import '../loan_certifacte/loan_certificate.dart';
 import '../user_agrements/user_agrements_screen.dart';
 
@@ -38,9 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      print(response.statusCode);
-      print(response.body);
-
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         setState(() {
@@ -58,7 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _logout(BuildContext context) async {
-    // Show confirmation dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -74,7 +71,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             TextButton(
               onPressed: () async {
-                // Remove user session from SharedPreferences
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove('token');
                 prefs.remove('phone');
@@ -83,8 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (builder) =>
-                            LoginScreen())); // Redirect to login screen (change as per your app's navigation)
+                        builder: (builder) => LoginScreen()));
               },
               child: Text("Yes"),
             ),
@@ -96,133 +91,137 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Profile'),
       ),
-      body: Column(
-        children: [
-          // Pass updated name and number to ProfileHeader
-          ProfileHeader(number: number, name: name),
-          Expanded(
-            child: ListView(
-              children: [
-                ProfileOption(
-                  icon: FontAwesomeIcons.university,
-                  text: 'Personal Information',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => PersonalInfoScreen()));
-                  },
+      body: Center(
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth, // Max width 400px
+          child: Column(
+            children: [
+              ProfileHeader(number: number, name: name),
+              Expanded(
+                child: ListView(
+                  children: [
+                    ProfileOption(
+                      icon: FontAwesomeIcons.university,
+                      text: 'Personal Information',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => PersonalInfoScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.moneyBill,
+                      text: 'Bank Account',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => BankAccountScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.infoCircle,
+                      text: 'About Me',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => AboutMeScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.plusCircle,
+                      text: 'Complain',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => ComplaintFormScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.lock,
+                      text: 'Change Password',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => ChangePasswordScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.shieldAlt,
+                      text: 'Terms and Condition',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => TermsAndConditionScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.warning,
+                      text: 'Privacy Policy',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => PrivacyPolicyScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.remove,
+                      text: 'Data Delete policy',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => DataDeletionPolicyScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.certificate,
+                      text: 'Loan Certificate',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => LoanCertificatePage()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.userLarge,
+                      text: 'Agreements',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => LoanDetailsScreen()));
+                      },
+                    ),
+                    ProfileOption(
+                      icon: FontAwesomeIcons.powerOff,
+                      text: 'Logout',
+                      onTap: () {
+                        _logout(context);
+                      },
+                    ),
+
+
+                  ],
                 ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.moneyBill,
-                  text: 'Bank Account',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => BankAccountScreen()));
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.infoCircle,
-                  text: 'About Me',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => AboutMeScreen()));
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.plusCircle,
-                  text: 'Complain',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => ComplaintFormScreen()));
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.lock,
-                  text: 'Change Password',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => ChangePasswordScreen()));
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.shieldAlt,
-                  text: 'Terms and Condition',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => TermsAndConditionScreen()));
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.warning,
-                  text: 'Privacy Policy',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Comming soon'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.remove,
-                  text: 'Data Delete policy',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Comming soon'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.certificate,
-                  text: 'Loan Certificate',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => LoanCertificatePage()));
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.userLarge,
-                  text: 'Agreements',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => LoanDetailsScreen()));
-                  },
-                ),
-                ProfileOption(
-                  icon: FontAwesomeIcons.powerOff,
-                  text: 'Logout',
-                  onTap: () {
-                    _logout(context);
-                  },
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -266,6 +265,8 @@ class ProfileHeader extends StatelessWidget {
     );
   }
 }
+
+
 
 class ProfileOption extends StatelessWidget {
   final IconData icon;

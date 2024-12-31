@@ -95,21 +95,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Responsive layout design
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isMobile = screenWidth < 600;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text('WORLD BANK DEVELOPMENT', style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BalanceSection(balance: balance, name: name),
-            SliderSection(),
-            LoanApplicationSection(
-                loanStatus: loanStatus.toString(), status: status.toString()),
-            // Convert to string for passing to the widget
-          ],
+      body: Center(
+        child: Container(
+          width: isMobile ? double.infinity : 600,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                BalanceSection(balance: balance, name: name),
+                SliderSection(),
+                LoanApplicationSection(
+                    loanStatus: loanStatus.toString(), status: status.toString()),
+                // Convert to string for passing to the widget
+              ],
+            ),
+          ),
         ),
       ),
     );

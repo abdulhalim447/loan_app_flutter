@@ -20,7 +20,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
-  bool _isLoading = false;  // লোডিং স্টেট
+  bool _isLoading = false; // লোডিং স্টেট
 
   Future<void> _changePassword(String oldPassword, String newPassword) async {
     final url = 'https://wbli.org/api/change-password'; // এখানে API URL দিন
@@ -37,7 +37,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
 
     setState(() {
-      _isLoading = true;  // লোডিং শুরু
+      _isLoading = true; // লোডিং শুরু
     });
 
     final response = await http.post(
@@ -54,7 +54,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
 
     setState(() {
-      _isLoading = false;  // লোডিং শেষ
+      _isLoading = false; // লোডিং শেষ
     });
 
     print(response.statusCode);
@@ -72,52 +72,59 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Change your password'),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildPasswordField(
-                label: 'Old Password',
-                controller: oldPasswordController,
-                obscureText: _obscureOldPassword,
-                toggleObscureText: () {
-                  setState(() {
-                    _obscureOldPassword = !_obscureOldPassword;
-                  });
-                },
+      body: Center(
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildPasswordField(
+                    label: 'Old Password',
+                    controller: oldPasswordController,
+                    obscureText: _obscureOldPassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureOldPassword = !_obscureOldPassword;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  _buildPasswordField(
+                    label: 'New password',
+                    controller: newPasswordController,
+                    obscureText: _obscureNewPassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureNewPassword = !_obscureNewPassword;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  _buildPasswordField(
+                    label: 'Confirm Password',
+                    controller: confirmPasswordController,
+                    obscureText: _obscureConfirmPassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 24.0),
+                  _buildSaveButton(),
+                ],
               ),
-              SizedBox(height: 16.0),
-              _buildPasswordField(
-                label: 'New password',
-                controller: newPasswordController,
-                obscureText: _obscureNewPassword,
-                toggleObscureText: () {
-                  setState(() {
-                    _obscureNewPassword = !_obscureNewPassword;
-                  });
-                },
-              ),
-              SizedBox(height: 16.0),
-              _buildPasswordField(
-                label: 'Confirm Password',
-                controller: confirmPasswordController,
-                obscureText: _obscureConfirmPassword,
-                toggleObscureText: () {
-                  setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  });
-                },
-              ),
-              SizedBox(height: 24.0),
-              _buildSaveButton(),
-            ],
+            ),
           ),
         ),
       ),
