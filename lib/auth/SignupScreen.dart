@@ -3,6 +3,9 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // For JSON encoding
 import 'package:world_bank_loan/auth/LoginScreen.dart';
+import 'package:world_bank_loan/auth/saved_login/user_session.dart';
+
+import '../bottom_navigation/MainNavigationScreen.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -39,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-  // Function to handle sign up API request
+/*  // Function to handle sign up API request
   Future<void> _signUp() async {
     final String name = nameController.text.trim();
     final String phone = phoneController.text.trim();
@@ -95,6 +98,109 @@ class _SignupScreenState extends State<SignupScreen> {
         }
       } else {
         _showErrorDialog('Failed to sign up. Please try again later.');
+      }
+    } catch (error) {
+      setState(() {
+        isLoading = false; // Stop loading in case of error
+      });
+      _showErrorDialog('An error occurred. Please try again.');
+    }
+  }
+
+
+ */
+
+  Future<void> _signUp() async {
+    final String name = nameController.text.trim();
+    final String phone = phoneController.text.trim();
+    final String password = passwordController.text.trim();
+    final String confirmPassword = confirmPasswordController.text.trim();
+
+    if (name.isEmpty ||
+        phone.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
+      _showErrorDialog('All fields are required!');
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showErrorDialog('Passwords do not match!');
+      return;
+    }
+
+    setState(() {
+      isLoading = true; // Start loading
+    });
+
+    try {
+      // Registration request
+      final registerResponse = await http.post(
+        Uri.parse('https://wbli.org/api/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'name': name,
+          'countryCode': countryCode,
+          'phone': phone,
+          'password': password,
+          'c_password': confirmPassword,
+        }),
+      );
+
+      if (registerResponse.statusCode == 201) {
+        final Map<String, dynamic> registerData =
+            json.decode(registerResponse.body);
+
+        if (registerData['message'] == 'User registered successfully!') {
+          // Automatically login the user
+          final loginResponse = await http.post(
+            Uri.parse('https://wbli.org/api/login'),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'countryCode': countryCode,
+              'phone': phone,
+              'password': password,
+            }),
+          );
+
+          setState(() {
+            isLoading = false; // Stop loading
+          });
+
+          if (loginResponse.statusCode == 200) {
+            final Map<String, dynamic> loginData =
+                json.decode(loginResponse.body);
+
+            if (loginData['success'] != null && loginData['success']) {
+              // Save session
+              String token = loginData['token'];
+              UserSession.saveSession(token, phone);
+
+              // Navigate to MainNavigationScreen
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+              );
+            } else {
+              _showErrorDialog(loginData['message'] ?? 'Login failed');
+            }
+          } else {
+            _showErrorDialog('Failed to login after registration.');
+          }
+        } else {
+          setState(() {
+            isLoading = false; // Stop loading
+          });
+          _showErrorDialog(registerData['message'] ?? 'Registration failed');
+        }
+      } else {
+        setState(() {
+          isLoading = false; // Stop loading
+        });
+        _showErrorDialog('Failed to register. Please try again later.');
       }
     } catch (error) {
       setState(() {

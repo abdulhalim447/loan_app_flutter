@@ -52,26 +52,26 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
     print(response.body);
 
     if (response.statusCode == 200) {
-      // সঠিক ডাটা এসেছে, JSON ডাটা পার্স করা হচ্ছে
       var data = json.decode(response.body);
 
       setState(() {
-        hasLoan = data['hasLoan'];
+        hasLoan = data['hasLoan'] ?? false;
+
         if (hasLoan) {
-          borrowerName = data['name'];
-          loanTime = data['time'];
-          loanAmount = data['amount'];
-          loanInstallments = data['install'];
-          monthlyInterestRate = data['intrest'];
-          contactNumber = data['phone'];
-          borrowerSignature = data['signature'];
-          loanStamp = data['stamp'];
+          borrowerName = data['name'] ?? "N/A";
+          loanTime = data['LoanCreationTime'] ?? "Unknown";
+          loanAmount = data['loan_amount'] ?? "0";
+          loanInstallments = data['installments'] ?? "0";
+          monthlyInterestRate = data['intrest_rate'] ?? "0%";
+          contactNumber = data['phone'] ?? "N/A";
+          borrowerSignature = data['user_signature'] ?? "";
+          loanStamp = data['stamp'] ?? "";
         }
       });
     } else {
-      // যদি API কল সফল না হয়, তাহলে একটি এরর বার্তা দেখানো হবে
       print('Failed to load loan data');
     }
+
   }
 
   @override
