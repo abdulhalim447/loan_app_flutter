@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../auth/saved_login/user_session.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class WithdrawScreen extends StatefulWidget {
   @override
@@ -53,8 +55,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         },
       );
 
-      print(response.statusCode);
-      print(response.body);
+
 
       if (response.statusCode == 200) {
         try {
@@ -82,7 +83,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             adminAccountName =
                 data['adminBankInfo']['adminAccountName'] ?? "N/A";
 
-            print("Balance: $balance, Loan: $loan"); // Debugging print
+
           });
         } catch (e) {
           print("Error parsing data: $e");
@@ -94,67 +95,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       print("Token is null");
     }
   }
-
-  // Function to pick an image from the gallery or camera
-  /*Future<void> _pickImage() async {
-    final XFile? pickedFile =
-    await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<void> _submitImage() async {
-    if (_image == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Please select an image")));
-      return;
-    }
-
-    String? token = await UserSession.getToken();
-    if (token == null || token.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("User not authenticated")));
-      return;
-    }
-
-    try {
-      var uri = Uri.parse("https://wbli.org/api/recharge");
-      var request = http.MultipartRequest('POST', uri);
-
-      // Attach the image file
-      request.files
-          .add(await http.MultipartFile.fromPath('image', _image!.path));
-
-      // Add headers
-      request.headers.addAll({
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'multipart/form-data',
-      });
-
-      // Send the request
-      var response = await request.send();
-      final responseString = await response.stream.bytesToString();
-      print("Server Response: $responseString");
-
-      if (response.statusCode == 200) {
-        setState(() {
-          _image = null; // Reset the image
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Image submitted successfully")));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed: ${response.statusCode}")));
-      }
-    } catch (e) {
-      print("Error: $e");
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e")));
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -527,23 +467,32 @@ class TransactionScreenshot extends StatefulWidget {
 }
 
 class _TransactionScreenshotState extends State<TransactionScreenshot> {
-  File? _selectedImage; // Locally selected image
+  Uint8List? _webSelectedImage; // For web: store image bytes
+  File? _selectedImage; // For mobile: store image file
   final ImagePicker _picker = ImagePicker();
   bool _isUploading = false; // Upload status
 
-  // Function to pick image from gallery
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
+      if (kIsWeb) {
+        // For web: Use readAsBytes to get the image data
+        final imageBytes = await pickedFile.readAsBytes();
+        setState(() {
+          _webSelectedImage = imageBytes;
+        });
+      } else {
+        // For mobile: Use the file path
+        setState(() {
+          _selectedImage = File(pickedFile.path);
+        });
+      }
     }
   }
 
-  // Function to submit image to the server
   Future<void> _submitImage() async {
-    if (_selectedImage == null) return;
+    if (_selectedImage == null && _webSelectedImage == null) return;
 
     setState(() {
       _isUploading = true;
@@ -553,15 +502,24 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
       var uri = Uri.parse("https://wbli.org/api/recharge");
       var request = http.MultipartRequest('POST', uri);
 
-      // Attach image file
-      request.files.add(
-        await http.MultipartFile.fromPath('image', _selectedImage!.path),
-      );
+      if (kIsWeb && _webSelectedImage != null) {
+        // For web: Add image as bytes
+        request.files.add(http.MultipartFile.fromBytes(
+          'image',
+          _webSelectedImage!,
+          filename: 'screenshot.png', // Provide a file name
+          contentType: MediaType('image', 'png'),
+        ));
+      } else if (_selectedImage != null) {
+        // For mobile: Add image as file
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          _selectedImage!.path,
+        ));
+      }
 
-      // Add headers (if necessary, e.g., Authorization)
-      String? token =
-          await UserSession.getToken(); // Get token from UserSession
       // Add headers
+      String? token = await UserSession.getToken(); // Get token
       request.headers.addAll({
         'Authorization': 'Bearer $token',
         'Content-Type': 'multipart/form-data',
@@ -577,6 +535,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
         widget.onSuccess(); // Callback after successful upload
         setState(() {
           _selectedImage = null; // Reset the selected image
+          _webSelectedImage = null; // Reset for web
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -617,7 +576,9 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
               ),
               image: _buildBackgroundImage(),
             ),
-            child: widget.status != 1 && _selectedImage == null
+            child: widget.status != 1 &&
+                    _selectedImage == null &&
+                    _webSelectedImage == null
                 ? Center(
                     child: Text(
                       "Tap to select an image",
@@ -633,7 +594,8 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: (_selectedImage == null || _isUploading)
+              onPressed: (_selectedImage == null && _webSelectedImage == null ||
+                      _isUploading)
                   ? null // Disable button if no image or during upload
                   : _submitImage,
               child: _isUploading
@@ -656,7 +618,6 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
     );
   }
 
-  // Function to show background image
   DecorationImage? _buildBackgroundImage() {
     if (widget.status == 1 && widget.imagePath != null) {
       return DecorationImage(
@@ -664,7 +625,14 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
             "https://wbli.org/storage/uploads/recharge/${widget.imagePath}"),
         fit: BoxFit.cover,
       );
+    } else if (_webSelectedImage != null) {
+      // For web: Display image using MemoryImage
+      return DecorationImage(
+        image: MemoryImage(_webSelectedImage!),
+        fit: BoxFit.cover,
+      );
     } else if (_selectedImage != null) {
+      // For mobile: Display image using FileImage
       return DecorationImage(
         image: FileImage(_selectedImage!),
         fit: BoxFit.cover,

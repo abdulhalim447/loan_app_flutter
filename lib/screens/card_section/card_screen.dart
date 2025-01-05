@@ -67,101 +67,97 @@ class _CardScreenState extends State<CardScreen> {
         title: Text("Card"),
         centerTitle: true,
       ),
-      body: Center( // মূল কনটেন্টকে সেন্টারে রাখা
-        child: SingleChildScrollView( // স্ক্রল যোগ করা যাতে ছোট স্ক্রীনে ভালো দেখায়
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: isLoading
-                ? CircularProgressIndicator() // লোডিং ইন্ডিকেটর
-                : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Credit Card with Text Overlay
-                Container(
-                  height: isMobile ? 200 : 200, // মোবাইলে হাইট কমানো
-                  width: isMobile ? double.infinity : 600, // ডেস্কটপে নির্দিষ্ট প্রস্থ
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                  ),
+      body: SingleChildScrollView( // স্ক্রল যোগ করা যাতে ছোট স্ক্রীনে ভালো দেখায়
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: isLoading
+              ? CircularProgressIndicator() // লোডিং ইন্ডিকেটর
+              : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Credit Card with Text Overlay
+              Container(
+                width: isMobile ? double.infinity : screenWidth * 0.8, // মোবাইলের জন্য পূর্ণ প্রস্থ, বড় স্ক্রিনে ৮০%
+                child: AspectRatio(
+                  aspectRatio: 18 / 9, // নির্দিষ্ট অনুপাত বজায় রাখুন
                   child: Stack(
                     children: [
-                      // Credit Card Image
-                      Positioned.fill(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
-                          child: Image.asset(
-                            "assets/images/credit_card.png",
-                            fit: BoxFit.cover,
-                          ),
+                      // কার্ডের ছবি
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(18), // কার্ডের কোণার গোলাকার স্টাইল
+                        child: Image.asset(
+                          "assets/images/credit_card.png",
+                          fit: BoxFit.cover, // ছবিটি পূর্ণ কার্ড ঢেকে রাখবে
                         ),
                       ),
-                      // Card Holder Name
+                      // কার্ড হোল্ডারের নাম
                       Positioned(
                         left: 20,
-                        bottom: isMobile ? 55: 65, // মোবাইলে পজিশন সামঞ্জস্য
+                        bottom: isMobile ? 40 : 60, // স্ক্রিন সাইজ অনুযায়ী পজিশন
                         child: Text(
                           "Card Holder:  $cardHolderName",
                           style: TextStyle(
+                            fontSize: isMobile ? 14 : screenWidth * 0.015, // স্ক্রীন প্রস্থের উপর নির্ভর করে ফন্ট সাইজ
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: isMobile ? 14 : 16, // মোবাইলে ফন্ট সাইজ কমানো
                           ),
                         ),
                       ),
-                      // Account Number
+                      // কার্ড নাম্বার
                       Positioned(
                         left: 20,
-                        bottom: isMobile ? 30 : 65,
+                        bottom: isMobile ? 20 : 40, // মোবাইল এবং বড় স্ক্রিনে পজিশনিং
                         child: Text(
                           "$cardNumber",
                           style: TextStyle(
+                            fontSize: isMobile ? 16 : screenWidth * 0.02,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: isMobile ? 16 : 18,
                           ),
                         ),
                       ),
-                      // Validity Date
+                      // ভ্যালিডিটি তারিখ
                       Positioned(
                         right: 20,
-                        bottom: isMobile ? 40 : 50,
+                        bottom: isMobile ? 30 : 50,
                         child: Text(
                           "Valid Till\n$validity",
                           textAlign: TextAlign.right,
                           style: TextStyle(
+                            fontSize: isMobile ? 14 : screenWidth * 0.015,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: isMobile ? 14 : 16,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: isMobile ? 15 : 20),
-                // Clock and Calendar Icon
-                Icon(
-                  Icons.watch_later_outlined,
-                  color: Colors.red,
-                  size: isMobile ? 40 : 60,
-                ),
-                SizedBox(height: isMobile ? 8 : 10),
-                // Bengali Text
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "It's not time to pay your installments yet!",
-                    style: TextStyle(
-                      fontSize: isMobile ? 14 : 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
+              ),
+
+              SizedBox(height: isMobile ? 15 : 20),
+              // Clock and Calendar Icon
+              Icon(
+                Icons.watch_later_outlined,
+                color: Colors.red,
+                size: isMobile ? 40 : 60,
+              ),
+              SizedBox(height: isMobile ? 8 : 10),
+              // Bengali Text
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "It's not time to pay your installments yet!",
+                  style: TextStyle(
+                    fontSize: isMobile ? 14 : 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 const Spacer(),
                 Image.network(
-                  'https://yt3.googleusercontent.com/ytc/AIdro_k0v2FHYr_czhsvCDN6LNxuaWY1c0osMWV2ZOSmsZC8GNk=s900-c-k-c0x00ffffff-no-rj',
+                  'https://brandlogos.net/wp-content/uploads/2021/12/world_bank-brandlogo.net_-512x512.png',
                   height: 100,
                   width: 100,
                 ),

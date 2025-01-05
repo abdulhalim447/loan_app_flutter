@@ -70,9 +70,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
         body: jsonEncode(loanData),
       );
 
-      print('Token: $token');
-      print(response.statusCode);
-      print(response.body);
+
 
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(

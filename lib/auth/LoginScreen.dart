@@ -68,8 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        print(
-            'Response Data: $responseData'); // Log response body for debugging
+       // Log response body for debugging
 
         if (responseData['success'] != null && responseData['success']) {
           // Save token and phone after successful login
@@ -82,19 +81,18 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(builder: (context) => MainNavigationScreen()),
           );
         } else {
-          print('Login Failed: ${responseData['message']}');
+
           _showErrorDialog(responseData['message'] ?? 'Login failed');
         }
       } else {
-        print('Request failed with status: ${response.statusCode}');
-        print('Response body: ${response.body}');
+
         _showErrorDialog('Failed to login. Please try again later.');
       }
     } catch (error) {
       setState(() {
         isLoading = false; // End loading in case of error
       });
-      print('Error: $error');
+
       _showErrorDialog('An error occurred. Please try again.');
     }
   }

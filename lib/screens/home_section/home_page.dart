@@ -61,8 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      print(response.statusCode);
-      print(response.body);
+
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

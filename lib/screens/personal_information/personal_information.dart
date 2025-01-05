@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:signature/signature.dart';
@@ -25,15 +26,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController nidNameController = TextEditingController();
   final TextEditingController monthyIncomController = TextEditingController();
   final TextEditingController currentAddressController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController permanentAddressController =
-  TextEditingController();
-
-  //final TextEditingController phoneController = TextEditingController();
+      TextEditingController();
   final TextEditingController professionController = TextEditingController();
   final TextEditingController loanPurposeController = TextEditingController();
   final TextEditingController nomineeRelationController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController nomineeNameController = TextEditingController();
   final TextEditingController nomineePhoneController = TextEditingController();
 
@@ -59,7 +58,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      print(response.body);
+
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
@@ -73,7 +72,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 jsonResponse['currentAddress'] ?? '';
             permanentAddressController.text =
                 jsonResponse['permanentAddress'] ?? '';
-            // phoneController.text = jsonResponse['phone'] ?? '';
             professionController.text = jsonResponse['profession'] ?? '';
             loanPurposeController.text = jsonResponse['loanPurpose'] ?? '';
             nomineeRelationController.text =
@@ -111,7 +109,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     }
   }
 
-
   Future<File> _convertImageToJpg(File file) async {
     final originalImage = img.decodeImage(file.readAsBytesSync());
     final jpgImage = img.encodeJpg(originalImage!);
@@ -120,6 +117,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       ..writeAsBytesSync(jpgImage);
     return convertedFile;
   }
+
   // Submit Personal Information
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
@@ -133,19 +131,49 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       // Convert signature to image
       final signatureImage = await _getSignatureImage();
 
-      final frontImage = await http.MultipartFile.fromPath(
-          'nidFrontImage', frontIdImage!.path);
-      final backImage =
-      await http.MultipartFile.fromPath('nidBackImage', backIdImage!.path);
-      final selfieImage = selfieWithIdImage != null &&
-          File(selfieWithIdImage!.path).existsSync()
-          ? await http.MultipartFile.fromPath('selfie', selfieWithIdImage!.path)
-          : null;
+      // Prepare files for web compatibility
+      http.MultipartFile? frontImage;
+      http.MultipartFile? backImage;
+      http.MultipartFile? selfieImage;
+
+      if (kIsWeb) {
+        if (frontIdImage != null) {
+          final frontBytes = await frontIdImage!.readAsBytes();
+          frontImage = http.MultipartFile.fromBytes('nidFrontImage', frontBytes,
+              filename: frontIdImage!.name);
+        }
+        if (backIdImage != null) {
+          final backBytes = await backIdImage!.readAsBytes();
+          backImage = http.MultipartFile.fromBytes('nidBackImage', backBytes,
+              filename: backIdImage!.name);
+        }
+        if (selfieWithIdImage != null) {
+          final selfieBytes = await selfieWithIdImage!.readAsBytes();
+          selfieImage = http.MultipartFile.fromBytes('selfie', selfieBytes,
+              filename: selfieWithIdImage!.name);
+        }
+      } else {
+        if (frontIdImage != null) {
+          frontImage = await http.MultipartFile.fromPath(
+              'nidFrontImage', frontIdImage!.path);
+        }
+        if (backIdImage != null) {
+          backImage = await http.MultipartFile.fromPath(
+              'nidBackImage', backIdImage!.path);
+        }
+        if (selfieWithIdImage != null) {
+          selfieImage = await http.MultipartFile.fromPath(
+              'selfie', selfieWithIdImage!.path);
+        }
+      }
 
       if (selfieImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Selfie image not available or invalid')),
         );
+        setState(() {
+          _isLoading = false;
+        });
         return;
       }
 
@@ -165,12 +193,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         ..fields['nomineeName'] = nomineeNameController.text
         ..fields['nomineePhone'] = nomineePhoneController.text
         ..fields['nidName'] = nidNameController.text
-        ..fields['income'] = monthyIncomController.text
-      //..fields['phone'] = phoneController.text // এ লাইনটি যোগ করুন
-        ..files.add(frontImage)
-        ..files.add(backImage)
-        ..files.add(selfieImage)
-        ..files.add(signatureMultipart);
+        ..fields['income'] = monthyIncomController.text;
+
+      if (frontImage != null) request.files.add(frontImage);
+      if (backImage != null) request.files.add(backImage);
+      request.files.add(selfieImage);
+      request.files.add(signatureMultipart);
 
       try {
         var response = await request.send();
@@ -180,55 +208,17 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         if (response.statusCode == 200) {
           final jsonResponse = json.decode(responseBody);
           String message = jsonResponse['message'];
-          Map<String, dynamic> user = jsonResponse['user'];
 
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => BankAccountScreen()));
-          // Show success message and user details
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Success'),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(message),
-                  SizedBox(height: 8),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
 
-                    // Clear form fields after success
-                    nameController.clear();
-                    idController.clear();
-                    currentAddressController.clear();
-                    permanentAddressController.clear();
-                    //phoneController.clear();
-                    professionController.clear();
-                    loanPurposeController.clear();
-                    nomineeRelationController.clear();
-                    nomineeNameController.clear();
-                    nomineePhoneController.clear();
-                    monthyIncomController.clear();
-                    nidNameController.clear();
-
-                    // Clear images and signature
-                    setState(() {
-                      frontIdImage = null;
-                      backIdImage = null;
-                      selfieWithIdImage = null;
-                      _signatureController.clear();
-                    });
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message)),
           );
+
+          // Clear form fields
+          _clearForm();
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Failed to submit data')));
@@ -244,10 +234,25 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     }
   }
 
-
-
-
-
+  void _clearForm() {
+    nameController.clear();
+    idController.clear();
+    currentAddressController.clear();
+    permanentAddressController.clear();
+    professionController.clear();
+    loanPurposeController.clear();
+    nomineeRelationController.clear();
+    nomineeNameController.clear();
+    nomineePhoneController.clear();
+    monthyIncomController.clear();
+    nidNameController.clear();
+    setState(() {
+      frontIdImage = null;
+      backIdImage = null;
+      selfieWithIdImage = null;
+      _signatureController.clear();
+    });
+  }
 
   Future<Uint8List> _getSignatureImage() async {
     final ui.Image? image = await _signatureController.toImage();
@@ -255,10 +260,61 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     return byteData!.buffer.asUint8List();
   }
 
+
+  Future<void> _pickImage(String type, ImageSource source) async {
+    XFile? pickedFile;
+
+    try {
+      pickedFile = await _picker.pickImage(source: source);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('ইমেজ পিক করার সময় ত্রুটি: $e')),
+      );
+      return;
+    }
+
+    if (pickedFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('কোনো বৈধ ইমেজ নির্বাচন করা হয়নি। আবার চেষ্টা করুন।')),
+      );
+      return;
+    }
+
+    setState(() {
+      if (type == 'front') {
+        frontIdImage = pickedFile;
+      } else if (type == 'back') {
+        backIdImage = pickedFile;
+      } else if (type == 'selfie') {
+        selfieWithIdImage = pickedFile;
+      }
+    });
+
+
+  }
+
+
+
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    idController.dispose();
+    currentAddressController.dispose();
+    permanentAddressController.dispose();
+    professionController.dispose();
+    loanPurposeController.dispose();
+    nomineeRelationController.dispose();
+    nomineeNameController.dispose();
+    nomineePhoneController.dispose();
+    _signatureController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
-    _checkStatus(); // Check status when the screen is loaded
+    _checkStatus(); // Call _checkStatus immediately after screen creation
   }
 
   @override
@@ -267,54 +323,62 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       appBar: AppBar(
         title: Text('Personal Information'),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSectionTitle('Your Information'),
-              _buildTextField(' Name', nameController),
-              SizedBox(height: 8.0),
-              _buildTextField('Current Address', currentAddressController),
-              SizedBox(height: 8.0),
-              _buildTextField('Permanent Address', permanentAddressController),
-              SizedBox(height: 8.0),
-              //_buildTextField('Your Mobile Number', phoneController),
-              SizedBox(height: 8.0),
-              _buildTextField('Profession', professionController),
-              SizedBox(height: 8.0),
-              _buildTextField('Monthly Income', monthyIncomController),
-              SizedBox(height: 8.0),
-              _buildTextField('Purpose of Loan', loanPurposeController),
-              SizedBox(height: 16.0),
-              _buildSectionTitle('Nominee Information'),
-              _buildTextField('Nominee Name', nomineeNameController),
-              SizedBox(height: 8.0),
-              _buildTextField('Relation', nomineeRelationController),
-              SizedBox(height: 8.0),
-              _buildTextField('Nominee Mobile Number', nomineePhoneController),
-              SizedBox(height: 16.0),
-              _buildSectionTitle('Image Collection'),
-              SizedBox(height: 8.0),
-              _buildTextField('NID Name', nidNameController),
-              SizedBox(height: 8.0),
-              _buildTextField('NID Number', idController),
-              SizedBox(height: 8.0),
-              _buildImageUploadField('Front Side of Your ID Card',
-                      () => _pickImage('front'), frontIdImage),
-              _buildImageUploadField('Back Side of Your ID Card',
-                      () => _pickImage('back'), backIdImage),
-              _buildImageUploadField('Selfie with Your ID Card',
-                      () => _pickImage('selfie'), selfieWithIdImage),
-              SizedBox(height: 16.0),
-              _buildSignatureField('Sign in the box below'),
-              SizedBox(height: 16.0),
-              if (_isLoading) Center(child: CircularProgressIndicator()),
-              SizedBox(height: 16.0),
-              _buildSaveButton(),
-            ],
+      body: Center(
+        // Center the content on larger screens
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 600),
+          // Limit width to 600 pixels
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionTitle('Your Information'),
+                  _buildTextField(' Name', nameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Current Address', currentAddressController),
+                  SizedBox(height: 8.0),
+                  _buildTextField(
+                      'Permanent Address', permanentAddressController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Profession', professionController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Monthly Income', monthyIncomController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Purpose of Loan', loanPurposeController),
+                  SizedBox(height: 16.0),
+                  _buildSectionTitle('Nominee Information'),
+                  _buildTextField('Nominee Name', nomineeNameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('Relation', nomineeRelationController),
+                  SizedBox(height: 8.0),
+                  _buildTextField(
+                      'Nominee Mobile Number', nomineePhoneController),
+                  SizedBox(height: 16.0),
+                  _buildSectionTitle('Image Collection'),
+                  SizedBox(height: 8.0),
+                  _buildTextField('NID Name', nidNameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('NID Number', idController),
+                  SizedBox(height: 8.0),
+                  _buildImageUploadField(
+                      'Front Side of Your ID Card', 'front', frontIdImage),
+                  _buildImageUploadField(
+                      'Back Side of Your ID Card', 'back', backIdImage),
+                  _buildImageUploadField(
+                      'Selfie with Your ID Card', 'selfie', selfieWithIdImage),
+
+                  SizedBox(height: 16.0),
+                  _buildSignatureField('Sign in the box below'),
+                  SizedBox(height: 16.0),
+                  if (_isLoading) Center(child: CircularProgressIndicator()),
+                  SizedBox(height: 16.0),
+                  _buildSaveButton(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -326,7 +390,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -348,53 +412,82 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     );
   }
 
+  void _showImageSourceSelection(String type) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select an option'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _pickImage(type, ImageSource.gallery);
+              },
+            ),
+            TextButton(
+              child: Text('Camera'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _pickImage(type, ImageSource.camera);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   Widget _buildImageUploadField(
-      String label, VoidCallback onTap, XFile? imageFile) {
+      String label, String type, XFile? imageFile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 16)),
+        Text(label, style: TextStyle(fontSize: 24)),
         SizedBox(height: 8.0),
         GestureDetector(
-          onTap: onTap,
+          onTap: () => _showImageSourceSelection(type),
           child: Container(
             height: 150,
             width: double.infinity,
             color: Colors.grey[300],
             child: imageFile == null
                 ? Icon(Icons.add_photo_alternate, size: 50)
-                : imageFile!.path.contains('http')
-                ? Image.network(imageFile.path,
-                fit: BoxFit.cover) // Show image from URL
-                : Image.file(File(imageFile.path),
-                fit: BoxFit.cover), // Show local image
+                : kIsWeb
+                ? Image.network(imageFile.path, fit: BoxFit.cover)
+                : Image.file(File(imageFile.path), fit: BoxFit.cover),
           ),
         ),
       ],
     );
   }
 
+
+
+
   Widget _buildSignatureField(String label) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 16)),
+        Text(label, style: TextStyle(fontSize: 24)),
         SizedBox(height: 8.0),
         Container(
           height: 150,
           decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           child: _isFormDisabled && _signatureUrl.isNotEmpty
               ? Image.network(
-            _signatureUrl,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return Center(child: Text("Signature not found"));
-            },
-          )
+                  _signatureUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Center(child: Text("Signature not found"));
+                  },
+                )
               : Signature(
-            controller: _signatureController,
-            backgroundColor: Colors.white,
-          ),
+                  controller: _signatureController,
+                  backgroundColor: Colors.white,
+                ),
         ),
         if (!_isFormDisabled)
           TextButton(
@@ -408,112 +501,16 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   Widget _buildSaveButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _isFormDisabled ? null : _submitForm,
-        // Disable button if form is disabled
-        child: Text('Save'),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: _isFormDisabled ? null : _submitForm,
+          // Disable button if form is disabled
+          child: Text('Save'),
+        ),
       ),
     );
-  }
-
-  Future<void> _pickImage(String type) async {
-    final pickedFile = await showDialog<XFile?>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Choose an option'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text('Take a Photo'),
-                onTap: () async {
-                  final pickedFile =
-                  await _picker.pickImage(source: ImageSource.camera);
-                  Navigator.pop(context, pickedFile);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Select from Gallery'),
-                onTap: () async {
-                  final pickedFile =
-                  await _picker.pickImage(source: ImageSource.gallery);
-                  Navigator.pop(context, pickedFile);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (pickedFile == null || !File(pickedFile.path).existsSync()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No valid image selected. Please try again.')),
-      );
-      return;
-    }
-
-    // Save the selected file to state
-    setState(() {
-      if (type == 'front') {
-        frontIdImage = pickedFile;
-        _checkFileFormat(frontIdImage);
-      } else if (type == 'back') {
-        backIdImage = pickedFile;
-        _checkFileFormat(backIdImage);
-      } else if (type == 'selfie') {
-        selfieWithIdImage = pickedFile;
-        _checkFileFormat(selfieWithIdImage);
-      }
-    });
-
-    print('Selected file path: ${pickedFile.path}');
-  }
-
-
-  void _checkFileFormat(XFile? file) async {
-    if (file != null) {
-      String fileExtension = file.path.split('.').last.toLowerCase();
-      print('File format: $fileExtension');
-      if (fileExtension != 'jpg' && fileExtension != 'jpeg' && fileExtension != 'png') {
-        print('Invalid file format. Converting to JPG...');
-        File originalFile = File(file.path);
-        File convertedFile = await _convertImageToJpg(originalFile);
-
-        // Update the file reference after conversion
-        setState(() {
-          if (file == selfieWithIdImage) {
-            selfieWithIdImage = XFile(convertedFile.path);
-          } else if (file == frontIdImage) {
-            frontIdImage = XFile(convertedFile.path);
-          } else if (file == backIdImage) {
-            backIdImage = XFile(convertedFile.path);
-          }
-        });
-      }
-    }
-  }
-
-
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    idController.dispose();
-    currentAddressController.dispose();
-    permanentAddressController.dispose();
-    //phoneController.dispose();
-    professionController.dispose();
-    loanPurposeController.dispose();
-    nomineeRelationController.dispose();
-    nomineeNameController.dispose();
-    nomineePhoneController.dispose();
-    _signatureController.dispose();
-    super.dispose();
   }
 }

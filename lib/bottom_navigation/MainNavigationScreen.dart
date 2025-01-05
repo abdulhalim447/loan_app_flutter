@@ -29,7 +29,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    print("Screen width: $screenWidth"); // স্ক্রিন প্রস্থ দেখুন
     final bool isMobile = screenWidth < 600;
 
     return Scaffold(
