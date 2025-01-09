@@ -6,9 +6,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
-        android:label="world_bank_loan"
+        android:label="World Bank Loan"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"

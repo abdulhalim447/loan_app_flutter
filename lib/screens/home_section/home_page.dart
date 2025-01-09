@@ -6,7 +6,6 @@ import 'package:world_bank_loan/screens/personal_information/personal_informatio
 import 'package:world_bank_loan/slider/home_screen_slider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../auth/saved_login/user_session.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,12 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadStoredUserData();  // Load user data from SharedPreferences
-    _getUserData();         // Call API to fetch updated data
+    _loadStoredUserData(); // Load user data from SharedPreferences
+    _getUserData(); // Call API to fetch updated data
   }
 
   // ডাটা সেভ করার ফাংশন
-  Future<void> saveUserData(String balance, String name, int loanStatus, int status) async {
+  Future<void> saveUserData(
+      String balance, String name, int loanStatus, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('balance', balance);
     await prefs.setString('name', name);
@@ -72,7 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
         int newStatus = data['status'];
 
         // Only update if data has changed
-        if (balance != newBalance || name != newName || loanStatus != newLoanStatus || status != newStatus) {
+        if (balance != newBalance ||
+            name != newName ||
+            loanStatus != newLoanStatus ||
+            status != newStatus) {
           await saveUserData(newBalance, newName, newLoanStatus, newStatus);
           setState(() {
             balance = newBalance;
@@ -114,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 BalanceSection(balance: balance, name: name),
                 SliderSection(),
                 LoanApplicationSection(
-                    loanStatus: loanStatus.toString(), status: status.toString()),
+                    loanStatus: loanStatus.toString(),
+                    status: status.toString()),
                 // Convert to string for passing to the widget
               ],
             ),
@@ -179,9 +183,8 @@ class BalanceSection extends StatelessWidget {
                 Icon(Icons.public, size: 48, color: Colors.white),
                 SizedBox(height: 8),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white
-                  ),
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -191,7 +194,9 @@ class BalanceSection extends StatelessWidget {
                     );
                   },
                   child: Text(
-                    'Withdraw', style: TextStyle(color: Colors.black),),
+                    'Withdraw',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ],
             ),
@@ -242,8 +247,8 @@ class LoanApplicationSection extends StatelessWidget {
                 if (status == '0') ...[
                   Text(
                     'Submit your personal information first.',
-                    style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.normal),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
@@ -267,94 +272,86 @@ class LoanApplicationSection extends StatelessWidget {
                   ),
                 ]
                 // If user is status '1' (Information verified)
-                else
-                  if (status == '1') ...[
-                    Text(
-                      'Your personal information has been submitted. Apply for a loan.',
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => LoanApplicationScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        textStyle: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      child: const Text('Apply For Loan'),
-                    ),
-                  ]
-              ]
-              // Condition 2: Loan Status == '1' (Loan application under processing)
-              else
-                if (loanStatus == '1') ...[
+                else if (status == '1') ...[
                   Text(
-                    'Your loan application has been completed, please wait. The loan will be passed/cancelled after verifying your information.',
-                    style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.normal),
+                    'Your personal information has been submitted. Apply for a loan.',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
                   ),
                   SizedBox(height: 16),
-                  // No button for loan status '1'
-                ]
-                // Condition 3: Loan Status == '2' (Loan approved)
-                else
-                  if (loanStatus == '2') ...[
-                    Text(
-                      'Congratulations your loan has been approved successfully.',
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => WithdrawScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        textStyle: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      child: const Text('Withdraw'),
-                    ),
-                  ]
-                  // Condition 4: Loan Status == '3' (Ongoing loan)
-                  else
-                    if (loanStatus == '3') ...[
-                      Text(
-                        'You currently have an ongoing loan.',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.normal),
-                      ),
-                      SizedBox(height: 16),
-                      // No button for ongoing loan status '3'
-                    ]
-                    // Default Condition: If loan status is invalid
-                    else
-                      ...[
-                        Text(
-                          'Invalid loan status.',
-                          style: TextStyle(color: Colors.red, fontSize: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (builder) => LoanApplicationScreen(),
                         ),
-                      ]
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      textStyle: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    child: const Text('Apply For Loan'),
+                  ),
+                ]
+              ]
+              // Condition 2: Loan Status == '1' (Loan application under processing)
+              else if (loanStatus == '1') ...[
+                Text(
+                  'Your loan application has been completed, please wait. The loan will be passed/cancelled after verifying your information.',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                ),
+                SizedBox(height: 16),
+                // No button for loan status '1'
+              ]
+              // Condition 3: Loan Status == '2' (Loan approved)
+              else if (loanStatus == '2') ...[
+                Text(
+                  'Congratulations your loan has been approved successfully.',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (builder) => WithdrawScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    textStyle: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  child: const Text('Withdraw'),
+                ),
+              ]
+              // Condition 4: Loan Status == '3' (Ongoing loan)
+              else if (loanStatus == '3') ...[
+                Text(
+                  'Congratulations! your loan application has been passed, Now you can withdraw your money.',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                ),
+                SizedBox(height: 16),
+                // No button for ongoing loan status '3'
+              ]
+              // Default Condition: If loan status is invalid
+              else ...[
+                Text(
+                  'Invalid loan status.',
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+              ]
             ],
           ),
         ),

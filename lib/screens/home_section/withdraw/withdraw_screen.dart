@@ -95,67 +95,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     }
   }
 
-  // Function to pick an image from the gallery or camera
-  /*Future<void> _pickImage() async {
-    final XFile? pickedFile =
-    await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<void> _submitImage() async {
-    if (_image == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Please select an image")));
-      return;
-    }
-
-    String? token = await UserSession.getToken();
-    if (token == null || token.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("User not authenticated")));
-      return;
-    }
-
-    try {
-      var uri = Uri.parse("https://wbli.org/api/recharge");
-      var request = http.MultipartRequest('POST', uri);
-
-      // Attach the image file
-      request.files
-          .add(await http.MultipartFile.fromPath('image', _image!.path));
-
-      // Add headers
-      request.headers.addAll({
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'multipart/form-data',
-      });
-
-      // Send the request
-      var response = await request.send();
-      final responseString = await response.stream.bytesToString();
-      print("Server Response: $responseString");
-
-      if (response.statusCode == 200) {
-        setState(() {
-          _image = null; // Reset the image
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Image submitted successfully")));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed: ${response.statusCode}")));
-      }
-    } catch (e) {
-      print("Error: $e");
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e")));
-    }
-  }*/
-
   @override
   Widget build(BuildContext context) {
     // Responsive layout design
