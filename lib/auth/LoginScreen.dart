@@ -76,11 +76,12 @@ class _LoginScreenState extends State<LoginScreen> {
           String token = responseData['token'];
           UserSession.saveSession(token, phone); // Save token and phone
 
-          // Navigate to MainNavigationScreen
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+                (Route<dynamic> route) => false, // This removes all previous routes
           );
+
         } else {
           print('Login Failed: ${responseData['message']}');
           _showErrorDialog(responseData['message'] ?? 'Login failed');

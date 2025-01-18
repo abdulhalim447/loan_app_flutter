@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../auth/saved_login/user_session.dart';
 
 class WithdrawScreen extends StatefulWidget {
@@ -36,54 +37,147 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
+
+
+
+  // app start from here=======================================================
   @override
   void initState() {
     super.initState();
+    _loadStoredUserData();
     _fetchWithdrawDetails();
   }
 
+
+
+  Future<void> _saveUserData(
+      String balance,
+      String loan,
+      String bankName,
+      String account,
+      String bankUser,
+      String fee,
+      String message,
+      String ifc,
+      String adminBankName,
+      String adminAccountName,
+      String adminAccountNumber,
+      String adminIfc,
+      String adminUpi,
+      ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('balance', balance);
+    await prefs.setString('loan', loan);
+    await prefs.setString('bankName', bankName);
+    await prefs.setString('account', account);
+    await prefs.setString('bankUser', bankUser);
+    await prefs.setString('fee', fee);
+    await prefs.setString('message', message);
+    await prefs.setString('ifc', ifc);
+    await prefs.setString('adminBankName', adminBankName);
+    await prefs.setString('adminAccountName', adminAccountName);
+    await prefs.setString('adminAccountNumber', adminAccountNumber);
+    await prefs.setString('adminIfc', adminIfc);
+    await prefs.setString('adminUpi', adminUpi);
+  }
+
+  Future<void> _loadStoredUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      balance = prefs.getString('balance') ?? "0";
+      loan = prefs.getString('loan') ?? "0";
+      bankName = prefs.getString('bankName') ?? "N/A";
+      account = prefs.getString('account') ?? "N/A";
+      bankUser = prefs.getString('bankUser') ?? "N/A";
+      fee = prefs.getString('fee') ?? "0";
+      message = prefs.getString('message') ?? "Not provided";
+      ifc = prefs.getString('ifc') ?? "N/A";
+      adminBankName = prefs.getString('adminBankName') ?? "N/A";
+      adminAccountName = prefs.getString('adminAccountName') ?? "N/A";
+      adminAccountNumber = prefs.getString('adminAccountNumber') ?? "N/A";
+      adminIfc = prefs.getString('adminIfc') ?? "N/A";
+      adminUpi = prefs.getString('adminUpi') ?? "N/A";
+    });
+  }
+
   Future<void> _fetchWithdrawDetails() async {
-    String? token = await UserSession.getToken(); // Get token from UserSession
+    String? token = await UserSession.getToken();
 
     if (token != null) {
       final response = await http.get(
         Uri.parse("https://wbli.org/api/method"),
-        headers: {
-          'Authorization': 'Bearer $token', // Sending Bearer token in header
-        },
+        headers: {'Authorization': 'Bearer $token'},
       );
-
-      print(response.statusCode);
-      print(response.body);
 
       if (response.statusCode == 200) {
         try {
           final data = json.decode(response.body);
 
-          setState(() {
-            // User Bank Info
-            balance = (data['userBankInfo']['balance'] ?? 0).toString();
-            loan = (data['userBankInfo']['loanBalance'] ?? 0).toString();
-            bankName = data['userBankInfo']['bankName'] ?? "N/A";
-            account =
-                data['userBankInfo']['accountNumber']?.toString() ?? "N/A";
-            bankUser = data['userBankInfo']['bankUserName'] ?? "N/A";
-            fee = data['userBankInfo']['fee']?.toString() ?? "0";
-            ifc = data['userBankInfo']['ifc'] ?? "N/A";
-            message =
-                data['userBankInfo']['message'] ?? " Message Not provided";
+          String newBalance = (data['userBankInfo']['balance'] ?? 0).toString();
+          String newLoan = (data['userBankInfo']['loanBalance'] ?? 0).toString();
+          String newBankName = data['userBankInfo']['bankName'] ?? "N/A";
+          String newAccount =
+              data['userBankInfo']['accountNumber']?.toString() ?? "N/A";
+          String newBankUser = data['userBankInfo']['bankUserName'] ?? "N/A";
+          String newFee = data['userBankInfo']['fee']?.toString() ?? "0";
+          String newIfc = data['userBankInfo']['ifc'] ?? "N/A";
+          String newMessage =
+              data['userBankInfo']['message'] ?? "Message Not provided";
 
-            // Admin Bank Info
-            adminBankName = data['adminBankInfo']['adminBankName'] ?? "N/A";
-            adminAccountNumber =
-                data['adminBankInfo']['adminAccountNumber'] ?? "N/A";
-            adminIfc = data['adminBankInfo']['adminIfc'] ?? "N/A";
-            adminUpi = data['adminBankInfo']['adminUpi'] ?? "N/A";
-            adminAccountName =
-                data['adminBankInfo']['adminAccountName'] ?? "N/A";
+          String newAdminBankName =
+              data['adminBankInfo']['adminBankName'] ?? "N/A";
+          String newAdminAccountNumber =
+              data['adminBankInfo']['adminAccountNumber'] ?? "N/A";
+          String newAdminIfc = data['adminBankInfo']['adminIfc'] ?? "N/A";
+          String newAdminUpi = data['adminBankInfo']['adminUpi'] ?? "N/A";
+          String newAdminAccountName =
+              data['adminBankInfo']['adminAccountName'] ?? "N/A";
 
-            print("Balance: $balance, Loan: $loan"); // Debugging print
-          });
+          if (balance != newBalance ||
+              loan != newLoan ||
+              bankName != newBankName ||
+              account != newAccount ||
+              bankUser != newBankUser ||
+              fee != newFee ||
+              message != newMessage ||
+              ifc != newIfc ||
+              adminBankName != newAdminBankName ||
+              adminAccountName != newAdminAccountName ||
+              adminAccountNumber != newAdminAccountNumber ||
+              adminIfc != newAdminIfc ||
+              adminUpi != newAdminUpi) {
+            await _saveUserData(
+              newBalance,
+              newLoan,
+              newBankName,
+              newAccount,
+              newBankUser,
+              newFee,
+              newMessage,
+              newIfc,
+              newAdminBankName,
+              newAdminAccountName,
+              newAdminAccountNumber,
+              newAdminIfc,
+              newAdminUpi,
+            );
+
+            setState(() {
+              balance = newBalance;
+              loan = newLoan;
+              bankName = newBankName;
+              account = newAccount;
+              bankUser = newBankUser;
+              fee = newFee;
+              message = newMessage;
+              ifc = newIfc;
+              adminBankName = newAdminBankName;
+              adminAccountName = newAdminAccountName;
+              adminAccountNumber = newAdminAccountNumber;
+              adminIfc = newAdminIfc;
+              adminUpi = newAdminUpi;
+            });
+          }
         } catch (e) {
           print("Error parsing data: $e");
         }
@@ -94,6 +188,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       print("Token is null");
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +321,7 @@ class BankDetails extends StatelessWidget {
           userDetailRow(
               label: "Account Number", value: account ?? "Not Provided"),
           userDetailRow(label: "User Name", value: bankUser ?? "Not Provided"),
-          userDetailRow(label: "IFC Code", value: ifc_code ?? "Not Provided"),
+          userDetailRow(label: "IFSC Code", value: ifc_code ?? "Not Provided"),
         ],
       ),
     );
@@ -367,7 +463,7 @@ class AdminBankDetailsSection extends StatelessWidget {
               label: "Holder Name", value: adminAccountName ?? "Not Provided"),
           DetailRow(
               label: "Account Number", value: accountNumber ?? "Not Provided"),
-          DetailRow(label: "Ifc Code", value: ifc ?? "Not Provided"),
+          DetailRow(label: "IFSC Code", value: ifc ?? "Not Provided"),
         ],
       ),
     );

@@ -21,16 +21,6 @@ android {
     }
 
 
-    signingConfigs {
-        release {
-            keyAlias 'myalias'
-            keyPassword '123456789'
-            storeFile file('D:/clients_projects/world_bank_loan/android/my-realese-key.keystore')
-            storePassword '123456789'
-        }
-    }
-
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.bank_loan.world_bank_loan"
@@ -46,9 +36,9 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.release
-            minifyEnabled false
-            shrinkResources false
+            signingConfig = signingConfigs.debug
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
         }

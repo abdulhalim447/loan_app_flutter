@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../auth/saved_login/user_session.dart';
 
 class HomeBannerSlider extends StatefulWidget {
@@ -22,12 +21,25 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
   @override
   void initState() {
     super.initState();
+    _loadStoredImages();
     _fetchImages();
+  }
+
+  Future<void> _saveImages(List<String> imageUrls) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('imageUrls', imageUrls);
+  }
+
+  Future<void> _loadStoredImages() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _imageUrls = prefs.getStringList('imageUrls') ?? [];
+      _isLoading = false;
+    });
   }
 
   Future<void> _fetchImages() async {
     try {
-      // Get token from shared preferences
       String? token = await UserSession.getToken();
       if (token == null) {
         setState(() {
@@ -37,7 +49,6 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
         return;
       }
 
-      // Make API call
       final response = await http.get(
         Uri.parse('https://wbli.org/api/slides'),
         headers: {
@@ -46,18 +57,22 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
       );
 
       if (response.statusCode == 200) {
-        // Parse the response
         final data = json.decode(response.body);
+        List<String> newImageUrls = (data['images'] as List)
+            .map((image) => image['url'] as String)
+            .toList();
+
+        // Save to SharedPreferences
+        await _saveImages(newImageUrls);
+
         setState(() {
-          _imageUrls = (data['images'] as List)
-              .map((image) => image['url'] as String)
-              .toList();
+          _imageUrls = newImageUrls;
           _isLoading = false;
         });
       } else {
         setState(() {
           _errorMessage =
-              "Failed to load images. Error: ${response.statusCode}";
+          "Failed to load images. Error: ${response.statusCode}";
           _isLoading = false;
         });
       }
@@ -78,7 +93,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
     if (_errorMessage != null) {
       return Center(
           child:
-              Text(_errorMessage!, style: const TextStyle(color: Colors.red)));
+          Text(_errorMessage!, style: const TextStyle(color: Colors.red)));
     }
 
     if (_imageUrls.isEmpty) {
@@ -114,7 +129,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
+                            (loadingProgress.expectedTotalBytes ?? 1)
                             : null,
                       ),
                     );

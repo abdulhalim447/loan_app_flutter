@@ -302,12 +302,16 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               SizedBox(height: 8.0),
               _buildTextField('NID Number', idController),
               SizedBox(height: 8.0),
+
+
               _buildImageUploadField('Front Side of Your ID Card',
                       () => _pickImage('front'), frontIdImage),
               _buildImageUploadField('Back Side of Your ID Card',
                       () => _pickImage('back'), backIdImage),
               _buildImageUploadField('Selfie with Your ID Card',
                       () => _pickImage('selfie'), selfieWithIdImage),
+
+
               SizedBox(height: 16.0),
               _buildSignatureField('Sign in the box below'),
               SizedBox(height: 16.0),
@@ -356,7 +360,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         Text(label, style: TextStyle(fontSize: 16)),
         SizedBox(height: 8.0),
         GestureDetector(
-          onTap: onTap,
+          onTap: _isFormDisabled ? null : onTap,
           child: Container(
             height: 150,
             width: double.infinity,

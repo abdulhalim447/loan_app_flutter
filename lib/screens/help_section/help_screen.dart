@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../auth/saved_login/user_session.dart';
@@ -18,10 +19,27 @@ class _ContactScreenState extends State<ContactScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchContactDetails();
+    _loadStoredContactDetails(); // Load data from SharedPreferences
+    _fetchContactDetails(); // Fetch data from API
   }
 
-  // Function to fetch the contact details using the API
+  // Save contact details to SharedPreferences
+  Future<void> _saveContactDetails(String? whatsapp, String? telegram) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('whatsappContact', whatsapp ?? '');
+    await prefs.setString('telegramContact', telegram ?? '');
+  }
+
+  // Load contact details from SharedPreferences
+  Future<void> _loadStoredContactDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      whatsappContact = prefs.getString('whatsappContact') ?? null;
+      telegramContact = prefs.getString('telegramContact') ?? null;
+    });
+  }
+
+  // Fetch contact details from API
   Future<void> _fetchContactDetails() async {
     String? token = await UserSession.getToken();
     if (token != null) {
@@ -33,14 +51,20 @@ class _ContactScreenState extends State<ContactScreen> {
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body); // Decode the JSON response
-        setState(() {
-          // Extract the whatsapp and telegram contact info from the JSON response
-          whatsappContact = data['whatsapp'];
-          telegramContact = data['telegram'];
-        });
+        final data = json.decode(response.body);
+        String? newWhatsappContact = data['whatsapp'];
+        String? newTelegramContact = data['telegram'];
+
+        // Save the new data if it has changed
+        if (whatsappContact != newWhatsappContact || telegramContact != newTelegramContact) {
+          await _saveContactDetails(newWhatsappContact, newTelegramContact);
+
+          setState(() {
+            whatsappContact = newWhatsappContact;
+            telegramContact = newTelegramContact;
+          });
+        }
       } else {
-        // Handle API failure
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to fetch contact details.')),
         );
@@ -48,7 +72,7 @@ class _ContactScreenState extends State<ContactScreen> {
     }
   }
 
-  // Function to launch the URL
+  // Launch URL function
   void _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -59,27 +83,27 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // স্ক্রিনের উইডথ নির্ধারণ
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Contact Us'),
-        centerTitle: true, // অ্যাপবারের টাইটেল সেন্টারে রাখা
+        centerTitle: true,
       ),
-      body: Center( // মূল কনটেন্টকে সেন্টারে রাখা
-        child: SingleChildScrollView( // স্ক্রল যোগ করা যাতে ছোট স্ক্রীনে ভালো দেখায়
+      body: Center(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
-              width: isMobile ? double.infinity : 600, // ডেস্কটপে নির্দিষ্ট প্রস্থ
+              width: isMobile ? double.infinity : 600,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.support_agent,
-                    size: isMobile ? 80 : 100, // মোবাইলে আইকন সাইজ কমানো
+                    size: isMobile ? 80 : 100,
                     color: Colors.orange,
                   ),
                   SizedBox(height: isMobile ? 12 : 16),
@@ -87,7 +111,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     "You can contact us through any of the methods below or make an appointment to visit the office directly.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: isMobile ? 14 : 16, // মোবাইলে ফন্ট সাইজ কমানো
+                      fontSize: isMobile ? 14 : 16,
                     ),
                   ),
                   SizedBox(height: isMobile ? 12 : 16),
@@ -107,7 +131,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           icon: FontAwesomeIcons.whatsapp,
                           color: Colors.green,
                           title: "Contact via WhatsApp",
-                          contact: whatsappContact!,
+                          contact: "whatsappContact!",
                           onTap: () => _launchURL("https://wa.me/$whatsappContact"),
                           isMobile: isMobile,
                         ),
@@ -115,14 +139,14 @@ class _ContactScreenState extends State<ContactScreen> {
                           icon: FontAwesomeIcons.telegram,
                           color: Colors.blueAccent,
                           title: "Contact via Telegram",
-                          contact: telegramContact!,
+                          contact: "telegramContact!",
                           onTap: () => _launchURL("https://t.me/$telegramContact"),
                           isMobile: isMobile,
                         ),
                       ],
                     )
                   else
-                    CircularProgressIndicator(), // লোডিং ইন্ডিকেটর দেখানো হচ্ছে
+                    CircularProgressIndicator(),
                 ],
               ),
             ),
@@ -161,7 +185,7 @@ class ContactOption extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: isMobile ? 24 : 32), // আইকন সাইজ পরিবর্তন
+          Icon(icon, color: color, size: isMobile ? 24 : 32),
           SizedBox(width: isMobile ? 12 : 16),
           Expanded(
             child: Column(

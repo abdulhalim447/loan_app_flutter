@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../auth/saved_login/user_session.dart';
 
@@ -28,6 +29,22 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
     fetchData();
   }
 
+
+  // save data to local drive
+  Future<void> saveDataLocally(Map<String, dynamic> data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('loanData', json.encode(data));
+  }
+
+  Future<Map<String, dynamic>?> getLocalData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonData = prefs.getString('loanData');
+    if (jsonData != null) {
+      return json.decode(jsonData);
+    }
+    return null;
+  }
+
   // Update Current Date
   void updateDate() {
     final DateTime now = DateTime.now();
@@ -47,6 +64,14 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
       String? token = await UserSession.getToken();
       if (token == null) throw Exception('No token found. Please log in again.');
 
+      // লোকাল ডাটা চেক করা
+      Map<String, dynamic>? localData = await getLocalData();
+      if (localData != null) {
+        setState(() {
+          updateUI(localData);
+        });
+      }
+
       // Set up headers
       final headers = {
         'Authorization': 'Bearer $token',
@@ -55,32 +80,17 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
 
       // API Call
       final response = await http.get(Uri.parse(url), headers: headers);
-      print(response.statusCode);
-      print(response.body);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
-        // Check if loan exists
-        if (data['hasLoan'] == true) {
-          setState(() {
-            hasLoan = true;
-            name = data['name'];
-            loanBalance = double.parse(data['amount'].toString());
-            stampUrl = data['stamp'];
-            signatureUrl = data['signature'];
-            time = data['time'];
+        // লোকাল ডাটা সেভ করা
+        await saveDataLocally(data);
 
-            app_icon = data['app_icon'];
-            phone = data['phone'];
-            interest = data['interest'];
-            installments = data['interest'];
-          });
-        } else {
-          setState(() {
-            hasLoan = false;
-          });
-        }
+        // আপডেট করা UI
+        setState(() {
+          updateUI(data);
+        });
       } else {
         throw Exception('Failed to fetch data. Error: ${response.statusCode}');
       }
@@ -88,6 +98,30 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
       print('Error fetching data: $e');
     }
   }
+
+// ডাটা UI তে আপডেট করার জন্য ফাংশন
+  void updateUI(Map<String, dynamic> data) {
+    if (data['hasLoan'] == true) {
+      hasLoan = true;
+      name = data['name'];
+      loanBalance = double.parse(data['amount'].toString());
+      stampUrl = data['stamp'];
+      signatureUrl = data['signature'];
+      time = data['time'];
+      app_icon = data['app_icon'];
+      phone = data['phone'];
+      interest = data['interest'];
+      installments = data['installments'];
+    } else {
+      hasLoan = false;
+    }
+  }
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +142,8 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // IMF Logo
-                  Image.network(
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Seal_of_the_Reserve_Bank_of_India.svg/1200px-Seal_of_the_Reserve_Bank_of_India.svg.png',
+                  Image.asset(
+                    'assets/icons/loan_icon.png',
                     height: 80,
                   ),
                   SizedBox(height: 10),
@@ -149,9 +183,9 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                         right: 0,
                         child: Opacity(
                           opacity: 0.3, // Set watermark transparency
-                          child: Image.network(
+                          child: Image.asset(
                             // app_icon,
-                            "https://www.clipartmax.com/png/middle/458-4587792_promanity-international-round-world-map-png.png",
+                            "assets/icons/loan_watermark.png",
                             fit: BoxFit.fitWidth, // Adjusts the image width
                             height: 170, // Adjust the height if needed
                           ),

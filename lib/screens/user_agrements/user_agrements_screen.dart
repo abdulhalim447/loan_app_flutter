@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // JSON ডাটা পার্স করার জন্য
 
 import '../../auth/saved_login/user_session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class LoanDetailsScreen extends StatefulWidget {
@@ -30,7 +31,26 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
     _fetchLoanData();
   }
 
-  // API থেকে ডাটা ফেচ করার জন্য এই মেথডটি ব্যবহার করা হবে
+
+
+
+// ডেটা লোকাল স্টোরেজে সংরক্ষণ করার জন্য ফাংশন
+  Future<void> saveLoanDataLocally(Map<String, dynamic> data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('loanData', json.encode(data));
+  }
+
+// লোকাল স্টোরেজ থেকে ডেটা রিট্রিভ করার জন্য ফাংশন
+  Future<Map<String, dynamic>?> getLoanDataFromLocal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonData = prefs.getString('loanData');
+    if (jsonData != null) {
+      return json.decode(jsonData);
+    }
+    return null;
+  }
+
+
   Future<void> _fetchLoanData() async {
     // টোকেন নিন
     String? token = await UserSession.getToken();
@@ -38,6 +58,14 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
     // যদি টোকেন না থাকে, তাহলে কোনো API কল হবে না
     if (token == null) {
       return;
+    }
+
+    // লোকাল স্টোরেজ থেকে ডেটা লোড করুন
+    Map<String, dynamic>? localData = await getLoanDataFromLocal();
+    if (localData != null) {
+      setState(() {
+        _updateUIWithData(localData);
+      });
     }
 
     // API কল করার জন্য হেডার তৈরি
@@ -48,31 +76,40 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
       },
     );
 
-    print(response.statusCode);
-    print(response.body);
 
+    
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
-      setState(() {
-        hasLoan = data['hasLoan'] ?? false;
+      // ডেটা সেভ করুন লোকাল স্টোরেজে
+      await saveLoanDataLocally(data);
 
-        if (hasLoan) {
-          borrowerName = data['name'] ?? "N/A";
-          loanTime = data['LoanCreationTime'] ?? "Unknown";
-          loanAmount = data['loan_amount'] ?? "0";
-          loanInstallments = data['installments'] ?? "0";
-          monthlyInterestRate = data['intrest_rate'] ?? "0%";
-          contactNumber = data['phone'] ?? "N/A";
-          borrowerSignature = data['user_signature'] ?? "";
-          loanStamp = data['stamp'] ?? "";
-        }
+      // UI আপডেট করুন
+      setState(() {
+        _updateUIWithData(data);
       });
     } else {
       print('Failed to load loan data');
     }
-
   }
+
+// UI আপডেট করার ফাংশন
+  void _updateUIWithData(Map<String, dynamic> data) {
+    hasLoan = data['hasLoan'] ?? false;
+
+    if (hasLoan) {
+      borrowerName = data['name'] ?? "N/A";
+      loanTime = data['LoanCreationTime'] ?? "Unknown";
+      loanAmount = data['loan_amount'] ?? "0";
+      loanInstallments = data['installments'] ?? "0";
+      monthlyInterestRate = data['intrest_rate'] ?? "0%";
+      contactNumber = data['phone'] ?? "N/A";
+      borrowerSignature = data['user_signature'] ?? "";
+      loanStamp = data['stamp'] ?? "";
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

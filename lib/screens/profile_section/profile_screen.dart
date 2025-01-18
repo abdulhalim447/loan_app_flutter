@@ -28,23 +28,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _loadStoredUserData();
     _getUserData();
   }
+
+
+
+  Future<void> _loadStoredUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      number = prefs.getString('number') ?? "0";
+      name = prefs.getString('name') ?? "Loading...";
+    });
+  }
+
+
+  Future<void> _saveUserData(String number, String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('number', number);
+    await prefs.setString('name', name);
+  }
+
 
   Future<void> _getUserData() async {
     String? token = await UserSession.getToken();
     if (token != null) {
       final response = await http.get(
-        Uri.parse('https://wbli.org/api/index'), // Replace with your API URL
+        Uri.parse('https://wbli.org/api/index'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        setState(() {
-          number = data['number'] ?? "0"; // Safe null check
-          name = data['name'] ?? "No Name"; // Safe null check
-        });
+
+        String newNumber = data['number'] ?? "0";
+        String newName = data['name'] ?? "No Name";
+
+        // Update only if data has changed
+        if (number != newNumber || name != newName) {
+          await _saveUserData(newNumber, newName); // Save new data in SharedPreferences
+          setState(() {
+            number = newNumber;
+            name = newName;
+          });
+        }
       } else {
         // Handle error
         setState(() {
@@ -52,9 +79,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           name = "Failed to load data";
         });
       }
+    } else {
+      setState(() {
+        number = "0";
+        name = "Token is null";
+      });
     }
   }
 
+
+  // logout ============================================================
   void _logout(BuildContext context) async {
     showDialog(
       context: context,
@@ -89,6 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  //============================================================
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -96,6 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Profile'),
       ),
       body: Center(

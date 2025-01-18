@@ -42,73 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-/*  // Function to handle sign up API request
-  Future<void> _signUp() async {
-    final String name = nameController.text.trim();
-    final String phone = phoneController.text.trim();
-    final String password = passwordController.text.trim();
-    final String confirmPassword = confirmPasswordController.text.trim();
 
-    if (name.isEmpty ||
-        phone.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
-      _showErrorDialog('All fields are required!');
-      return;
-    }
-
-    if (password != confirmPassword) {
-      _showErrorDialog('Passwords do not match!');
-      return;
-    }
-
-    setState(() {
-      isLoading = true; // Start loading
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse('https://wbli.org/api/register'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'name': name,
-          'countryCode': countryCode,
-          'phone': phone,
-          'password': password,
-          'c_password': confirmPassword,
-        }),
-      );
-
-      setState(() {
-        isLoading = false; // Stop loading
-      });
-
-      print("Status Code: ${response.statusCode}");
-      print("Response Body: ${response.body}");
-      if (response.statusCode == 201) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        if (responseData['message'] == 'User registered successfully!') {
-          // Registration was successful, navigate to LoginScreen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
-          );
-        } else {
-          _showErrorDialog(responseData['message'] ?? 'Registration failed');
-        }
-      } else {
-        _showErrorDialog('Failed to sign up. Please try again later.');
-      }
-    } catch (error) {
-      setState(() {
-        isLoading = false; // Stop loading in case of error
-      });
-      _showErrorDialog('An error occurred. Please try again.');
-    }
-  }
-
-
- */
 
   Future<void> _signUp() async {
     final String name = nameController.text.trim();
@@ -180,10 +114,12 @@ class _SignupScreenState extends State<SignupScreen> {
               UserSession.saveSession(token, phone);
 
               // Navigate to MainNavigationScreen
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+                    (Route<dynamic> route) => false, // This removes all previous routes
               );
+
             } else {
               _showErrorDialog(loginData['message'] ?? 'Login failed');
             }
