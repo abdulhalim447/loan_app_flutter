@@ -133,6 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Profile'),
+
       ),
       body: Center(
         child: Container(
