@@ -23,7 +23,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _isLoading = false; // লোডিং স্টেট
 
   Future<void> _changePassword(String oldPassword, String newPassword) async {
-    final url = 'https://wbli.org/api/change-password'; // এখানে API URL দিন
+    final url = 'https://app.wbli.org/api/change-password'; // এখানে API URL দিন
 
     // টোকেন সংগ্রহ করা
     String? token = await UserSession.getToken();
@@ -78,52 +78,50 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       appBar: AppBar(
         title: Text('Change your password'),
       ),
-      body: Center(
-        child: Container(
-          width: screenWidth > 600 ? 600 : screenWidth,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildPasswordField(
-                    label: 'Old Password',
-                    controller: oldPasswordController,
-                    obscureText: _obscureOldPassword,
-                    toggleObscureText: () {
-                      setState(() {
-                        _obscureOldPassword = !_obscureOldPassword;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 16.0),
-                  _buildPasswordField(
-                    label: 'New password',
-                    controller: newPasswordController,
-                    obscureText: _obscureNewPassword,
-                    toggleObscureText: () {
-                      setState(() {
-                        _obscureNewPassword = !_obscureNewPassword;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 16.0),
-                  _buildPasswordField(
-                    label: 'Confirm Password',
-                    controller: confirmPasswordController,
-                    obscureText: _obscureConfirmPassword,
-                    toggleObscureText: () {
-                      setState(() {
-                        _obscureConfirmPassword = !_obscureConfirmPassword;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 24.0),
-                  _buildSaveButton(),
-                ],
-              ),
+      body: Container(
+        width: screenWidth > 600 ? 600 : screenWidth,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPasswordField(
+                  label: 'পূরাতন পাসওয়ার্ড',
+                  controller: oldPasswordController,
+                  obscureText: _obscureOldPassword,
+                  toggleObscureText: () {
+                    setState(() {
+                      _obscureOldPassword = !_obscureOldPassword;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                _buildPasswordField(
+                  label: 'নতুন পাসওয়ারড',
+                  controller: newPasswordController,
+                  obscureText: _obscureNewPassword,
+                  toggleObscureText: () {
+                    setState(() {
+                      _obscureNewPassword = !_obscureNewPassword;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                _buildPasswordField(
+                  label: 'কনফার্ম পাসওয়াররড',
+                  controller: confirmPasswordController,
+                  obscureText: _obscureConfirmPassword,
+                  toggleObscureText: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
+                ),
+                SizedBox(height: 24.0),
+                _buildSaveButton(),
+              ],
             ),
           ),
         ),
@@ -142,14 +140,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(color: Colors.white), // White color for label
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when enabled
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when focused
+        ),
         suffixIcon: IconButton(
           icon: Icon(
             obscureText ? Icons.visibility : Icons.visibility_off,
+            color: Colors.white, // White icon color
           ),
           onPressed: toggleObscureText,
         ),
       ),
+      style: TextStyle(color: Colors.white), // White text color
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'This field is required';
@@ -164,6 +173,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       },
     );
   }
+
 
   Widget _buildSaveButton() {
     return SizedBox(
@@ -184,7 +194,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ? CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
         )
-            : Text('Save'),
+            : Text('সেইভ'),
       ),
     );
   }

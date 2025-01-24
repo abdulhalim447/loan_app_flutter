@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? token = await UserSession.getToken();
     if (token != null) {
       final response = await http.get(
-        Uri.parse('https://wbli.org/api/index'),
+        Uri.parse('https://app.wbli.org/api/index'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -129,10 +129,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF002336),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Profile'),
+        title: Text('প্রোফাইল'),
 
       ),
       body: Center(
@@ -146,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     ProfileOption(
                       icon: FontAwesomeIcons.university,
-                      text: 'Personal Information',
+                      text: 'ব্যক্তিগত তথ্য',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -156,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.moneyBill,
-                      text: 'Bank Account',
+                      text: 'ব্যাংক একাউন্ট',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.infoCircle,
-                      text: 'About Me',
+                      text: 'আমার সম্পর্কে',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -176,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.plusCircle,
-                      text: 'Complain',
+                      text: 'অভিযোগ করুন',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -186,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.lock,
-                      text: 'Change Password',
+                      text: 'পাসওয়ার্ড পরিবর্তন করুন',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -196,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.shieldAlt,
-                      text: 'Terms and Condition',
+                      text: 'শর্তাবলী',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -206,7 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.warning,
-                      text: 'Privacy Policy',
+                      text: 'প্রাইভেসি পলিসি ',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -216,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.remove,
-                      text: 'Data Delete policy',
+                      text: 'ডাটা ডিলিট পলিসি',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -226,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.certificate,
-                      text: 'Loan Certificate',
+                      text: 'ঋণের সার্টিফিকেট',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -236,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.userLarge,
-                      text: 'Agreements',
+                      text: 'চুক্তি',
                       onTap: () {
                         Navigator.push(
                             context,
@@ -246,7 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileOption(
                       icon: FontAwesomeIcons.powerOff,
-                      text: 'Logout',
+                      text: 'লগ-আউট',
                       onTap: () {
                         _logout(context);
                       },
@@ -280,7 +280,7 @@ class ProfileHeader extends StatelessWidget {
           Icon(
             Icons.account_circle,
             size: 100,
-            color: Colors.black54,
+            color:Color(0xFF00839E),
           ),
           SizedBox(height: 10),
           Text(
@@ -288,13 +288,14 @@ class ProfileHeader extends StatelessWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              color: Colors.white
             ),
           ),
           Text(
             number,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey,
+              color: Colors.white,
             ),
           ),
         ],
@@ -315,11 +316,12 @@ class ProfileOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.black,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: ListTile(
-        leading: Icon(icon, color: Colors.grey[800]),
-        title: Text(text, style: TextStyle(fontSize: 16)),
-        trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+        leading: Icon(icon, color: Color(0xFF00839E)),
+        title: Text(text, style: TextStyle(fontSize: 16, color: Colors.white)),
+        trailing: Icon(Icons.arrow_forward_ios, color: Color(0xFF00839E)),
         onTap: onTap,
       ),
     );

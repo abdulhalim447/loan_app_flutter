@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String? token = await UserSession.getToken();
     if (token != null) {
       final response = await http.get(
-        Uri.parse('https://wbli.org/api/index'),
+        Uri.parse('https://app.wbli.org/api/index'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -104,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: Text('WORLD BANK DEVELOPMENT', style: TextStyle(fontSize: 18)),
+        backgroundColor: Color(0xFF002336),
+        title: Text('এশিয়ান ডেভেলপমেন্ট ব্যাংক', style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
       body: Center(
@@ -144,7 +144,7 @@ class BalanceSection extends StatelessWidget {
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.red, Colors.deepOrange],
+            colors: [Color(0xFF00839E), Colors.deepOrange],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -157,7 +157,7 @@ class BalanceSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Balance',
+                  'ব্যালেন্স',
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class BalanceSection extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  '₹ $balance',
+                  'ট $balance',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -182,22 +182,7 @@ class BalanceSection extends StatelessWidget {
               children: [
                 Icon(Icons.public, size: 48, color: Colors.white),
                 SizedBox(height: 8),
-                ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (builder) => WithdrawScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Withdraw',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
+
               ],
             ),
           ],
@@ -206,6 +191,8 @@ class BalanceSection extends StatelessWidget {
     );
   }
 }
+
+
 
 class SliderSection extends StatelessWidget {
   @override
@@ -239,16 +226,16 @@ class LoanApplicationSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.contact_mail_outlined, size: 54),
+              Icon(Icons.contact_mail_outlined, size: 54, color: Color(0xFF00839E),),
               SizedBox(height: 8),
               // Condition 1: Loan Status == '0' (No loan yet)
               if (loanStatus == '0') ...[
                 // If user is status '0' (Information not submitted)
                 if (status == '0') ...[
                   Text(
-                    'Submit your personal information first.',
+                    'প্রথমে ব্যাক্তিগত তথ্য দিন.',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: Colors.white),
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
@@ -261,22 +248,22 @@ class LoanApplicationSection extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color(0xFF00839E),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 12),
                       textStyle: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    child: const Text('Personal Information'),
+                    child: const Text('ব্যাক্তিগত তথ্য'),
                   ),
                 ]
                 // If user is status '1' (Information verified)
                 else if (status == '1') ...[
                   Text(
-                    'Your personal information has been submitted. Apply for a loan.',
+                    'আপনার ব্যক্তিগত তথ্য জমা দেওয়া হয়েছে। ঋণের জন্য আবেদন করুন।',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: Colors.white),
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
@@ -289,22 +276,22 @@ class LoanApplicationSection extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color(0xFF00839E),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 12),
                       textStyle: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    child: const Text('Apply For Loan'),
+                    child: const Text('লোনের জন্য আবেদন করুন'),
                   ),
                 ]
               ]
               // Condition 2: Loan Status == '1' (Loan application under processing)
               else if (loanStatus == '1') ...[
                 Text(
-                  'Your loan application has been completed, please wait. The loan will be passed/cancelled after verifying your information.',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                  'আপনার ঋণের আবেদন সম্পন্ন হয়েছে, অনুগ্রহ করে অপেক্ষা করুন। আপনার তথ্য যাচাই করার পর ঋণটি পাস/বাতিল করা হবে।',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal,color: Colors.white),
                 ),
                 SizedBox(height: 16),
                 // No button for loan status '1'
@@ -312,8 +299,8 @@ class LoanApplicationSection extends StatelessWidget {
               // Condition 3: Loan Status == '2' (Loan approved)
               else if (loanStatus == '2') ...[
                 Text(
-                  'Congratulations your loan has been approved successfully.',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                  'অভিনন্দন, আপনার ঋণ সফলভাবে অনুমোদিত হয়েছে।',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: Colors.white),
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
@@ -326,21 +313,21 @@ class LoanApplicationSection extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Color(0xFF00839E),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
                     textStyle: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  child: const Text('Withdraw'),
+                  child: const Text('উত্তোলন'),
                 ),
               ]
               // Condition 4: Loan Status == '3' (Ongoing loan)
               else if (loanStatus == '3') ...[
                 Text(
-                  'Congratulations! your loan application has been passed, Now you can withdraw your money.',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                  'অভিনন্দন! আপনার ঋণের আবেদন গৃহীত হয়েছে, এখন আপনি আপনার টাকা তুলতে পারবেন।',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal,color: Colors.white),
                 ),
                 SizedBox(height: 16),
                 // No button for ongoing loan status '3'
@@ -348,8 +335,8 @@ class LoanApplicationSection extends StatelessWidget {
               // Default Condition: If loan status is invalid
               else ...[
                 Text(
-                  'Invalid loan status.',
-                  style: TextStyle(color: Colors.red, fontSize: 16),
+                  'অবৈধ ঋণের অবস্থা।',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ]
             ],

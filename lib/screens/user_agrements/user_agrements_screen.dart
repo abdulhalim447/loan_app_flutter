@@ -5,7 +5,6 @@ import 'dart:convert'; // JSON ডাটা পার্স করার জন�
 import '../../auth/saved_login/user_session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class LoanDetailsScreen extends StatefulWidget {
   const LoanDetailsScreen({Key? key}) : super(key: key);
 
@@ -31,9 +30,6 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
     _fetchLoanData();
   }
 
-
-
-
 // ডেটা লোকাল স্টোরেজে সংরক্ষণ করার জন্য ফাংশন
   Future<void> saveLoanDataLocally(Map<String, dynamic> data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,7 +45,6 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
     }
     return null;
   }
-
 
   Future<void> _fetchLoanData() async {
     // টোকেন নিন
@@ -70,14 +65,12 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
 
     // API কল করার জন্য হেডার তৈরি
     final response = await http.get(
-      Uri.parse('https://wbli.org/api/aggrement'),
+      Uri.parse('https://app.wbli.org/api/aggrement'),
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
 
-
-    
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -109,8 +102,6 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -137,7 +128,11 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
                         monthlyInterestRate: monthlyInterestRate,
                         contactNumber: contactNumber,
                       )
-                    : Center(child: const Text('No active loan found')),
+                    : Center(
+                        child: const Text(
+                        'No active loan found',
+                        style: TextStyle(color: Colors.white),
+                      )),
                 // এই লাইনটি যুক্ত হয়েছে
 
                 const SizedBox(height: 20),
@@ -197,66 +192,77 @@ class LoanTableWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text('Borrower:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(borrowerName),
+            child: Text(
+              borrowerName,
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ]),
         TableRow(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text('Loan Time:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(loanTime),
+            child: Text(loanTime, style: TextStyle(color: Colors.white)),
           ),
         ]),
         TableRow(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text('Contact Number:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(contactNumber),
+            child: Text(contactNumber, style: TextStyle(color: Colors.white)),
           ),
         ]),
         TableRow(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text('Loan Amount:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(loanAmount),
+            child: Text(loanAmount, style: TextStyle(color: Colors.white)),
           ),
         ]),
         TableRow(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text('Loan Installments:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(loanInstallments),
+            child:
+                Text(loanInstallments, style: TextStyle(color: Colors.white)),
           ),
         ]),
         TableRow(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text('Monthly Interest Rate:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(monthlyInterestRate),
+            child: Text(monthlyInterestRate,
+                style: TextStyle(color: Colors.white)),
           ),
         ]),
       ],
@@ -285,26 +291,29 @@ class SignatureTableWidget extends StatelessWidget {
         TableRow(children: [
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Borrower Signature:'),
+            child: Text('Borrower Signature:',
+                style: TextStyle(color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.network(
               borrowerSignature, // Borrower's signature image URL
               height: 100,
+              color: Color(0xFF00839E),
             ),
           ),
         ]),
         TableRow(children: [
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Loan Stamp:'),
+            child: Text('Loan Stamp:', style: TextStyle(color: Colors.white)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.network(
               loanStamp, // Loan stamp image URL
               height: 100,
+              color: Color(0xFF00839E),
             ),
           ),
         ]),
@@ -324,41 +333,45 @@ class LoanTextDetailsWidget extends StatelessWidget {
         children: const [
           Text(
             'Payment Method:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'Option A: Automatic deduction by the system on the 10th of every month.\n'
-                'Option B: Transfer via electronic banking system; bank & Ewallet\n'
-                'Option C: Direct bank transaction & NEFT',
-          ),
+              'Option A: Automatic deduction by the system on the 10th of every month.\n'
+              'Option B: Transfer via electronic banking system; bank & Ewallet\n'
+              'Option C: Direct bank transaction & NEFT',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Warranty clause:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'The Reserve Bank of India has mandated savings for loans, requiring clients to accumulate savings to avail loans. '
-                'The clients\' deposited money will be credited to the wallet along with the loan amount. '
-                'After repayment of the loan, the accumulated savings will be returned to the clients. '
-                'The savings deposited by the clients for taking the loan will be recorded in the loan agreement form. '
-                'The company will be obliged to return the savings to the clients after repayment of the loan.',
-          ),
+              'The Reserve Bank of India has mandated savings for loans, requiring clients to accumulate savings to avail loans. '
+              'The clients\' deposited money will be credited to the wallet along with the loan amount. '
+              'After repayment of the loan, the accumulated savings will be returned to the clients. '
+              'The savings deposited by the clients for taking the loan will be recorded in the loan agreement form. '
+              'The company will be obliged to return the savings to the clients after repayment of the loan.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Prepayment:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'Borrower has the right to pay back the whole exceptional amount at any time. If Borrower pays before time, or if this loan is refinanced or replaced by a new note, '
-                'Lender will refund the unearned finance charge, figured by the Rule of 78—a commonly used formula for figuring rebates on installment loans.',
-          ),
+              'Borrower has the right to pay back the whole exceptional amount at any time. If Borrower pays before time, or if this loan is refinanced or replaced by a new note, '
+              'Lender will refund the unearned finance charge, figured by the Rule of 78—a commonly used formula for figuring rebates on installment loans.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Late Charge:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
@@ -367,79 +380,87 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 16),
           Text(
             'Security:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'To protect Lender, the loan company working online different from another bank that\'s why Party A does not require collateral for this loan. '
-                'Party A only requires the deposit in advance to verify the repayment ability of customers.',
-          ),
+              'To protect Lender, the loan company working online different from another bank that\'s why Party A does not require collateral for this loan. '
+              'Party A only requires the deposit in advance to verify the repayment ability of customers.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Wrong Information:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'If Party B provides wrong bank information or ID information, then Party A should ask for a deposit from Party B 20% of the loan amount to solve this problem. '
-                'This amount will be refunded to Party B along with the loan amount later.',
-          ),
+              'If Party B provides wrong bank information or ID information, then Party A should ask for a deposit from Party B 20% of the loan amount to solve this problem. '
+              'This amount will be refunded to Party B along with the loan amount later.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Liabilities:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'If Party B is involved in any kind of illegal activities such as gambling, money laundering, etc., then Party A can take legal action or Party B might pay the full loan amount in advance.',
-          ),
+              'If Party B is involved in any kind of illegal activities such as gambling, money laundering, etc., then Party A can take legal action or Party B might pay the full loan amount in advance.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Default:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'If for any reason Borrower does not succeed in making any payment on time, Borrower shall be in default. The Lender can then order instant payment of the entire remaining unpaid balance of this loan, without giving anyone further notices. '
-                'If Borrower has not paid the full amount of the loan when the final payment is due, the Lender will charge Borrower interest on the unpaid balance at 6% per year.',
-          ),
+              'If for any reason Borrower does not succeed in making any payment on time, Borrower shall be in default. The Lender can then order instant payment of the entire remaining unpaid balance of this loan, without giving anyone further notices. '
+              'If Borrower has not paid the full amount of the loan when the final payment is due, the Lender will charge Borrower interest on the unpaid balance at 6% per year.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Loan Cancellation:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'If Party B wants to cancel the loan after applying, then Party B is subject to pay 5% of the loan amount for loan cancellation. After cancellation, Party B does not need to pay any loan installment.',
-          ),
+              'If Party B wants to cancel the loan after applying, then Party B is subject to pay 5% of the loan amount for loan cancellation. After cancellation, Party B does not need to pay any loan installment.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Collection fees:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'If this note is placed with a legal representative for collection, then Borrower agrees to pay an attorney\'s fee of fifteen percent (15%) of the voluntary balance. This fee will be added to the unpaid balance of the loan.',
-          ),
+              'If this note is placed with a legal representative for collection, then Borrower agrees to pay an attorney\'s fee of fifteen percent (15%) of the voluntary balance. This fee will be added to the unpaid balance of the loan.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Rights & Obligations:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'The signed contract has a strong and valid legal force. All parties, both Party A and Party B, must follow all the rules and conditions contained in the contract agreement. '
-                'All parties to the contract will strictly carry out their obligations under the credit contract. Both parties are fully responsible for the contents of the agreed contract.',
-          ),
+              'The signed contract has a strong and valid legal force. All parties, both Party A and Party B, must follow all the rules and conditions contained in the contract agreement. '
+              'All parties to the contract will strictly carry out their obligations under the credit contract. Both parties are fully responsible for the contents of the agreed contract.',
+              style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
             'Co-borrowers:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
-            'Any co-borrowers signing this agreement agree to be likewise accountable with the borrower for this loan.',
-          ),
+              'Any co-borrowers signing this agreement agree to be likewise accountable with the borrower for this loan.',
+              style: TextStyle(color: Colors.white)),
         ],
       ),
     );

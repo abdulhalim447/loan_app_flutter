@@ -70,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
     try {
       // Registration request
       final registerResponse = await http.post(
-        Uri.parse('https://wbli.org/api/register'),
+        Uri.parse('https://app.wbli.org/api/register'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'name': name,
@@ -88,7 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
         if (registerData['message'] == 'User registered successfully!') {
           // Automatically login the user
           final loginResponse = await http.post(
-            Uri.parse('https://wbli.org/api/login'),
+            Uri.parse('https://app.wbli.org/api/login'),
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',

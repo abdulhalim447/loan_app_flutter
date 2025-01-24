@@ -50,8 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                Image.network(
-                  'https://yt3.googleusercontent.com/ytc/AIdro_k0v2FHYr_czhsvCDN6LNxuaWY1c0osMWV2ZOSmsZC8GNk=s900-c-k-c0x00ffffff-no-rj',
+                Image.asset(
+                  'assets/icons/app_logo.png',
                   height: 100,
                   width: 100,
                 ),

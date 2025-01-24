@@ -33,6 +33,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final bool isMobile = screenWidth < 600;
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: _pages[_selectedIndex], // Display the selected screen
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(
@@ -40,8 +41,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         child: Container(
           width: isMobile ? double.infinity : 600,
           child: BottomNavigationBar(
-            backgroundColor: Colors.purple,
-            selectedItemColor: Colors.red,
+            backgroundColor: Color(0xFF002336),
+            selectedItemColor: Color(0xFF00839E),
             unselectedItemColor: Colors.black,
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
@@ -52,7 +53,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.wallet),
-                label: 'Card',
+                label: 'Wallet',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.phone),

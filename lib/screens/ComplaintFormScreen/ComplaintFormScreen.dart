@@ -30,7 +30,7 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
       return;
     }
 
-    final String apiUrl = 'https://wbli.org/api/complaint';
+    final String apiUrl = 'https://app.wbli.org/api/complaint';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -75,27 +75,26 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
       appBar: AppBar(
         title: Text('Complain'),
       ),
-      body: Center(
-        child: Container(
-          width: screenWidth > 600 ? 600 : screenWidth,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTextField('Your number', yourNameController),
-                  SizedBox(height: 8.0),
-                  _buildTextField('Website', websiteController),
-                  SizedBox(height: 8.0),
-                  _buildTextField('Service number', providerNameController),
-                  SizedBox(height: 8.0),
-                  _buildTextField('Loss details', totalDamageController),
-                  SizedBox(height: 16.0),
-                  _buildSubmitButton(),
-                ],
-              ),
+      body: Container(
+        width: screenWidth > 600 ? 600 : screenWidth,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTextField('আপনার নম্বর', yourNameController),
+                SizedBox(height: 8.0),
+                _buildTextField('ওয়েবসাইট', websiteController),
+                SizedBox(height: 8.0),
+                _buildTextField('সার্ভিস নম্বর', providerNameController),
+                SizedBox(height: 8.0),
+                _buildTextField('ক্ষতির বিবরণ', totalDamageController),
+                SizedBox(height: 16.0),
+                _buildSubmitButton(),
+
+              ],
             ),
           ),
         ),
@@ -108,11 +107,21 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(color: Colors.white), // White color for label
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when enabled
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when focused
+        ),
       ),
+      style: TextStyle(color: Colors.white), // White text color
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Fill up all fields';
+          return 'Fill up all fields'; // Validation message
         }
         return null;
       },
@@ -129,7 +138,7 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
             _submitComplaint();
           }
         },
-        child: Text('Submit'),
+        child: Text('সাবমিট'),
       ),
     );
   }

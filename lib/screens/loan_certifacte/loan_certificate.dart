@@ -57,12 +57,12 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
 
   // Fetch Data from API
   Future<void> fetchData() async {
-    final String url = 'https://wbli.org/api/certificate';
+    final String url = 'https://app.wbli.org/api/certificate';
 
     try {
       // Retrieve token
       String? token = await UserSession.getToken();
-      if (token == null) throw Exception('No token found. Please log in again.');
+      if (token == null) throw Exception('কোনো টোকেন পাওয়া যায়নি। দয়া করে আবার লগইন করুন।.');
 
       // লোকাল ডাটা চেক করা
       Map<String, dynamic>? localData = await getLocalData();
@@ -129,7 +129,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Loan Certificate'),
+        title: Text('লোন সার্টিফিকেট'),
       ),
       body: Center(
         child: Container(
@@ -150,7 +150,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
 
                   // Bank Header
                   Text(
-                    'World Bank International Loan Service',
+                    'Asian Development bank Loan Service',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(height: 10),
@@ -187,7 +187,8 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                             // app_icon,
                             "assets/icons/loan_watermark.png",
                             fit: BoxFit.fitWidth, // Adjusts the image width
-                            height: 170, // Adjust the height if needed
+                            height: 170,
+                            color: Color(0xFF00839E),// Adjust the height if needed
                           ),
                         ),
                       ),
@@ -198,22 +199,24 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                         child: Text.rich(
                           TextSpan(
                             text: 'Dear Sir ', // Regular text
-                            style: TextStyle(fontSize: 16, color: Colors.black),
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                             children: [
                               TextSpan(
                                 text: '$name', // Bold name
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
                               TextSpan(
                                 text: ', Your loan has been approved. The World Bank has registered your proposed loan amount of ',
+                                style: TextStyle(fontSize: 16, color: Colors.white),
                               ),
                               TextSpan(
                                 text: '$loanBalance', // Bold loan amount
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
                               TextSpan(
                                 text:
-                                ' Rs. for the purpose of evaluating the Poverty Alleviation Microfinance Project for Business Restructuring and Development. Agriculture business global practice, India Asia Region.',
+                                ' tk. for the purpose of evaluating the Poverty Alleviation Microfinance Project for Business Restructuring and Development. Agriculture business global practice, India Asia Region.',
+                                style: TextStyle(fontSize: 16, color: Colors.white),
                               ),
                             ],
                           ),
@@ -231,6 +234,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                     style: TextStyle(
                       fontSize: 16,
                       fontStyle: FontStyle.italic,
+                      color: Colors.white
                     ),
                     textAlign: TextAlign.start,
                   ),
@@ -243,6 +247,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                       child: Image.network(
                         stampUrl,
                         height: 120,
+                        color: Color(0xFF00839E),
                       ),
                     ),
 
@@ -256,6 +261,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                         child: Image.network(
                           signatureUrl,
                           height: 30,
+                          color: Color(0xFF00839E),
                         ),
                       ),
                     ),
@@ -267,7 +273,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       time,
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
+                      style: TextStyle(fontSize: 14, color: Colors.white),
                       textAlign: TextAlign.start,
                     ),
                   ),
@@ -277,8 +283,9 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                   // Disclaimer
                   Text(
                     'This document has restricted distribution and may be used by recipients only for their official duties. Unauthorized use is prohibited.',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.white),
                     textAlign: TextAlign.justify,
+
                   ),
                 ],
               ),
@@ -287,7 +294,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
               : Center(
             child: Text(
               'You do not have any loan application approved.',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
             ),
           ),
         ),

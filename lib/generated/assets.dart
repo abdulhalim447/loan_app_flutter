@@ -2,11 +2,11 @@
 class Assets {
   Assets._();
 
-  static const String apkWorldBankLoan = 'assets/apk/world_bank_loan.apk';
   static const String assetsImagesCreditCard = 'assets/images/credit_card.png';
   static const String iconsIconWhatsapp = 'assets/icons/icon_whatsapp.svg';
-  static const String iconsImg = 'assets/icons/loan_watermark.png';
+  static const String iconsImg = 'assets/icons/app_logo.png';
   static const String iconsLoanIcon = 'assets/icons/loan_icon.png';
+  static const String iconsLoanWatermark = 'assets/icons/loan_watermark.png';
   static const String iconsTelegram = 'assets/icons/telegram.svg';
   static const String iconsWorker = 'assets/icons/worker.png';
   static const String imagesCreditCard = 'assets/images/credit_card.png';

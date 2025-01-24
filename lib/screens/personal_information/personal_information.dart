@@ -50,7 +50,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
   // get Personal Information ==============================
   Future<void> _checkStatus() async {
-    var uri = Uri.parse('https://wbli.org/api/getverified');
+    var uri = Uri.parse('https://app.wbli.org/api/getverified');
     String? token = await UserSession.getToken();
 
     try {
@@ -127,7 +127,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         _isLoading = true;
       });
 
-      var uri = Uri.parse('https://wbli.org/api/verify');
+      var uri = Uri.parse('https://app.wbli.org/api/verify');
       String? token = await UserSession.getToken();
 
       // Convert signature to image
@@ -265,7 +265,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal Information'),
+        title: Text('ব্যাক্তিগত'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -274,46 +274,46 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Your Information'),
-              _buildTextField(' Name', nameController),
+              _buildSectionTitle('আপনার তথ্য'),
+              _buildTextField(' নাম', nameController),
               SizedBox(height: 8.0),
-              _buildTextField('Current Address', currentAddressController),
+              _buildTextField('বর্তমান ঠিকানা', currentAddressController),
               SizedBox(height: 8.0),
-              _buildTextField('Permanent Address', permanentAddressController),
+              _buildTextField('স্থায়ী ঠিকানা', permanentAddressController),
               SizedBox(height: 8.0),
               //_buildTextField('Your Mobile Number', phoneController),
               SizedBox(height: 8.0),
-              _buildTextField('Profession', professionController),
+              _buildTextField('পেশা', professionController),
               SizedBox(height: 8.0),
-              _buildTextField('Monthly Income', monthyIncomController),
+              _buildTextField('মাসিক আয়', monthyIncomController),
               SizedBox(height: 8.0),
-              _buildTextField('Purpose of Loan', loanPurposeController),
+              _buildTextField('ঋণের উদ্দেশ্য', loanPurposeController),
               SizedBox(height: 16.0),
-              _buildSectionTitle('Nominee Information'),
-              _buildTextField('Nominee Name', nomineeNameController),
+              _buildSectionTitle('মনোনীত ব্যক্তির তথ্য'),
+              _buildTextField('মনোনীত ব্যক্তির নাম', nomineeNameController),
               SizedBox(height: 8.0),
-              _buildTextField('Relation', nomineeRelationController),
+              _buildTextField('সম্পর্ক', nomineeRelationController),
               SizedBox(height: 8.0),
-              _buildTextField('Nominee Mobile Number', nomineePhoneController),
+              _buildTextField('মনোনীত ব্যক্তির মোবাইল নম্বর', nomineePhoneController),
               SizedBox(height: 16.0),
-              _buildSectionTitle('Image Collection'),
+              _buildSectionTitle('ছবির সংগ্রহ'),
               SizedBox(height: 8.0),
-              _buildTextField('NID Name', nidNameController),
+              _buildTextField('জাতীয় পরিচয়পত্রের নাম', nidNameController),
               SizedBox(height: 8.0),
-              _buildTextField('NID Number', idController),
+              _buildTextField('জাতীয় পরিচয়পত্র নম্বর', idController),
               SizedBox(height: 8.0),
 
 
-              _buildImageUploadField('Front Side of Your ID Card',
+              _buildImageUploadField('আপনার আইডি কার্ডের সামনের দিক',
                       () => _pickImage('front'), frontIdImage),
-              _buildImageUploadField('Back Side of Your ID Card',
+              _buildImageUploadField('আপনার আইডি কার্ডের পিছনের দিক',
                       () => _pickImage('back'), backIdImage),
-              _buildImageUploadField('Selfie with Your ID Card',
+              _buildImageUploadField('আপনার আইডি কার্ডের সাথে সেলফি',
                       () => _pickImage('selfie'), selfieWithIdImage),
 
 
               SizedBox(height: 16.0),
-              _buildSignatureField('Sign in the box below'),
+              _buildSignatureField('নিচের বাক্সে সাইন ইন করুন'),
               SizedBox(height: 16.0),
               if (_isLoading) Center(child: CircularProgressIndicator()),
               SizedBox(height: 16.0),
@@ -330,7 +330,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
@@ -340,17 +340,32 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(color: Colors.white), // White label text
+        hintText: 'Enter your $label', // Optional hint text
+        hintStyle: TextStyle(color: Colors.white70), // Optional hint text color
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when enabled
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when focused
+        ),
       ),
+      style: TextStyle(color: Colors.white), // White text color
       enabled: !_isFormDisabled, // Disable the field if form is disabled
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please fill out this field';
+          return 'সব ঘরট পূরণ করুন।';
         }
         return null;
       },
     );
   }
+
+
+
 
   Widget _buildImageUploadField(
       String label, VoidCallback onTap, XFile? imageFile) {
@@ -405,7 +420,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             onPressed: () {
               _signatureController.clear();
             },
-            child: Text('Clear Signature'),
+            child: Text('স্বাক্ষর মুছুন', style: TextStyle(color: Colors.white),),
           ),
       ],
     );
@@ -417,7 +432,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       child: ElevatedButton(
         onPressed: _isFormDisabled ? null : _submitForm,
         // Disable button if form is disabled
-        child: Text('Save'),
+        child: Text('সেইভ'),
       ),
     );
   }
@@ -427,13 +442,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Choose an option'),
+          title: Text('একটি  বেছে নিন'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
                 leading: Icon(Icons.camera_alt),
-                title: Text('Take a Photo'),
+                title: Text('ছবি তুলুন'),
                 onTap: () async {
                   final pickedFile =
                   await _picker.pickImage(source: ImageSource.camera);
@@ -442,7 +457,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.photo_library),
-                title: Text('Select from Gallery'),
+                title: Text('গ্যালারি থেকে নির্বাচন করুন'),
                 onTap: () async {
                   final pickedFile =
                   await _picker.pickImage(source: ImageSource.gallery);

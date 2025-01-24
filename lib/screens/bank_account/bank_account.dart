@@ -37,7 +37,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       return;
     }
 
-    final String apiUrl = 'https://wbli.org/api/getbank';
+    final String apiUrl = 'https://app.wbli.org/api/getbank';
 
     final response = await http.get(
       Uri.parse(apiUrl),
@@ -91,7 +91,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       return;
     }
 
-    final String apiUrl = 'https://wbli.org/api/savebank';
+    final String apiUrl = 'https://app.wbli.org/api/savebank';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -141,37 +141,36 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bank Account'),
+        title: Text('ব্যাক একাউন্ট'),
       ),
-      body: Center(
-        child: Container(
-          width: screenWidth > 600 ? 600 : screenWidth,
-          child: SingleChildScrollView(
-            child: isLoading
-                ? Center(
-              child: CircularProgressIndicator(), // Show loading spinner
-            )
-                : SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionTitle('Your bank details'),
-                    SizedBox(height: 16.0),
-                    _buildTextField('Account Holder Name', accountHolderController),
-                    SizedBox(height: 8.0),
-                    _buildTextField('Bank Name', bankNameController),
-                    SizedBox(height: 8.0),
-                    _buildTextField('Account Number', accountNumberController,
-                        keyboardType: TextInputType.number),
-                    SizedBox(height: 8.0),
-                    _buildTextField('IFC Code', ifcCode),
-                    SizedBox(height: 16.0),
-                    _buildSaveButton(),
-                  ],
-                ),
+      body: Container(
+        width: screenWidth > 600 ? 600 : screenWidth,
+        child: SingleChildScrollView(
+          child: isLoading
+              ? Center(
+            child: CircularProgressIndicator(), // Show loading spinner
+          )
+              : SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionTitle('আপনার ব্যাংক তথ্য'),
+                  SizedBox(height: 16.0),
+                  _buildTextField('অ্যাকাউন্ট হোল্ডারের নাম', accountHolderController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('ব্যাংকের নাম', bankNameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('অ্যাকাউন্ট নম্বর', accountNumberController,
+                      keyboardType: TextInputType.number),
+                  SizedBox(height: 8.0),
+                  _buildTextField('আইএফসি কোড', ifcCode),
+                  SizedBox(height: 16.0),
+                  _buildSaveButton(),
+
+                ],
               ),
             ),
           ),
@@ -186,22 +185,35 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
 
-  // TextField Widget
-  Widget _buildTextField(String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text}) {
+
+  Widget _buildTextField(
+      String label,
+      TextEditingController controller, {
+        TextInputType keyboardType = TextInputType.text,
+      }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       enabled: isEditable, // Set field editable based on bankStatus
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(color: Colors.white), // White color for label
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when enabled
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when focused
+        ),
       ),
+      style: TextStyle(color: Colors.white), // White text color
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'This field is required';
@@ -223,7 +235,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
           }
         }
             : null, // Disable button if not editable
-        child: Text('Save'),
+        child: Text('সেইভ'),
       ),
     );
   }

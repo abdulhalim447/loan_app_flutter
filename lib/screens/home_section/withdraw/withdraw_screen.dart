@@ -92,8 +92,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       fee = prefs.getString('fee') ?? "0";
       message = prefs.getString('message') ?? "Not provided";
       ifc = prefs.getString('ifc') ?? "N/A";
-      adminBankName = prefs.getString('adminBankName') ?? "N/A";
-      adminAccountName = prefs.getString('adminAccountName') ?? "N/A";
+      adminBankName = prefs.getString('bkash') ?? "N/A";
+      adminAccountName = prefs.getString('nagad') ?? "N/A";
       adminAccountNumber = prefs.getString('adminAccountNumber') ?? "N/A";
       adminIfc = prefs.getString('adminIfc') ?? "N/A";
       adminUpi = prefs.getString('adminUpi') ?? "N/A";
@@ -105,7 +105,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
     if (token != null) {
       final response = await http.get(
-        Uri.parse("https://wbli.org/api/method"),
+        Uri.parse("https://app.wbli.org/api/method"),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -125,9 +125,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               data['userBankInfo']['message'] ?? "Message Not provided";
 
           String newAdminBankName =
-              data['adminBankInfo']['adminBankName'] ?? "N/A";
+              data['adminBankInfo']['bkash'] ?? "N/A";
           String newAdminAccountNumber =
-              data['adminBankInfo']['adminAccountNumber'] ?? "N/A";
+              data['adminBankInfo']['nagad'] ?? "N/A";
           String newAdminIfc = data['adminBankInfo']['adminIfc'] ?? "N/A";
           String newAdminUpi = data['adminBankInfo']['adminUpi'] ?? "N/A";
           String newAdminAccountName =
@@ -208,23 +208,23 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           child: ListView(
             padding: EdgeInsets.all(16),
             children: [
-              BalanceSection(balance: balance, loan: loan),
-              SizedBox(height: 8),
-              Text('Details', style: TextStyle(color: Colors.black)),
-              BankDetails(
+             // BalanceSection(balance: balance, loan: loan),
+              //SizedBox(height: 8),
+              Text('Details', style: TextStyle(color: Colors.white)),
+             /* BankDetails(
                 bankName: bankName,
                 account: account,
                 bankUser: bankUser,
                 ifc_code: ifc,
-              ),
-              NoteSection(message: message),
+              ),*/
               AdminBankDetailsSection(
                 bankName: adminBankName,
                 accountNumber: adminAccountNumber,
-                ifc: adminIfc,
+             /*   ifc: adminIfc,
                 upi: adminUpi,
-                adminAccountName: adminAccountName,
+                adminAccountName: adminAccountName,*/
               ),
+              NoteSection(message: message),
               TakaSection(fee: fee),
               TransactionScreenshot(
                 imagePath: imagePath,
@@ -419,16 +419,16 @@ class userDetailRow extends StatelessWidget {
 class AdminBankDetailsSection extends StatelessWidget {
   final String? bankName;
   final String? accountNumber;
-  final String? ifc;
+/*  final String? ifc;
   final String? upi;
-  final String? adminAccountName;
+  final String? adminAccountName;*/
 
   AdminBankDetailsSection(
       {this.bankName,
       this.accountNumber,
-      this.ifc,
+   /*   this.ifc,
       this.upi,
-      required this.adminAccountName});
+      required this.adminAccountName*/});
 
   @override
   Widget build(BuildContext context) {
@@ -447,23 +447,12 @@ class AdminBankDetailsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DetailRow(label: "UPI", value: upi ?? "Not Provided"),
-          SizedBox(
-            height: 10,
-          ),
-          Divider(
-            height: 2,
-            color: Colors.black,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          DetailRow(label: "Bank Name", value: bankName ?? "Not Provided"),
+
+          DetailRow(label: "বিকাশ", value: bankName ?? "Not Provided"),
+
           DetailRow(
-              label: "Holder Name", value: adminAccountName ?? "Not Provided"),
-          DetailRow(
-              label: "Account Number", value: accountNumber ?? "Not Provided"),
-          DetailRow(label: "IFSC Code", value: ifc ?? "Not Provided"),
+              label: "নগদ", value: accountNumber ?? "Not Provided"),
+
         ],
       ),
     );
@@ -585,7 +574,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
     });
 
     try {
-      var uri = Uri.parse("https://wbli.org/api/recharge");
+      var uri = Uri.parse("https://app.wbli.org/api/recharge");
       var request = http.MultipartRequest('POST', uri);
 
       // Attach image file
@@ -655,7 +644,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
             child: widget.status != 1 && _selectedImage == null
                 ? Center(
                     child: Text(
-                      "Tap to select an image",
+                      "একটি ছবি নির্বাচন করতে ট্যাপ করুন",
                       style: TextStyle(color: Colors.grey, fontSize: 16),
                     ),
                   )
@@ -681,7 +670,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
                       ),
                     )
                   : Text(
-                      "Submit Screenshot",
+                      "স্ক্রিনশট জমা দিন",
                       style: TextStyle(color: Colors.white),
                     ),
             ),
@@ -696,7 +685,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
     if (widget.status == 1 && widget.imagePath != null) {
       return DecorationImage(
         image: NetworkImage(
-            "https://wbli.org/storage/uploads/recharge/${widget.imagePath}"),
+            "https://app.wbli.org/storage/uploads/recharge/${widget.imagePath}"),
         fit: BoxFit.cover,
       );
     } else if (_selectedImage != null) {

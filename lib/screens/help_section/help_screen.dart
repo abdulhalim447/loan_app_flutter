@@ -44,7 +44,7 @@ class _ContactScreenState extends State<ContactScreen> {
     String? token = await UserSession.getToken();
     if (token != null) {
       final response = await http.get(
-        Uri.parse("https://wbli.org/api/support"),
+        Uri.parse("https://app.wbli.org/api/support"),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -104,23 +104,25 @@ class _ContactScreenState extends State<ContactScreen> {
                   Icon(
                     Icons.support_agent,
                     size: isMobile ? 80 : 100,
-                    color: Colors.orange,
+                    color: Color(0xFF00839E),
                   ),
                   SizedBox(height: isMobile ? 12 : 16),
                   Text(
-                    "You can contact us through any of the methods below or make an appointment to visit the office directly.",
+                    "আপনি নীচের যেকোনো পদ্ধতিতে আমাদের সাথে যোগাযোগ করতে পারেন অথবা সরাসরি অফিসে আসার জন্য অ্যাপয়েন্টমেন্ট নিতে পারেন।",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: isMobile ? 14 : 16,
+                      color: Colors.white
+
                     ),
                   ),
                   SizedBox(height: isMobile ? 12 : 16),
                   Text(
-                    "The World Bank, No 11, Taramani Link Rd, Tharamani, Chennai, Tamil Nadu 600113, India",
+                    "ঠিকানা: সৈয়দ মাহবুব মোর্শেদ রোড, প্লট ই-৩১, শেরেবাংলা নগর, ঢাকা ১২০৭।",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: isMobile ? 12 : 14,
-                      color: Colors.grey[700],
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(height: isMobile ? 16 : 20),
@@ -130,7 +132,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         ContactOption(
                           icon: FontAwesomeIcons.whatsapp,
                           color: Colors.green,
-                          title: "Contact via WhatsApp",
+                          title: "হোয়াটসঅ্যাপের মাধ্যমে যোগাযোগ করুন",
                           contact: "whatsappContact!",
                           onTap: () => _launchURL("https://wa.me/$whatsappContact"),
                           isMobile: isMobile,
@@ -138,7 +140,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         ContactOption(
                           icon: FontAwesomeIcons.telegram,
                           color: Colors.blueAccent,
-                          title: "Contact via Telegram",
+                          title: "টেলিগ্রামের মাধ্যমে যোগাযোগ করুন",
                           contact: "telegramContact!",
                           onTap: () => _launchURL("https://t.me/$telegramContact"),
                           isMobile: isMobile,
@@ -181,7 +183,7 @@ class ContactOption extends StatelessWidget {
       padding: EdgeInsets.all(isMobile ? 10 : 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.grey[100],
+        color: Colors.black,
       ),
       child: Row(
         children: [
@@ -196,20 +198,22 @@ class ContactOption extends StatelessWidget {
                   style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white
                   ),
                 ),
                 Text(
                   contact,
                   style: TextStyle(
                     fontSize: isMobile ? 12 : 14,
-                    color: Colors.black87,
+                    color: Colors.white,
+
                   ),
                 ),
               ],
             ),
           ),
           IconButton(
-            icon: Icon(Icons.launch, size: isMobile ? 20 : 24),
+            icon: Icon(Icons.launch, size: isMobile ? 20 : 24, color: Color(0xFF00839E),),
             onPressed: onTap,
           ),
         ],

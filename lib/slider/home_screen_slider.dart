@@ -50,7 +50,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
       }
 
       final response = await http.get(
-        Uri.parse('https://wbli.org/api/slides'),
+        Uri.parse('https://app.wbli.org/api/slides'),
         headers: {
           'Authorization': 'Bearer $token',
         },

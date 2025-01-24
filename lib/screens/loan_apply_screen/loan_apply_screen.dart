@@ -52,7 +52,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
       return;
     }
 
-    final apiUrl = 'https://wbli.org/api/loans'; 
+    final apiUrl = 'https://app.wbli.org/api/loans'; 
     final loanData = {
       'amount': selectedLoanAmount.toString(),
       'interest_rate': interestRate.toString(),
@@ -95,8 +95,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome to World Bank App'),
-        backgroundColor: Colors.red,
+        title: Text('এশিয়ান ডেভেলপমেন্ট ব্যাংক'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -124,9 +123,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                 selectedLoanAmount = 0; // Reset selection
                               }),
                               child: Chip(
-                                label: Text('$term month'),
+                                label: Text('$term মাস'),
                                 backgroundColor: selectedLoanTerm == term
-                                    ? Colors.red
+                                    ? Color(0xFF002336)
                                     : Colors.grey[300],
                                 labelStyle: TextStyle(
                                     color: selectedLoanTerm == term
@@ -166,7 +165,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                               padding: EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color:
-                                    isSelected ? Colors.red : Colors.grey[100],
+                                    isSelected ? Color(0xFF00839E) : Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
@@ -190,7 +189,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '₹${installment.toStringAsFixed(2)} / $selectedLoanTerm month',
+                                    '₹${installment.toStringAsFixed(2)} / $selectedLoanTerm মাস',
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: isSelected
@@ -215,12 +214,12 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                 ? submitLoanApplication
                                 : null, // সিলেক্ট করা না হলে বাটন ডিজেবল
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
+                              backgroundColor:Color(0xFF00839E),
                               padding: EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
                             ),
-                            child: Text('Submit',
+                            child: Text('সাবমিট',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18)),
                           ),

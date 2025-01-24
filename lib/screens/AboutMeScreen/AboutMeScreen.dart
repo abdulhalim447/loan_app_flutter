@@ -36,7 +36,7 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse("https://wbli.org/api/about"),
+        Uri.parse("https://app.wbli.org/api/about"),
         headers: headers,
       );
 
@@ -76,7 +76,7 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
       body: Center(
         child: isLoading
             ? const CircularProgressIndicator()  // Show loading spinner while fetching
-            : Text(aboutText),
+            : Text(aboutText, style: TextStyle(color: Colors.white),),
       ),
     );
   }

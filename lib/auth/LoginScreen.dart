@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://wbli.org/api/login'),
+        Uri.parse('https://app.wbli.org/api/login'),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
