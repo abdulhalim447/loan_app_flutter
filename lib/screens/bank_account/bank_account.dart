@@ -141,7 +141,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('ব্যাক একাউন্ট'),
+        title: Text('ব্যাংক একাউন্ট তথ্য'),
       ),
       body: Container(
         width: screenWidth > 600 ? 600 : screenWidth,
@@ -157,7 +157,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('আপনার ব্যাংক তথ্য'),
+                  _buildSectionTitle('ব্যাংক একাউন্ট তথ্য'),
                   SizedBox(height: 16.0),
                   _buildTextField('অ্যাকাউন্ট হোল্ডারের নাম', accountHolderController),
                   SizedBox(height: 8.0),
@@ -166,7 +166,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                   _buildTextField('অ্যাকাউন্ট নম্বর', accountNumberController,
                       keyboardType: TextInputType.number),
                   SizedBox(height: 8.0),
-                  _buildTextField('আইএফসি কোড', ifcCode),
+                  _buildTextField('শাখা', ifcCode),
                   SizedBox(height: 16.0),
                   _buildSaveButton(),
 
@@ -212,6 +212,9 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white), // White border when focused
         ),
+        disabledBorder:  OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // White border when focused
+        ),
       ),
       style: TextStyle(color: Colors.white), // White text color
       validator: (value) {
@@ -235,7 +238,8 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
           }
         }
             : null, // Disable button if not editable
-        child: Text('সেইভ'),
+        child: Text('জমা দিন'),
+
       ),
     );
   }

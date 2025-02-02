@@ -17,11 +17,11 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
   bool passwordVisible = false;
   bool confirmPasswordVisible = false;
   bool isLoading = false; // New variable to manage loading state
-  String countryCode = "+91"; // Default country code
+  String countryCode = "+880"; // Default country code
 
   @override
   void initState() {
@@ -41,8 +41,6 @@ class _SignupScreenState extends State<SignupScreen> {
       confirmPasswordVisible = !confirmPasswordVisible;
     });
   }
-
-
 
   Future<void> _signUp() async {
     final String name = nameController.text.trim();
@@ -83,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
       if (registerResponse.statusCode == 201) {
         final Map<String, dynamic> registerData =
-            json.decode(registerResponse.body);
+        json.decode(registerResponse.body);
 
         if (registerData['message'] == 'User registered successfully!') {
           // Automatically login the user
@@ -106,7 +104,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
           if (loginResponse.statusCode == 200) {
             final Map<String, dynamic> loginData =
-                json.decode(loginResponse.body);
+            json.decode(loginResponse.body);
 
             if (loginData['success'] != null && loginData['success']) {
               // Save session
@@ -117,9 +115,9 @@ class _SignupScreenState extends State<SignupScreen> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => MainNavigationScreen()),
-                    (Route<dynamic> route) => false, // This removes all previous routes
+                    (Route<dynamic> route) =>
+                false, // This removes all previous routes
               );
-
             } else {
               _showErrorDialog(loginData['message'] ?? 'Login failed');
             }
@@ -149,23 +147,27 @@ class _SignupScreenState extends State<SignupScreen> {
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-            child: Text('OK'),
+      builder: (ctx) =>
+          AlertDialog(
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -184,24 +186,24 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 SizedBox(height: 80),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.public,
-                      size: screenWidth > 600 ? 100 : 80,
-                      // স্ক্রিন সাইজ অনুযায়ী আইকনের আকার পরিবর্তন
-                      color: Colors.blue,
+                    Image.asset(
+                      "assets/icons/app_logo.png",
+                      height: 120,
+                      width: 120,
                     ),
                     Text(
-                      'World Bank Development',
+                      'Asian Development Bank',
                       style: TextStyle(
-                        fontSize: screenWidth > 600 ? 28 : 24,
-                        // স্ক্রিন সাইজ অনুযায়ী টেক্সট সাইজ
+                        fontSize: screenWidth > 600 ? 28 : 20,
+                        // স্ক্রিন সাইজ অনুযায়ী টেক্সট সাইজ =====================
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                       ),
                     ),
                     Text(
-                      'Micro Finance',
+                      "Microfinance",
                       style: TextStyle(
                         fontSize: screenWidth > 600 ? 18 : 16,
                         color: Colors.blue,
@@ -213,7 +215,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 TextField(
                   controller: nameController,
                   decoration: InputDecoration(
-                    labelText: 'Name',
+                    labelText: 'নাম',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -231,11 +233,11 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: CountryCodePicker(
                         onChanged: (country) {
                           setState(() {
-                            countryCode = country.dialCode ?? "+91";
+                            countryCode = country.dialCode ?? "+880";
                           });
                         },
-                        initialSelection: 'IN',
-                        favorite: ['+91', 'IN'],
+                        initialSelection: 'BD',
+                        favorite: ['+880', 'BD'],
                         showCountryOnly: false,
                         showOnlyCountryWhenClosed: false,
                         alignLeft: false,
@@ -247,7 +249,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
-                          labelText: 'Phone',
+                          labelText: 'মোবাইল নম্বর',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -264,7 +266,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   keyboardType: TextInputType.text,
                   // Keep this as text input for the password
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'পাসওয়ার্ড',
                     suffixIcon: IconButton(
                       icon: Icon(
                         passwordVisible
@@ -277,21 +279,21 @@ class _SignupScreenState extends State<SignupScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     errorText: passwordController.text.length != 6 &&
-                            passwordController.text.isNotEmpty
-                        ? 'Password must be 6 digits'
+                        passwordController.text.isNotEmpty
+                        ? 'পাসওয়ার্ড অবশ্যই ৬ ডিজিটের হতে হবে'
                         : null, // Display error if password length is not 6 digits
                   ),
                 ),
 
                 SizedBox(height: 20),
 
-// Confirm Password Field with validation
+                // Confirm Password Field with validation
                 TextField(
                   controller: confirmPasswordController,
                   obscureText: !confirmPasswordVisible,
                   keyboardType: TextInputType.text, // Keep this as text input
                   decoration: InputDecoration(
-                    labelText: 'Confirm Password',
+                    labelText: 'পূণরায়  একই পাসওয়ার্ড দিন',
                     suffixIcon: IconButton(
                       icon: Icon(
                         confirmPasswordVisible
@@ -299,13 +301,13 @@ class _SignupScreenState extends State<SignupScreen> {
                             : Icons.visibility_off,
                       ),
                       onPressed:
-                          toggleConfirmPasswordVisibility, // Toggle visibility
+                      toggleConfirmPasswordVisibility, // Toggle visibility
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     errorText:
-                        _confirmPasswordError(), // Show error if passwords don't match
+                    _confirmPasswordError(), // Show error if passwords don't match
                   ),
                 ),
 
@@ -323,13 +325,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     child: isLoading
                         ? CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
+                      valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
                         : Text(
-                            'Register',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
+                      'নিবন্ধন',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -337,7 +339,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: Text('Already have an account?'),
+                      child: Text('একাউন্ট আছে?'),
                     ),
                     TextButton(
                       onPressed: () {
@@ -348,7 +350,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         );
                       },
                       child: Text(
-                        'Login',
+                        'লগইন',
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),
@@ -369,7 +371,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return null; // No error if the field is empty
     }
     if (confirmPasswordController.text != passwordController.text) {
-      return 'Passwords do not match'; // Error if passwords do not match
+      return 'পাসওয়ার্ড মিলছেনা '; // Error if passwords do not match
     }
     return null; // No error if passwords match
   }

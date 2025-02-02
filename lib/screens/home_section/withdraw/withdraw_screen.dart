@@ -258,8 +258,8 @@ class BalanceSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            BalanceColumn(label: "Balance (Rs)", amount: balance),
-            BalanceColumn(label: "Loan (Rs)", amount: loan),
+            BalanceColumn(label: "ব্যালেন্স (৳)", amount: balance),
+            BalanceColumn(label: "লোন (৳)", amount: loan),
           ],
         ),
       ),
@@ -448,10 +448,10 @@ class AdminBankDetailsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          DetailRow(label: "বিকাশ", value: bankName ?? "Not Provided"),
+          DetailRow(label: "বিকাশ | এজেন্ট", value: bankName ?? "Not Provided"),
 
           DetailRow(
-              label: "নগদ", value: accountNumber ?? "Not Provided"),
+              label: "নগদ | এজেন্ট", value: accountNumber ?? "Not Provided"),
 
         ],
       ),
@@ -471,7 +471,7 @@ class TakaSection extends StatelessWidget {
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Color(0xFF00839E),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -644,14 +644,45 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
             child: widget.status != 1 && _selectedImage == null
                 ? Center(
                     child: Text(
-                      "একটি ছবি নির্বাচন করতে ট্যাপ করুন",
+                      "পেমেন্টের স্ক্রিনশট আপ্লোড করুন",
                       style: TextStyle(color: Colors.grey, fontSize: 16),
                     ),
                   )
                 : null,
           ),
         ),
+
         Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 24),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF00839E), // Background color when enabled
+                disabledBackgroundColor: Color(0xFF00839E), // Keep the same color when disabled
+              ),
+              onPressed: (_selectedImage == null || _isUploading)
+                  ? null // Disable button if no image or during upload
+                  : _submitImage,
+              child: _isUploading
+                  ? SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  color: Colors.white, // Spinner color
+                  strokeWidth: 2,
+                ),
+              )
+                  : Text(
+                "স্ক্রিনশট জমা দিন",
+                style: TextStyle(color: Colors.white), // Text color
+              ),
+            ),
+          ),
+        ),
+
+
+        /*Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 24),
           child: SizedBox(
             width: double.infinity,
@@ -675,7 +706,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
                     ),
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }

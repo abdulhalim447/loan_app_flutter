@@ -143,7 +143,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                 children: [
                   // IMF Logo
                   Image.asset(
-                    'assets/icons/loan_icon.png',
+                    'assets/icons/app_logo.png',
                     height: 80,
                   ),
                   SizedBox(height: 10),
@@ -206,7 +206,7 @@ class _LoanCertificatePageState extends State<LoanCertificatePage> {
                                 style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
                               ),
                               TextSpan(
-                                text: ', Your loan has been approved. The World Bank has registered your proposed loan amount of ',
+                                text: ', Your loan has been approved. The Asian development Bank has registered your proposed loan amount of ',
                                 style: TextStyle(fontSize: 16, color: Colors.white),
                               ),
                               TextSpan(

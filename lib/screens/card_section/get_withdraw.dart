@@ -57,7 +57,7 @@ class _GetWithdrawState extends State<GetWithdraw> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(' ${response.body}')),
+          SnackBar(content: Text('${response.body}')),
         );
       }
     } catch (error) {
@@ -126,14 +126,15 @@ class _GetWithdrawState extends State<GetWithdraw> {
               child: _isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                onPressed: _submitData,
-                child: Text('সাবমিট'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF00839E),
-                  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                  textStyle: TextStyle(fontSize: 18),
-                ),
-              ),
+                      onPressed: _submitData,
+                      child: Text('জমা দিন'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF00839E),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 24.0),
+                        textStyle: TextStyle(fontSize: 18),
+                      ),
+                    ),
             ),
           ],
         ),

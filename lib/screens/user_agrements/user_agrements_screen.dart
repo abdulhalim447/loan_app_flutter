@@ -376,8 +376,10 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
             'Any payment not remunerated within ten (10) days of its due date shall be subject to a belated charge of 5% of the payment, not to exceed BDT 10000 for any such late installment.',
+            style: TextStyle(
+                fontWeight: FontWeight.normal, fontSize: 16, color: Colors.white),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 16, ),
           Text(
             'Security:',
             style: TextStyle(

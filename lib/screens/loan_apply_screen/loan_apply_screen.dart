@@ -95,10 +95,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('এশিয়ান ডেভেলপমেন্ট ব্যাংক'),
+        title: Text('Asian Development Bank'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? CircularProgressIndicator()
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -106,7 +106,6 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                   SizedBox(height: 6),
 
                   SliderSection(),
-
                   // মাস সিলেকশন
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -179,7 +178,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '₹${loanAmounts[index]}',
+                                    '৳${loanAmounts[index]}',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -189,7 +188,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '₹${installment.toStringAsFixed(2)} / $selectedLoanTerm মাস',
+                                    '৳${installment.toStringAsFixed(2)} / $selectedLoanTerm মাস',
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: isSelected
@@ -219,7 +218,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
                             ),
-                            child: Text('সাবমিট',
+                            child: Text('জমা দিন',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18)),
                           ),

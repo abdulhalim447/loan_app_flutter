@@ -49,19 +49,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                label: 'Home',
+                label: 'হোম',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.wallet),
-                label: 'Wallet',
+                label: 'ওয়ালেট',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.phone),
-                label: 'Support',
+                label: 'সাপোর্ট',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
-                label: 'Profile',
+                label: 'প্রোফাইল্',
               ),
             ],
           ),

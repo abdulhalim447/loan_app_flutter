@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../auth/saved_login/user_session.dart';
+import '../../bottom_navigation/MainNavigationScreen.dart';
 
 class ContactScreen extends StatefulWidget {
   @override
@@ -56,7 +57,8 @@ class _ContactScreenState extends State<ContactScreen> {
         String? newTelegramContact = data['telegram'];
 
         // Save the new data if it has changed
-        if (whatsappContact != newWhatsappContact || telegramContact != newTelegramContact) {
+        if (whatsappContact != newWhatsappContact ||
+            telegramContact != newTelegramContact) {
           await _saveContactDetails(newWhatsappContact, newTelegramContact);
 
           setState(() {
@@ -86,70 +88,81 @@ class _ContactScreenState extends State<ContactScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text('Contact Us'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              width: isMobile ? double.infinity : 600,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.support_agent,
-                    size: isMobile ? 80 : 100,
-                    color: Color(0xFF00839E),
-                  ),
-                  SizedBox(height: isMobile ? 12 : 16),
-                  Text(
-                    "আপনি নীচের যেকোনো পদ্ধতিতে আমাদের সাথে যোগাযোগ করতে পারেন অথবা সরাসরি অফিসে আসার জন্য অ্যাপয়েন্টমেন্ট নিতে পারেন।",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: isMobile ? 14 : 16,
-                      color: Colors.white
-
+    return WillPopScope(
+      onWillPop: () async {
+        // যখন ইউজার ব্যাক বাটনে ক্লিক করবে, হোম স্ক্রিনে নেভিগেট হবে
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MainNavigationScreen()), // HomeScreen হলো আপনার হোম স্ক্রিন ক্লাস
+        );
+        return false; // Returning false to prevent the default pop action
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text('সাপোর্ট'),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                width: isMobile ? double.infinity : 600,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.support_agent,
+                      size: isMobile ? 80 : 100,
+                      color: Color(0xFF00839E),
                     ),
-                  ),
-                  SizedBox(height: isMobile ? 12 : 16),
-                  Text(
-                    "ঠিকানা: সৈয়দ মাহবুব মোর্শেদ রোড, প্লট ই-৩১, শেরেবাংলা নগর, ঢাকা ১২০৭।",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: isMobile ? 12 : 14,
-                      color: Colors.white,
+                    SizedBox(height: isMobile ? 12 : 16),
+                    Text(
+                      "আপনি নীচের যেকোনো পদ্ধতিতে আমাদের সাথে যোগাযোগ করতে পারেন অথবা সরাসরি অফিসে আসার জন্য অ্যাপয়েন্টমেন্ট নিতে পারেন।",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: isMobile ? 14 : 16, color: Colors.white),
                     ),
-                  ),
-                  SizedBox(height: isMobile ? 16 : 20),
-                  if (whatsappContact != null && telegramContact != null)
-                    Column(
-                      children: [
-                        ContactOption(
-                          icon: FontAwesomeIcons.whatsapp,
-                          color: Colors.green,
-                          title: "হোয়াটসঅ্যাপের মাধ্যমে যোগাযোগ করুন",
-                          contact: "whatsappContact!",
-                          onTap: () => _launchURL("https://wa.me/$whatsappContact"),
-                          isMobile: isMobile,
-                        ),
-                        ContactOption(
-                          icon: FontAwesomeIcons.telegram,
-                          color: Colors.blueAccent,
-                          title: "টেলিগ্রামের মাধ্যমে যোগাযোগ করুন",
-                          contact: "telegramContact!",
-                          onTap: () => _launchURL("https://t.me/$telegramContact"),
-                          isMobile: isMobile,
-                        ),
-                      ],
-                    )
-                  else
-                    CircularProgressIndicator(),
-                ],
+                    SizedBox(height: isMobile ? 12 : 16),
+                    Text(
+                      "ঠিকানা: সৈয়দ মাহবুব মোর্শেদ রোড, প্লট ই-৩১, শেরেবাংলা নগর, ঢাকা ১২০৭।",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: isMobile ? 12 : 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: isMobile ? 16 : 20),
+                    if (whatsappContact != null && telegramContact != null)
+                      Column(
+                        children: [
+                          ContactOption(
+                            icon: FontAwesomeIcons.whatsapp,
+                            color: Colors.green,
+                            title: "হোয়াটসঅ্যাপের মাধ্যমে যোগাযোগ করুন",
+                            contact: "whatsappContact!",
+                            onTap: () =>
+                                _launchURL("https://wa.me/$whatsappContact"),
+                            isMobile: isMobile,
+                          ),
+                          ContactOption(
+                            icon: FontAwesomeIcons.telegram,
+                            color: Colors.blueAccent,
+                            title: "টেলিগ্রামের মাধ্যমে যোগাযোগ করুন",
+                            contact: "telegramContact!",
+                            onTap: () =>
+                                _launchURL("https://t.me/$telegramContact"),
+                            isMobile: isMobile,
+                          ),
+                        ],
+                      )
+                    else
+                      CircularProgressIndicator(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -196,24 +209,26 @@ class ContactOption extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: isMobile ? 14 : 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                  ),
+                      fontSize: isMobile ? 14 : 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 Text(
                   contact,
                   style: TextStyle(
                     fontSize: isMobile ? 12 : 14,
                     color: Colors.white,
-
                   ),
                 ),
               ],
             ),
           ),
           IconButton(
-            icon: Icon(Icons.launch, size: isMobile ? 20 : 24, color: Color(0xFF00839E),),
+            icon: Icon(
+              Icons.launch,
+              size: isMobile ? 20 : 24,
+              color: Color(0xFF00839E),
+            ),
             onPressed: onTap,
           ),
         ],

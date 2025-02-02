@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^2.3.3
   url_launcher: ^6.3.1
   file_picker: ^8.1.7
+  webview_flutter: ^4.10.0
 
 
 
@@ -102,6 +103,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
   assets:
-    - assets/images/credit_card.png
+    - assets/images/
     - assets/icons/
 

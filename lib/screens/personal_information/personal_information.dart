@@ -25,15 +25,15 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController nidNameController = TextEditingController();
   final TextEditingController monthyIncomController = TextEditingController();
   final TextEditingController currentAddressController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController permanentAddressController =
-  TextEditingController();
+      TextEditingController();
 
   //final TextEditingController phoneController = TextEditingController();
   final TextEditingController professionController = TextEditingController();
   final TextEditingController loanPurposeController = TextEditingController();
   final TextEditingController nomineeRelationController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController nomineeNameController = TextEditingController();
   final TextEditingController nomineePhoneController = TextEditingController();
 
@@ -111,7 +111,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     }
   }
 
-
   Future<File> _convertImageToJpg(File file) async {
     final originalImage = img.decodeImage(file.readAsBytesSync());
     final jpgImage = img.encodeJpg(originalImage!);
@@ -120,6 +119,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       ..writeAsBytesSync(jpgImage);
     return convertedFile;
   }
+
   // Submit Personal Information
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
@@ -136,9 +136,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       final frontImage = await http.MultipartFile.fromPath(
           'nidFrontImage', frontIdImage!.path);
       final backImage =
-      await http.MultipartFile.fromPath('nidBackImage', backIdImage!.path);
+          await http.MultipartFile.fromPath('nidBackImage', backIdImage!.path);
       final selfieImage = selfieWithIdImage != null &&
-          File(selfieWithIdImage!.path).existsSync()
+              File(selfieWithIdImage!.path).existsSync()
           ? await http.MultipartFile.fromPath('selfie', selfieWithIdImage!.path)
           : null;
 
@@ -166,7 +166,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         ..fields['nomineePhone'] = nomineePhoneController.text
         ..fields['nidName'] = nidNameController.text
         ..fields['income'] = monthyIncomController.text
-      //..fields['phone'] = phoneController.text // এ লাইনটি যোগ করুন
+        //..fields['phone'] = phoneController.text // এ লাইনটি যোগ করুন
         ..files.add(frontImage)
         ..files.add(backImage)
         ..files.add(selfieImage)
@@ -244,11 +244,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     }
   }
 
-
-
-
-
-
   Future<Uint8List> _getSignatureImage() async {
     final ui.Image? image = await _signatureController.toImage();
     final byteData = await image!.toByteData(format: ui.ImageByteFormat.png);
@@ -265,7 +260,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ব্যাক্তিগত'),
+        title: Text('ব্যাক্তিগত তথ্য'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -289,12 +284,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               SizedBox(height: 8.0),
               _buildTextField('ঋণের উদ্দেশ্য', loanPurposeController),
               SizedBox(height: 16.0),
-              _buildSectionTitle('মনোনীত ব্যক্তির তথ্য'),
-              _buildTextField('মনোনীত ব্যক্তির নাম', nomineeNameController),
+              _buildSectionTitle('নমিনীর তথ্য দিন'),
+              _buildTextField(' নমিনী ব্যক্তির নাম', nomineeNameController),
               SizedBox(height: 8.0),
               _buildTextField('সম্পর্ক', nomineeRelationController),
               SizedBox(height: 8.0),
-              _buildTextField('মনোনীত ব্যক্তির মোবাইল নম্বর', nomineePhoneController),
+              _buildTextField('নমিনীর মোবাইল নম্বর', nomineePhoneController,
+                  keyboardType: TextInputType.number),
               SizedBox(height: 16.0),
               _buildSectionTitle('ছবির সংগ্রহ'),
               SizedBox(height: 8.0),
@@ -303,14 +299,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               _buildTextField('জাতীয় পরিচয়পত্র নম্বর', idController),
               SizedBox(height: 8.0),
 
-
               _buildImageUploadField('আপনার আইডি কার্ডের সামনের দিক',
-                      () => _pickImage('front'), frontIdImage),
+                  () => _pickImage('front'), frontIdImage),
               _buildImageUploadField('আপনার আইডি কার্ডের পিছনের দিক',
-                      () => _pickImage('back'), backIdImage),
+                  () => _pickImage('back'), backIdImage),
               _buildImageUploadField('আপনার আইডি কার্ডের সাথে সেলফি',
-                      () => _pickImage('selfie'), selfieWithIdImage),
-
+                  () => _pickImage('selfie'), selfieWithIdImage),
 
               SizedBox(height: 16.0),
               _buildSignatureField('নিচের বাক্সে সাইন ইন করুন'),
@@ -330,49 +324,68 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(
+            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    TextInputType? keyboardType,
+  }) {
     return TextFormField(
       controller: controller,
+      keyboardType: keyboardType,
+      // Set the optional keyboard type
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white), // White label text
-        hintText: 'Enter your $label', // Optional hint text
-        hintStyle: TextStyle(color: Colors.white70), // Optional hint text color
+        labelStyle: TextStyle(color: Colors.white),
+        // White label text
+        hintText: '$label',
+        // Optional hint text
+        hintStyle: TextStyle(color: Colors.white70),
+        // Optional hint text color
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white), // White border color
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white), // White border when enabled
+          borderSide:
+              BorderSide(color: Colors.white), // White border when enabled
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white), // White border when focused
+          borderSide:
+              BorderSide(color: Colors.white), // White border when focused
+        ),
+
+        disabledBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Colors.white), // White border when focused
         ),
       ),
-      style: TextStyle(color: Colors.white), // White text color
-      enabled: !_isFormDisabled, // Disable the field if form is disabled
+      style: TextStyle(color: Colors.white),
+      // White text color
+      enabled: !_isFormDisabled,
+      // Disable the field if form is disabled
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'সব ঘরট পূরণ করুন।';
+          return 'সব ঘর পূরণ করুন।';
         }
         return null;
       },
     );
   }
 
-
-
-
   Widget _buildImageUploadField(
       String label, VoidCallback onTap, XFile? imageFile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 16)),
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Text(label, style: TextStyle(fontSize: 16, color: Colors.white)),
+        ),
         SizedBox(height: 8.0),
         GestureDetector(
           onTap: _isFormDisabled ? null : onTap,
@@ -383,10 +396,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             child: imageFile == null
                 ? Icon(Icons.add_photo_alternate, size: 50)
                 : imageFile!.path.contains('http')
-                ? Image.network(imageFile.path,
-                fit: BoxFit.cover) // Show image from URL
-                : Image.file(File(imageFile.path),
-                fit: BoxFit.cover), // Show local image
+                    ? Image.network(imageFile.path,
+                        fit: BoxFit.cover) // Show image from URL
+                    : Image.file(File(imageFile.path),
+                        fit: BoxFit.cover), // Show local image
           ),
         ),
       ],
@@ -404,23 +417,26 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           child: _isFormDisabled && _signatureUrl.isNotEmpty
               ? Image.network(
-            _signatureUrl,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return Center(child: Text("Signature not found"));
-            },
-          )
+                  _signatureUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Center(child: Text("Signature not found"));
+                  },
+                )
               : Signature(
-            controller: _signatureController,
-            backgroundColor: Colors.white,
-          ),
+                  controller: _signatureController,
+                  backgroundColor: Colors.white,
+                ),
         ),
         if (!_isFormDisabled)
           TextButton(
             onPressed: () {
               _signatureController.clear();
             },
-            child: Text('স্বাক্ষর মুছুন', style: TextStyle(color: Colors.white),),
+            child: Text(
+              'স্বাক্ষর মুছুন',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
       ],
     );
@@ -432,7 +448,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       child: ElevatedButton(
         onPressed: _isFormDisabled ? null : _submitForm,
         // Disable button if form is disabled
-        child: Text('সেইভ'),
+        child: Text('জমা দিন'),
       ),
     );
   }
@@ -451,7 +467,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 title: Text('ছবি তুলুন'),
                 onTap: () async {
                   final pickedFile =
-                  await _picker.pickImage(source: ImageSource.camera);
+                      await _picker.pickImage(source: ImageSource.camera);
                   Navigator.pop(context, pickedFile);
                 },
               ),
@@ -460,7 +476,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 title: Text('গ্যালারি থেকে নির্বাচন করুন'),
                 onTap: () async {
                   final pickedFile =
-                  await _picker.pickImage(source: ImageSource.gallery);
+                      await _picker.pickImage(source: ImageSource.gallery);
                   Navigator.pop(context, pickedFile);
                 },
               ),
@@ -494,12 +510,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     print('Selected file path: ${pickedFile.path}');
   }
 
-
   void _checkFileFormat(XFile? file) async {
     if (file != null) {
       String fileExtension = file.path.split('.').last.toLowerCase();
       print('File format: $fileExtension');
-      if (fileExtension != 'jpg' && fileExtension != 'jpeg' && fileExtension != 'png') {
+      if (fileExtension != 'jpg' &&
+          fileExtension != 'jpeg' &&
+          fileExtension != 'png') {
         print('Invalid file format. Converting to JPG...');
         File originalFile = File(file.path);
         File convertedFile = await _convertImageToJpg(originalFile);
@@ -517,8 +534,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       }
     }
   }
-
-
 
   @override
   void dispose() {

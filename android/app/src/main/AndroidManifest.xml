@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
-        android:label="World Bank Loan"
+        android:label="Asian Development Bank"
         android:name="${applicationName}"
         android:icon="@drawable/img">
         <activity

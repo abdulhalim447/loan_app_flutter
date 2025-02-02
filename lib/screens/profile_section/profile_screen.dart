@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http; // Import http package
 import 'package:world_bank_loan/auth/LoginScreen.dart';
+import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
 import 'package:world_bank_loan/screens/ComplaintFormScreen/ComplaintFormScreen.dart';
 import 'package:world_bank_loan/screens/change_password/change_password.dart';
 import 'package:world_bank_loan/screens/data_delete_screen/data_delete_screen.dart';
@@ -13,7 +14,7 @@ import 'package:world_bank_loan/screens/terms_and_condition/terms_and_condition.
 import '../../auth/saved_login/user_session.dart';
 import '../AboutMeScreen/AboutMeScreen.dart';
 import '../bank_account/bank_account.dart';
-import '../loan_certifacte/loan_certificate.dart';
+import '../kisti_details/kisti_details.dart';
 import '../user_agrements/user_agrements_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -32,8 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _getUserData();
   }
 
-
-
   Future<void> _loadStoredUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -42,13 +41,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-
   Future<void> _saveUserData(String number, String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('number', number);
     await prefs.setString('name', name);
   }
-
 
   Future<void> _getUserData() async {
     String? token = await UserSession.getToken();
@@ -66,7 +63,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         // Update only if data has changed
         if (number != newNumber || name != newName) {
-          await _saveUserData(newNumber, newName); // Save new data in SharedPreferences
+          await _saveUserData(
+              newNumber, newName); // Save new data in SharedPreferences
           setState(() {
             number = newNumber;
             name = newName;
@@ -86,7 +84,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
-
 
   // logout ============================================================
   void _logout(BuildContext context) async {
@@ -110,10 +107,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 prefs.remove('phone');
 
                 Navigator.of(context).pop(); // Close the dialog
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (builder) => LoginScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (builder) => LoginScreen()));
               },
               child: Text("Yes"),
             ),
@@ -128,135 +123,146 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: Color(0xFF002336),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text('প্রোফাইল'),
+    return WillPopScope(
+      onWillPop: () async {
+        // যখন ইউজার ব্যাক বাটনে ক্লিক করবে, হোম স্ক্রিনে নেভিগেট হবে
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainNavigationScreen()), // HomeScreen হলো আপনার হোম স্ক্রিন ক্লাস
+        );
+        return false; // Returning false to prevent the default pop action
+      },
 
-      ),
-      body: Center(
-        child: Container(
-          width: screenWidth > 600 ? 600 : screenWidth, // Max width 400px
-          child: Column(
-            children: [
-              ProfileHeader(number: number, name: name),
-              Expanded(
-                child: ListView(
-                  children: [
-                    ProfileOption(
-                      icon: FontAwesomeIcons.university,
-                      text: 'ব্যক্তিগত তথ্য',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => PersonalInfoScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.moneyBill,
-                      text: 'ব্যাংক একাউন্ট',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => BankAccountScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.infoCircle,
-                      text: 'আমার সম্পর্কে',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => AboutMeScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.plusCircle,
-                      text: 'অভিযোগ করুন',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => ComplaintFormScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.lock,
-                      text: 'পাসওয়ার্ড পরিবর্তন করুন',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => ChangePasswordScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.shieldAlt,
-                      text: 'শর্তাবলী',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => TermsAndConditionScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.warning,
-                      text: 'প্রাইভেসি পলিসি ',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => PrivacyPolicyScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.remove,
-                      text: 'ডাটা ডিলিট পলিসি',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => DataDeletionPolicyScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.certificate,
-                      text: 'ঋণের সার্টিফিকেট',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => LoanCertificatePage()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.userLarge,
-                      text: 'চুক্তি',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => LoanDetailsScreen()));
-                      },
-                    ),
-                    ProfileOption(
-                      icon: FontAwesomeIcons.powerOff,
-                      text: 'লগ-আউট',
-                      onTap: () {
-                        _logout(context);
-                      },
-                    ),
-
-
-                  ],
+      child: Scaffold(
+        backgroundColor: Color(0xFF002336),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text('প্রোফাইল'),
+        ),
+        body: Center(
+          child: Container(
+            width: screenWidth > 600 ? 600 : screenWidth, // Max width 400px
+            child: Column(
+              children: [
+                ProfileHeader(number: number, name: name),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ProfileOption(
+                        icon: FontAwesomeIcons.university,
+                        text: 'ব্যক্তিগত তথ্য',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => PersonalInfoScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.moneyBill,
+                        text: 'ব্যাংক একাউন্ট',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => BankAccountScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.infoCircle,
+                        text: 'আমার সম্পর্কে',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => AboutMeScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.plusCircle,
+                        text: 'অভিযোগ করুন',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => ComplaintFormScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.lock,
+                        text: 'পাসওয়ার্ড পরিবর্তন করুন',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => ChangePasswordScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.shieldAlt,
+                        text: 'শর্তাবলী',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) =>
+                                      TermsAndConditionScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.warning,
+                        text: 'প্রাইভেসি পলিসি ',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => PrivacyPolicyScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.remove,
+                        text: 'ডাটা ডিলিট পলিসি',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) =>
+                                      DataDeletionPolicyScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.certificate,
+                        text: 'কিস্তির বিবরণ',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => KistiDetailsScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.userLarge,
+                        text: 'চুক্তি',
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => LoanDetailsScreen()));
+                        },
+                      ),
+                      ProfileOption(
+                        icon: FontAwesomeIcons.powerOff,
+                        text: 'লগ-আউট',
+                        onTap: () {
+                          _logout(context);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -280,16 +286,13 @@ class ProfileHeader extends StatelessWidget {
           Icon(
             Icons.account_circle,
             size: 100,
-            color:Color(0xFF00839E),
+            color: Color(0xFF00839E),
           ),
           SizedBox(height: 10),
           Text(
             name,
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-            ),
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           Text(
             number,
@@ -303,8 +306,6 @@ class ProfileHeader extends StatelessWidget {
     );
   }
 }
-
-
 
 class ProfileOption extends StatelessWidget {
   final IconData icon;

@@ -61,8 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      print(response.statusCode);
-      print(response.body);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -105,23 +103,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF002336),
-        title: Text('এশিয়ান ডেভেলপমেন্ট ব্যাংক', style: TextStyle(fontSize: 18)),
+        title: Text('Asian Development Bank', style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
-      body: Center(
-        child: Container(
-          width: isMobile ? double.infinity : 600,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                BalanceSection(balance: balance, name: name),
-                SliderSection(),
-                LoanApplicationSection(
-                    loanStatus: loanStatus.toString(),
-                    status: status.toString()),
-                // Convert to string for passing to the widget
-              ],
-            ),
+      body: Container(
+        width: isMobile ? double.infinity : 600,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              BalanceSection(balance: balance, name: name),
+              SliderSection(),
+              LoanApplicationSection(
+                  loanStatus: loanStatus.toString(),
+                  status: status.toString()),
+              // Convert to string for passing to the widget
+            ],
           ),
         ),
       ),
@@ -165,7 +161,7 @@ class BalanceSection extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'ট $balance',
+                  '৳$balance',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -289,9 +285,11 @@ class LoanApplicationSection extends StatelessWidget {
               ]
               // Condition 2: Loan Status == '1' (Loan application under processing)
               else if (loanStatus == '1') ...[
-                Text(
-                  'আপনার ঋণের আবেদন সম্পন্ন হয়েছে, অনুগ্রহ করে অপেক্ষা করুন। আপনার তথ্য যাচাই করার পর ঋণটি পাস/বাতিল করা হবে।',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal,color: Colors.white),
+                Center(
+                  child: Text(
+                    'আপনার ঋণের আবেদন সম্পন্ন হয়েছে, অনুগ্রহ করে অপেক্ষা করুন। আপনার তথ্য যাচাই করার পর ঋণটি পাস/বাতিল করা হবে।',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal,color: Colors.white),
+                  ),
                 ),
                 SizedBox(height: 16),
                 // No button for loan status '1'

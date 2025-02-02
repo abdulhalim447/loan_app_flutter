@@ -2,9 +2,8 @@
 class Assets {
   Assets._();
 
-  static const String assetsImagesCreditCard = 'assets/images/credit_card.png';
+  static const String iconsAppLogo = 'assets/icons/app_logo.png';
   static const String iconsIconWhatsapp = 'assets/icons/icon_whatsapp.svg';
-  static const String iconsImg = 'assets/icons/app_logo.png';
   static const String iconsLoanIcon = 'assets/icons/loan_icon.png';
   static const String iconsLoanWatermark = 'assets/icons/loan_watermark.png';
   static const String iconsTelegram = 'assets/icons/telegram.svg';

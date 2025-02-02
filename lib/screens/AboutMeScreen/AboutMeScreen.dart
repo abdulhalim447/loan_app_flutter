@@ -1,83 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import '../../auth/saved_login/user_session.dart';
-
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AboutMeScreen extends StatefulWidget {
-  const AboutMeScreen({super.key});
-
   @override
   _AboutMeScreenState createState() => _AboutMeScreenState();
 }
 
 class _AboutMeScreenState extends State<AboutMeScreen> {
-  String aboutText = "About is coming soon";
-  bool isLoading = true;
-
-  // Fetch data from the API
-  Future<void> fetchAboutData() async {
-    // Get the token from UserSession
-    String? token = await UserSession.getToken();
-
-    if (token == null) {
-      setState(() {
-        aboutText = "No token found. Please log in.";
-        isLoading = false;
-      });
-      return;
-    }
-
-    // Set up headers with the token
-    Map<String, String> headers = {
-      'Authorization': 'Bearer $token',
-    };
-
-    try {
-      final response = await http.get(
-        Uri.parse("https://app.wbli.org/api/about"),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        // Parse the response body if successful
-        final data = json.decode(response.body);
-        setState(() {
-          aboutText = data['about'].join(", ");  // Assuming 'about' is a list
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          aboutText = "Failed to load data.";
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        aboutText = "Error: $e";
-        isLoading = false;
-      });
-    }
-  }
+  late final WebViewController _controller;
+  String initialUrl = 'https://www.adb.org/who-we-are/about';
 
   @override
   void initState() {
     super.initState();
-    fetchAboutData(); // Call the fetch function on init
+    _loadSavedUrl(); // Load the saved URL from SharedPreferences
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFFFFFFFF))
+      ..loadRequest(Uri.parse(initialUrl));
+  }
+
+  Future<void> _loadSavedUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedUrl = prefs.getString('savedWebViewUrl');
+    if (savedUrl != null && savedUrl.isNotEmpty) {
+      setState(() {
+        initialUrl = savedUrl; // Use the saved URL if available
+      });
+    }
+  }
+
+  Future<void> _saveCurrentUrl() async {
+    String? currentUrl = await _controller.currentUrl();
+    if (currentUrl != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('savedWebViewUrl', currentUrl);
+    }
+  }
+
+  @override
+  void dispose() {
+    _saveCurrentUrl(); // Save the current URL when the screen is disposed
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About Me'),
+        title: const Text("আমাদের সম্পর্কে"),
+        backgroundColor: Colors.blue,
       ),
-      body: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()  // Show loading spinner while fetching
-            : Text(aboutText, style: TextStyle(color: Colors.white),),
+      body: WillPopScope(
+        onWillPop: () async {
+          if (await _controller.canGoBack()) {
+            _controller.goBack(); // Navigate back within the WebView
+            return false; // Don't pop the screen
+          }
+          return true; // Pop the screen
+        },
+        child: WebViewWidget(controller: _controller),
       ),
     );
   }
 }
+

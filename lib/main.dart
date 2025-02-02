@@ -37,15 +37,11 @@ class MyApp extends StatelessWidget {
             minimumSize: Size(120, 48), // Minimum button size
           ),
         ),
-
-
         textTheme: TextTheme(
           displayLarge: TextStyle(color: Colors.white), // Set text color
           displayMedium: TextStyle(color: Colors.white), // Set body text color
           displaySmall: TextStyle(color: Colors.white), // Set body text color
         ),
-
-
       ),
       home: SplashScreen(),
     );

@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool passwordVisible = false;
-  String countryCode = "+91"; // Default country code
+  String countryCode = "+880"; // Default country code
   bool isLoading = false; // Flag for loading state
 
   @override
@@ -79,9 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => MainNavigationScreen()),
-                (Route<dynamic> route) => false, // This removes all previous routes
+            (Route<dynamic> route) => false, // This removes all previous routes
           );
-
         } else {
           print('Login Failed: ${responseData['message']}');
           _showErrorDialog(responseData['message'] ?? 'Login failed');
@@ -118,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -141,22 +139,21 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 SizedBox(height: 80),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.public,
-                      size: 80,
-                      color: Colors.blue,
+                    Image.asset(
+                      "assets/icons/app_logo.png", height: 120,width: 120,
                     ),
                     Text(
-                      'World Bank Development',
+                      'Asian Development Bank',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                       ),
                     ),
                     Text(
-                      'Micro Finance',
+                      'Microfinance',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.blue,
@@ -176,11 +173,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: CountryCodePicker(
                         onChanged: (country) {
                           setState(() {
-                            countryCode = country.dialCode ?? "+91";
+                            countryCode = country.dialCode ?? "+880";
                           });
                         },
-                        initialSelection: 'IN',
-                        favorite: ['+91', 'IN'],
+                        initialSelection: 'BD',
+                        favorite: ['+880', 'BD'],
                         showCountryOnly: false,
                         showOnlyCountryWhenClosed: false,
                         alignLeft: false,
@@ -192,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
-                          labelText: 'Phone',
+                          labelText: 'মোবাইল নম্বর',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -206,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   obscureText: !passwordVisible,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'পাসওয়ার্ড',
                     suffixIcon: IconButton(
                       icon: Icon(
                         passwordVisible
@@ -238,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 AlwaysStoppedAnimation<Color>(Colors.white),
                           )
                         : Text(
-                            'Login',
+                            'লগইন',
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                   ),
@@ -247,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Don\'t have an account?'),
+                    Text('একাউন্ট নেই?'),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -257,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                       child: Text(
-                        'Register',
+                        'নিবন্ধন করুন',
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),
