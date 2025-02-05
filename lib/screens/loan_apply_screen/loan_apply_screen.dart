@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:world_bank_loan/screens/home_section/home_page.dart';
+import 'package:asian_development_bank/bottom_navigation/MainNavigationScreen.dart';
 import 'dart:convert';
 import '../../auth/saved_login/user_session.dart';
 import '../../slider/home_screen_slider.dart';
-import 'dart:math';
+
 
 
 class LoanApplicationScreen extends StatefulWidget {
@@ -78,7 +78,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Loan successfully submitted')));
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => MainNavigationScreen()));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Failed to submit loan')));
@@ -93,142 +93,149 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   // UI বিল্ড
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text('Asian Development Bank'),
       ),
-      body: isLoading
-          ? CircularProgressIndicator()
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: 6),
-
-                  SliderSection(),
-                  // মাস সিলেকশন
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Wrap(
-                        spacing: 8.0,  // Space between the chips
-                        runSpacing: 4.0,  // Space between the rows of chips
-                        children: loanTerms.map((term) {
-                          return Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: GestureDetector(
-                              onTap: () => setState(() {
-                                selectedLoanTerm = term;
-                                selectedLoanAmount = 0; // Reset selection
-                              }),
-                              child: Chip(
-                                label: Text('$term মাস'),
-                                backgroundColor: selectedLoanTerm == term
-                                    ? Color(0xFF002336)
-                                    : Colors.grey[300],
-                                labelStyle: TextStyle(
-                                    color: selectedLoanTerm == term
-                                        ? Colors.white
-                                        : Colors.black),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-
-
-                  // টাকার অংক + কিস্তি দেখানো
-                  Column(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: isLoading
+              ? CircularProgressIndicator()
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // টাকার অংক + কিস্তি দেখানো
-                      ListView.builder(
-                        shrinkWrap: true,
-                        // Allow the ListView to take only the space it needs
-                        physics: NeverScrollableScrollPhysics(),
-                        // Prevent scrolling within ListView
-                        itemCount: loanAmounts.length,
-                        itemBuilder: (context, index) {
-                          double installment = calculateInstallment(
-                              loanAmounts[index], selectedLoanTerm);
-                          bool isSelected =
-                              selectedLoanAmount == loanAmounts[index];
-                          return GestureDetector(
-                            onTap: () => setState(() {
-                              selectedLoanAmount = loanAmounts[index];
-                            }),
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 4, horizontal: 12),
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color:
-                                    isSelected ? Color(0xFF00839E) : Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black12,
-                                      spreadRadius: 1,
-                                      blurRadius: 3)
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '৳${loanAmounts[index]}',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                  Text(
-                                    '৳${installment.toStringAsFixed(2)} / $selectedLoanTerm মাস',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.black54,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                      SizedBox(height: 6),
 
-                      // সাবমিট বাটন
+                      SliderSection(),
+                      // মাস সিলেকশন
                       Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: selectedLoanAmount > 0
-                                ? submitLoanApplication
-                                : null, // সিলেক্ট করা না হলে বাটন ডিজেবল
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:Color(0xFF00839E),
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                            child: Text('জমা দিন',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18)),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Wrap(
+                            spacing: 8.0,  // Space between the chips
+                            runSpacing: 4.0,  // Space between the rows of chips
+                            children: loanTerms.map((term) {
+                              return Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: GestureDetector(
+                                  onTap: () => setState(() {
+                                    selectedLoanTerm = term;
+                                    selectedLoanAmount = 0; // Reset selection
+                                  }),
+                                  child: Chip(
+                                    label: Text('$term মাস'),
+                                    backgroundColor: selectedLoanTerm == term
+                                        ? Color(0xFF002336)
+                                        : Colors.grey[300],
+                                    labelStyle: TextStyle(
+                                        color: selectedLoanTerm == term
+                                            ? Colors.white
+                                            : Colors.black),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
                       ),
+
+
+                      // টাকার অংক + কিস্তি দেখানো
+                      Column(
+                        children: [
+                          // টাকার অংক + কিস্তি দেখানো
+                          ListView.builder(
+                            shrinkWrap: true,
+                            // Allow the ListView to take only the space it needs
+                            physics: NeverScrollableScrollPhysics(),
+                            // Prevent scrolling within ListView
+                            itemCount: loanAmounts.length,
+                            itemBuilder: (context, index) {
+                              double installment = calculateInstallment(
+                                  loanAmounts[index], selectedLoanTerm);
+                              bool isSelected =
+                                  selectedLoanAmount == loanAmounts[index];
+                              return GestureDetector(
+                                onTap: () => setState(() {
+                                  selectedLoanAmount = loanAmounts[index];
+                                }),
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 4, horizontal: 12),
+                                  padding: EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isSelected ? Color(0xFF00839E) : Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          spreadRadius: 1,
+                                          blurRadius: 3)
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '৳${loanAmounts[index]}',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        '৳${installment.toStringAsFixed(2)} / $selectedLoanTerm মাস',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
+                          // সাবমিট বাটন
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: selectedLoanAmount > 0
+                                    ? submitLoanApplication
+                                    : null, // সিলেক্ট করা না হলে বাটন ডিজেবল
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:Color(0xFF00839E),
+                                  padding: EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: Text('জমা দিন',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-            ),
+                  ),
+                ),
+        ),
+      ),
     );
   }
 }

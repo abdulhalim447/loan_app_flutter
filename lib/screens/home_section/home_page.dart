@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:world_bank_loan/screens/home_section/withdraw/withdraw_screen.dart';
-import 'package:world_bank_loan/screens/loan_apply_screen/loan_apply_screen.dart';
-import 'package:world_bank_loan/screens/personal_information/personal_information.dart';
-import 'package:world_bank_loan/slider/home_screen_slider.dart';
+import 'package:asian_development_bank/screens/home_section/withdraw/withdraw_screen.dart';
+import 'package:asian_development_bank/screens/loan_apply_screen/loan_apply_screen.dart';
+import 'package:asian_development_bank/screens/personal_information/personal_information.dart';
+import 'package:asian_development_bank/slider/home_screen_slider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../auth/saved_login/user_session.dart';
@@ -106,18 +106,21 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Asian Development Bank', style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
-      body: Container(
-        width: isMobile ? double.infinity : 600,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              BalanceSection(balance: balance, name: name),
-              SliderSection(),
-              LoanApplicationSection(
-                  loanStatus: loanStatus.toString(),
-                  status: status.toString()),
-              // Convert to string for passing to the widget
-            ],
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          width: isMobile ? double.infinity : 600,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                BalanceSection(balance: balance, name: name),
+                SliderSection(),
+                LoanApplicationSection(
+                    loanStatus: loanStatus.toString(),
+                    status: status.toString()),
+                // Convert to string for passing to the widget
+              ],
+            ),
           ),
         ),
       ),

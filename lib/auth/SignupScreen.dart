@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // For JSON encoding
-import 'package:world_bank_loan/auth/LoginScreen.dart';
-import 'package:world_bank_loan/auth/saved_login/user_session.dart';
+import 'package:asian_development_bank/auth/LoginScreen.dart';
+import 'package:asian_development_bank/auth/saved_login/user_session.dart';
 
 import '../bottom_navigation/MainNavigationScreen.dart';
 
@@ -293,7 +293,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: !confirmPasswordVisible,
                   keyboardType: TextInputType.text, // Keep this as text input
                   decoration: InputDecoration(
-                    labelText: 'পূণরায়  একই পাসওয়ার্ড দিন',
+                    labelText: 'পূণরায় একই পাসওয়ার্ড দিন',
                     suffixIcon: IconButton(
                       icon: Icon(
                         confirmPasswordVisible

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http; // Import http package
-import 'package:world_bank_loan/auth/LoginScreen.dart';
-import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
-import 'package:world_bank_loan/screens/ComplaintFormScreen/ComplaintFormScreen.dart';
-import 'package:world_bank_loan/screens/change_password/change_password.dart';
-import 'package:world_bank_loan/screens/data_delete_screen/data_delete_screen.dart';
-import 'package:world_bank_loan/screens/personal_information/personal_information.dart';
-import 'package:world_bank_loan/screens/privacy_policy_screen/privacy_policy_screen.dart';
-import 'package:world_bank_loan/screens/terms_and_condition/terms_and_condition.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:asian_development_bank/auth/LoginScreen.dart';
+import 'package:asian_development_bank/bottom_navigation/MainNavigationScreen.dart';
+import 'package:asian_development_bank/screens/ComplaintFormScreen/ComplaintFormScreen.dart';
+import 'package:asian_development_bank/screens/change_password/change_password.dart';
+import 'package:asian_development_bank/screens/data_delete_screen/data_delete_screen.dart';
+import 'package:asian_development_bank/screens/personal_information/personal_information.dart';
+import 'package:asian_development_bank/screens/privacy_policy_screen/privacy_policy_screen.dart';
+import 'package:asian_development_bank/screens/terms_and_condition/terms_and_condition.dart';
 import '../../auth/saved_login/user_session.dart';
-import '../AboutMeScreen/AboutMeScreen.dart';
 import '../bank_account/bank_account.dart';
 import '../kisti_details/kisti_details.dart';
 import '../user_agrements/user_agrements_screen.dart';
@@ -128,11 +128,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // যখন ইউজার ব্যাক বাটনে ক্লিক করবে, হোম স্ক্রিনে নেভিগেট হবে
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MainNavigationScreen()), // HomeScreen হলো আপনার হোম স্ক্রিন ক্লাস
+          MaterialPageRoute(
+              builder: (context) =>
+                  MainNavigationScreen()), // HomeScreen হলো আপনার হোম স্ক্রিন ক্লাস
         );
         return false; // Returning false to prevent the default pop action
       },
-
       child: Scaffold(
         backgroundColor: Color(0xFF002336),
         appBar: AppBar(
@@ -173,10 +174,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: FontAwesomeIcons.infoCircle,
                         text: 'আমার সম্পর্কে',
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => AboutMeScreen()));
+
+
+                          launchURL();
+
+
                         },
                       ),
                       ProfileOption(
@@ -196,7 +198,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (builder) => ChangePasswordScreen()));
+                                  builder: (builder) =>
+                                      ChangePasswordScreen()));
                         },
                       ),
                       ProfileOption(
@@ -326,5 +329,14 @@ class ProfileOption extends StatelessWidget {
         onTap: onTap,
       ),
     );
+  }
+}
+
+void launchURL() async {
+  const url = 'https://www.adb.org/who-we-are/about';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }

@@ -78,50 +78,53 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       appBar: AppBar(
         title: Text('Change your password'),
       ),
-      body: Container(
-        width: screenWidth > 600 ? 600 : screenWidth,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildPasswordField(
-                  label: 'পূরাতন পাসওয়ার্ড',
-                  controller: oldPasswordController,
-                  obscureText: _obscureOldPassword,
-                  toggleObscureText: () {
-                    setState(() {
-                      _obscureOldPassword = !_obscureOldPassword;
-                    });
-                  },
-                ),
-                SizedBox(height: 16.0),
-                _buildPasswordField(
-                  label: 'নতুন পাসওয়ারড',
-                  controller: newPasswordController,
-                  obscureText: _obscureNewPassword,
-                  toggleObscureText: () {
-                    setState(() {
-                      _obscureNewPassword = !_obscureNewPassword;
-                    });
-                  },
-                ),
-                SizedBox(height: 16.0),
-                _buildPasswordField(
-                  label: 'কনফার্ম পাসওয়াররড',
-                  controller: confirmPasswordController,
-                  obscureText: _obscureConfirmPassword,
-                  toggleObscureText: () {
-                    setState(() {
-                      _obscureConfirmPassword = !_obscureConfirmPassword;
-                    });
-                  },
-                ),
-                SizedBox(height: 24.0),
-                _buildSaveButton(),
-              ],
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildPasswordField(
+                    label: 'পূরাতন পাসওয়ার্ড',
+                    controller: oldPasswordController,
+                    obscureText: _obscureOldPassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureOldPassword = !_obscureOldPassword;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  _buildPasswordField(
+                    label: 'নতুন পাসওয়ার্ড',
+                    controller: newPasswordController,
+                    obscureText: _obscureNewPassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureNewPassword = !_obscureNewPassword;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  _buildPasswordField(
+                    label: 'কনফার্ম পাসওয়ার্ড',
+                    controller: confirmPasswordController,
+                    obscureText: _obscureConfirmPassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 24.0),
+                  _buildSaveButton(),
+                ],
+              ),
             ),
           ),
         ),

@@ -73,70 +73,77 @@ class _GetWithdrawState extends State<GetWithdraw> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(title: Text('টাকা তুলুন')),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            // Amount TextField with decoration and text color
-            TextField(
-              controller: _amountController,
-              decoration: InputDecoration(
-                labelText: 'টাকার পরিমান',
-                labelStyle: TextStyle(color: Colors.white),
-                filled: true,
-                fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(
-                    color: Color(0xFF00839E),
-                  ),
-                ),
-              ),
-              style: TextStyle(color: Colors.white),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 16),
-
-            // Pin TextField with decoration and text color
-            TextField(
-              controller: _pinController,
-              decoration: InputDecoration(
-                labelText: 'উত্তোলন পিন',
-                labelStyle: TextStyle(color: Colors.white),
-                filled: true,
-                fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(
-                    color: Color(0xFF00839E),
-                  ),
-                ),
-              ),
-              style: TextStyle(color: Colors.white),
-              obscureText: true,
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 16),
-
-            // Submit Button with loading indicator
-            SizedBox(
-              width: double.maxFinite,
-              child: _isLoading
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _submitData,
-                      child: Text('জমা দিন'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF00839E),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 12.0, horizontal: 24.0),
-                        textStyle: TextStyle(fontSize: 18),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              children: <Widget>[
+                // Amount TextField with decoration and text color
+                TextField(
+                  controller: _amountController,
+                  decoration: InputDecoration(
+                    labelText: 'টাকার পরিমান',
+                    labelStyle: TextStyle(color: Colors.white),
+                    filled: true,
+                    fillColor: Colors.grey[800],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Color(0xFF00839E),
                       ),
                     ),
+                  ),
+                  style: TextStyle(color: Colors.white),
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 16),
+
+                // Pin TextField with decoration and text color
+                TextField(
+                  controller: _pinController,
+                  decoration: InputDecoration(
+                    labelText: 'উত্তোলন পিন',
+                    labelStyle: TextStyle(color: Colors.white),
+                    filled: true,
+                    fillColor: Colors.grey[800],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Color(0xFF00839E),
+                      ),
+                    ),
+                  ),
+                  style: TextStyle(color: Colors.white),
+                  obscureText: true,
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 16),
+
+                // Submit Button with loading indicator
+                SizedBox(
+                  width: double.maxFinite,
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _submitData,
+                          child: Text('জমা দিন'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF00839E),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 24.0),
+                            textStyle: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

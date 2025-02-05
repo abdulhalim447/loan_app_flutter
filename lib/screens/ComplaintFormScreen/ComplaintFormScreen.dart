@@ -75,26 +75,29 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
       appBar: AppBar(
         title: Text('Complain'),
       ),
-      body: Container(
-        width: screenWidth > 600 ? 600 : screenWidth,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTextField('আপনার নম্বর', yourNameController),
-                SizedBox(height: 8.0),
-                _buildTextField('ওয়েবসাইট', websiteController),
-                SizedBox(height: 8.0),
-                _buildTextField('সার্ভিস নম্বর', providerNameController),
-                SizedBox(height: 8.0),
-                _buildTextField('ক্ষতির বিবরণ', totalDamageController),
-                SizedBox(height: 16.0),
-                _buildSubmitButton(),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTextField('আপনার নম্বর', yourNameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('ওয়েবসাইট', websiteController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('সার্ভিস নম্বর', providerNameController),
+                  SizedBox(height: 8.0),
+                  _buildTextField('ক্ষতির বিবরণ', totalDamageController),
+                  SizedBox(height: 16.0),
+                  _buildSubmitButton(),
 
-              ],
+                ],
+              ),
             ),
           ),
         ),

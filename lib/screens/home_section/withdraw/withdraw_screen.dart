@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../auth/saved_login/user_session.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class WithdrawScreen extends StatefulWidget {
   @override
@@ -34,51 +36,12 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   String adminIfc = "N/A";
   String adminUpi = "N/A";
 
-  File? _image;
-  final ImagePicker _picker = ImagePicker();
 
-
-
-
-  // app start from here=======================================================
   @override
   void initState() {
     super.initState();
     _loadStoredUserData();
     _fetchWithdrawDetails();
-  }
-
-
-
-  Future<void> _saveUserData(
-      String balance,
-      String loan,
-      String bankName,
-      String account,
-      String bankUser,
-      String fee,
-      String message,
-      String ifc,
-      String adminBankName,
-      String adminAccountName,
-      String adminAccountNumber,
-      String adminIfc,
-      String adminUpi,
-      ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('balance', balance);
-    await prefs.setString('loan', loan);
-    await prefs.setString('bankName', bankName);
-    await prefs.setString('account', account);
-    await prefs.setString('bankUser', bankUser);
-    await prefs.setString('fee', fee);
-    await prefs.setString('message', message);
-    await prefs.setString('ifc', ifc);
-    await prefs.setString('adminBankName', adminBankName);
-    await prefs.setString('adminAccountName', adminAccountName);
-    await prefs.setString('adminAccountNumber', adminAccountNumber);
-    await prefs.setString('adminIfc', adminIfc);
-    await prefs.setString('adminUpi', adminUpi);
   }
 
   Future<void> _loadStoredUserData() async {
@@ -100,6 +63,37 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     });
   }
 
+  Future<void> _saveUserData(
+    String balance,
+    String loan,
+    String bankName,
+    String account,
+    String bankUser,
+    String fee,
+    String message,
+    String ifc,
+    String adminBankName,
+    String adminAccountName,
+    String adminAccountNumber,
+    String adminIfc,
+    String adminUpi,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('balance', balance);
+    await prefs.setString('loan', loan);
+    await prefs.setString('bankName', bankName);
+    await prefs.setString('account', account);
+    await prefs.setString('bankUser', bankUser);
+    await prefs.setString('fee', fee);
+    await prefs.setString('message', message);
+    await prefs.setString('ifc', ifc);
+    await prefs.setString('adminBankName', adminBankName);
+    await prefs.setString('adminAccountName', adminAccountName);
+    await prefs.setString('adminAccountNumber', adminAccountNumber);
+    await prefs.setString('adminIfc', adminIfc);
+    await prefs.setString('adminUpi', adminUpi);
+  }
+
   Future<void> _fetchWithdrawDetails() async {
     String? token = await UserSession.getToken();
 
@@ -114,7 +108,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           final data = json.decode(response.body);
 
           String newBalance = (data['userBankInfo']['balance'] ?? 0).toString();
-          String newLoan = (data['userBankInfo']['loanBalance'] ?? 0).toString();
+          String newLoan =
+              (data['userBankInfo']['loanBalance'] ?? 0).toString();
           String newBankName = data['userBankInfo']['bankName'] ?? "N/A";
           String newAccount =
               data['userBankInfo']['accountNumber']?.toString() ?? "N/A";
@@ -124,8 +119,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           String newMessage =
               data['userBankInfo']['message'] ?? "Message Not provided";
 
-          String newAdminBankName =
-              data['adminBankInfo']['bkash'] ?? "N/A";
+          String newAdminBankName = data['adminBankInfo']['bkash'] ?? "N/A";
           String newAdminAccountNumber =
               data['adminBankInfo']['nagad'] ?? "N/A";
           String newAdminIfc = data['adminBankInfo']['adminIfc'] ?? "N/A";
@@ -189,8 +183,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     // Responsive layout design
@@ -208,21 +200,10 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           child: ListView(
             padding: EdgeInsets.all(16),
             children: [
-             // BalanceSection(balance: balance, loan: loan),
-              //SizedBox(height: 8),
               Text('Details', style: TextStyle(color: Colors.white)),
-             /* BankDetails(
-                bankName: bankName,
-                account: account,
-                bankUser: bankUser,
-                ifc_code: ifc,
-              ),*/
               AdminBankDetailsSection(
                 bankName: adminBankName,
                 accountNumber: adminAccountNumber,
-             /*   ifc: adminIfc,
-                upi: adminUpi,
-                adminAccountName: adminAccountName,*/
               ),
               NoteSection(message: message),
               TakaSection(fee: fee),
@@ -258,8 +239,8 @@ class BalanceSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            BalanceColumn(label: "ব্যালেন্স (৳)", amount: balance),
-            BalanceColumn(label: "লোন (৳)", amount: loan),
+            BalanceColumn(label: "Balance (Rs)", amount: balance),
+            BalanceColumn(label: "Loan (Rs)", amount: loan),
           ],
         ),
       ),
@@ -321,7 +302,7 @@ class BankDetails extends StatelessWidget {
           userDetailRow(
               label: "Account Number", value: account ?? "Not Provided"),
           userDetailRow(label: "User Name", value: bankUser ?? "Not Provided"),
-          userDetailRow(label: "IFSC Code", value: ifc_code ?? "Not Provided"),
+          userDetailRow(label: "IFC Code", value: ifc_code ?? "Not Provided"),
         ],
       ),
     );
@@ -419,16 +400,11 @@ class userDetailRow extends StatelessWidget {
 class AdminBankDetailsSection extends StatelessWidget {
   final String? bankName;
   final String? accountNumber;
-/*  final String? ifc;
-  final String? upi;
-  final String? adminAccountName;*/
 
-  AdminBankDetailsSection(
-      {this.bankName,
-      this.accountNumber,
-   /*   this.ifc,
-      this.upi,
-      required this.adminAccountName*/});
+  AdminBankDetailsSection({
+    this.bankName,
+    this.accountNumber,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -447,12 +423,9 @@ class AdminBankDetailsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           DetailRow(label: "বিকাশ | এজেন্ট", value: bankName ?? "Not Provided"),
-
           DetailRow(
               label: "নগদ | এজেন্ট", value: accountNumber ?? "Not Provided"),
-
         ],
       ),
     );
@@ -551,23 +524,32 @@ class TransactionScreenshot extends StatefulWidget {
 }
 
 class _TransactionScreenshotState extends State<TransactionScreenshot> {
-  File? _selectedImage; // Locally selected image
+  Uint8List? _webSelectedImage; // For web: store image bytes
+  File? _selectedImage; // For mobile: store image file
   final ImagePicker _picker = ImagePicker();
   bool _isUploading = false; // Upload status
 
-  // Function to pick image from gallery
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
+      if (kIsWeb) {
+        // For web: Use readAsBytes to get the image data
+        final imageBytes = await pickedFile.readAsBytes();
+        setState(() {
+          _webSelectedImage = imageBytes;
+        });
+      } else {
+        // For mobile: Use the file path
+        setState(() {
+          _selectedImage = File(pickedFile.path);
+        });
+      }
     }
   }
 
-  // Function to submit image to the server
   Future<void> _submitImage() async {
-    if (_selectedImage == null) return;
+    if (_selectedImage == null && _webSelectedImage == null) return;
 
     setState(() {
       _isUploading = true;
@@ -577,15 +559,24 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
       var uri = Uri.parse("https://app.wbli.org/api/recharge");
       var request = http.MultipartRequest('POST', uri);
 
-      // Attach image file
-      request.files.add(
-        await http.MultipartFile.fromPath('image', _selectedImage!.path),
-      );
+      if (kIsWeb && _webSelectedImage != null) {
+        // For web: Add image as bytes
+        request.files.add(http.MultipartFile.fromBytes(
+          'image',
+          _webSelectedImage!,
+          filename: 'screenshot.png', // Provide a file name
+          contentType: MediaType('image', 'png'),
+        ));
+      } else if (_selectedImage != null) {
+        // For mobile: Add image as file
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          _selectedImage!.path,
+        ));
+      }
 
-      // Add headers (if necessary, e.g., Authorization)
-      String? token =
-          await UserSession.getToken(); // Get token from UserSession
       // Add headers
+      String? token = await UserSession.getToken(); // Get token
       request.headers.addAll({
         'Authorization': 'Bearer $token',
         'Content-Type': 'multipart/form-data',
@@ -601,6 +592,7 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
         widget.onSuccess(); // Callback after successful upload
         setState(() {
           _selectedImage = null; // Reset the selected image
+          _webSelectedImage = null; // Reset for web
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -641,54 +633,26 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
               ),
               image: _buildBackgroundImage(),
             ),
-            child: widget.status != 1 && _selectedImage == null
+            child: widget.status != 1 &&
+                    _selectedImage == null &&
+                    _webSelectedImage == null
                 ? Center(
                     child: Text(
-                      "পেমেন্টের স্ক্রিনশট আপ্লোড করুন",
+                      "Tap to select an image",
                       style: TextStyle(color: Colors.grey, fontSize: 16),
                     ),
                   )
                 : null,
           ),
         ),
-
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 24),
           child: SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF00839E), // Background color when enabled
-                disabledBackgroundColor: Color(0xFF00839E), // Keep the same color when disabled
-              ),
-              onPressed: (_selectedImage == null || _isUploading)
-                  ? null // Disable button if no image or during upload
-                  : _submitImage,
-              child: _isUploading
-                  ? SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  color: Colors.white, // Spinner color
-                  strokeWidth: 2,
-                ),
-              )
-                  : Text(
-                "স্ক্রিনশট জমা দিন",
-                style: TextStyle(color: Colors.white), // Text color
-              ),
-            ),
-          ),
-        ),
-
-
-        /*Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 24),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: (_selectedImage == null || _isUploading)
+              onPressed: (_selectedImage == null && _webSelectedImage == null ||
+                      _isUploading)
                   ? null // Disable button if no image or during upload
                   : _submitImage,
               child: _isUploading
@@ -701,25 +665,31 @@ class _TransactionScreenshotState extends State<TransactionScreenshot> {
                       ),
                     )
                   : Text(
-                      "স্ক্রিনশট জমা দিন",
+                      "Submit Screenshot",
                       style: TextStyle(color: Colors.white),
                     ),
             ),
           ),
-        ),*/
+        ),
       ],
     );
   }
 
-  // Function to show background image
   DecorationImage? _buildBackgroundImage() {
     if (widget.status == 1 && widget.imagePath != null) {
       return DecorationImage(
         image: NetworkImage(
-            "https://app.wbli.org/storage/uploads/recharge/${widget.imagePath}"),
+            "https://wbli.org/storage/uploads/recharge/${widget.imagePath}"),
+        fit: BoxFit.cover,
+      );
+    } else if (_webSelectedImage != null) {
+      // For web: Display image using MemoryImage
+      return DecorationImage(
+        image: MemoryImage(_webSelectedImage!),
         fit: BoxFit.cover,
       );
     } else if (_selectedImage != null) {
+      // For mobile: Display image using FileImage
       return DecorationImage(
         image: FileImage(_selectedImage!),
         fit: BoxFit.cover,

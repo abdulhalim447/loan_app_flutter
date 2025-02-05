@@ -1,6 +1,6 @@
+import 'package:asian_development_bank/auth/LoginScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
-import '../../auth/SignupScreen.dart';
+import 'package:asian_development_bank/bottom_navigation/MainNavigationScreen.dart';
 import '../../auth/saved_login/user_session.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // If token does not exist, navigate to LoginScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SignupScreen()),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     }
   }

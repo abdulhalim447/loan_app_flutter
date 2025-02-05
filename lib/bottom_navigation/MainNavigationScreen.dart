@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:world_bank_loan/screens/card_section/card_screen.dart';
-import 'package:world_bank_loan/screens/help_section/help_screen.dart';
-import 'package:world_bank_loan/screens/home_section/home_page.dart';
-import 'package:world_bank_loan/screens/profile_section/profile_screen.dart';
+import 'package:asian_development_bank/screens/card_section/card_screen.dart';
+import 'package:asian_development_bank/screens/help_section/help_screen.dart';
+import 'package:asian_development_bank/screens/home_section/home_page.dart';
+import 'package:asian_development_bank/screens/profile_section/profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   @override

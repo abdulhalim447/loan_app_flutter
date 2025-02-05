@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:world_bank_loan/screens/loan_apply_screen/loan_apply_screen.dart';
+import 'package:asian_development_bank/screens/loan_apply_screen/loan_apply_screen.dart';
 import 'dart:convert';
 import '../../auth/saved_login/user_session.dart';
 
@@ -143,34 +143,37 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       appBar: AppBar(
         title: Text('ব্যাংক একাউন্ট তথ্য'),
       ),
-      body: Container(
-        width: screenWidth > 600 ? 600 : screenWidth,
-        child: SingleChildScrollView(
-          child: isLoading
-              ? Center(
-            child: CircularProgressIndicator(), // Show loading spinner
-          )
-              : SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('ব্যাংক একাউন্ট তথ্য'),
-                  SizedBox(height: 16.0),
-                  _buildTextField('অ্যাকাউন্ট হোল্ডারের নাম', accountHolderController),
-                  SizedBox(height: 8.0),
-                  _buildTextField('ব্যাংকের নাম', bankNameController),
-                  SizedBox(height: 8.0),
-                  _buildTextField('অ্যাকাউন্ট নম্বর', accountNumberController,
-                      keyboardType: TextInputType.number),
-                  SizedBox(height: 8.0),
-                  _buildTextField('শাখা', ifcCode),
-                  SizedBox(height: 16.0),
-                  _buildSaveButton(),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          width: screenWidth > 600 ? 600 : screenWidth,
+          child: SingleChildScrollView(
+            child: isLoading
+                ? Center(
+              child: CircularProgressIndicator(), // Show loading spinner
+            )
+                : SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle('ব্যাংক একাউন্ট তথ্য'),
+                    SizedBox(height: 16.0),
+                    _buildTextField('অ্যাকাউন্ট হোল্ডারের নাম', accountHolderController),
+                    SizedBox(height: 8.0),
+                    _buildTextField('ব্যাংকের নাম', bankNameController),
+                    SizedBox(height: 8.0),
+                    _buildTextField('অ্যাকাউন্ট নম্বর', accountNumberController,
+                        keyboardType: TextInputType.number),
+                    SizedBox(height: 8.0),
+                    _buildTextField('শাখা', ifcCode),
+                    SizedBox(height: 16.0),
+                    _buildSaveButton(),
 
-                ],
+                  ],
+                ),
               ),
             ),
           ),

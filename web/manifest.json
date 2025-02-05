@@ -1,11 +1,11 @@
 {
-    "name": "world_bank_loan",
-    "short_name": "world_bank_loan",
+    "name": "asian_development_bank",
+    "short_name": "asian_development_bank",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Asian Development Bank.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
