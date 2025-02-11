@@ -106,18 +106,21 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Asian Development Bank', style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
-      body: Container(
-        width: isMobile ? double.infinity : 600,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              BalanceSection(balance: balance, name: name),
-              SliderSection(),
-              LoanApplicationSection(
-                  loanStatus: loanStatus.toString(),
-                  status: status.toString()),
-              // Convert to string for passing to the widget
-            ],
+      body: Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: isMobile ? double.infinity : 600,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                BalanceSection(balance: balance, name: name),
+                SliderSection(),
+                LoanApplicationSection(
+                    loanStatus: loanStatus.toString(),
+                    status: status.toString()),
+                // Convert to string for passing to the widget
+              ],
+            ),
           ),
         ),
       ),

@@ -293,7 +293,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: !confirmPasswordVisible,
                   keyboardType: TextInputType.text, // Keep this as text input
                   decoration: InputDecoration(
-                    labelText: 'পূণরায়  একই পাসওয়ার্ড দিন',
+                    labelText: 'পূণরায় একই পাসওয়ার্ড দিন',
                     suffixIcon: IconButton(
                       icon: Icon(
                         confirmPasswordVisible

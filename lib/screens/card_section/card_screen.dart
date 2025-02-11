@@ -292,189 +292,200 @@ class _CardScreenState extends State<CardScreen> {
           title: Text("ওয়ালেট"),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: isLoading
-                ? CircularProgressIndicator()
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: isMobile ? 175 : 175,
-                        width: isMobile ? double.infinity : 600,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(18),
-                                child: Image.asset(
-                                  "assets/images/credit_card.png",
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 20,
-                              bottom: isMobile ? 55 : 65,
-                              child: Text(
-                                "$userBankNumber",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: isMobile ? 14 : 16,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 20,
-                              bottom: isMobile ? 30 : 45,
-                              child: Text(
-                                "$userBankName",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: isMobile ? 16 : 18,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              right: 20,
-                              bottom: isMobile ? 40 : 50,
-                              child: Text(
-                                "Valid Till\n$validity",
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: isMobile ? 14 : 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: isMobile ? 10 : 15),
-                      BalanceSection(balance: walletBalance, loan: walletLoan),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => WithdrawScreen()),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              // Set background color to transparent
-                              //onPrimary: Colors.blue, // Text color (you can change it to any color you want)
-                              shadowColor:
-                                  Colors.transparent, // Optional: removes shadow
-                            ),
-                            child: Text("রিচার্জ"),
+        body: Align(
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: isLoading
+                  ? CircularProgressIndicator()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: isMobile ? 175 : 175,
+                          width: isMobile ? double.infinity : 600,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
                           ),
-                          SizedBox(width: 50),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => GetWithdraw()),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              // Set background color to transparent
-                              //onPrimary: Colors.blue, // Text color (set it as needed)
-                              shadowColor: Colors
-                                  .transparent, // Optional: remove button shadow
-                            ),
-                            child: Text("উত্তোলন"),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "বিস্তারিত",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 300, // You can adjust the height as needed
-                        child: ListView.builder(
-                          itemCount: withdrawList.length,
-                          itemBuilder: (context, index) {
-                            var withdraw = withdrawList[index];
-                            return Card(
-                              margin: EdgeInsets.symmetric(vertical: 4),
-                              elevation: 5,
-                              child: ListTile(
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "টাকা: ${withdraw['amount']}",
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      withdraw['status'] == 0
-                                          ? 'Pending'
-                                          : withdraw['status'] == 1
-                                              ? 'Accepted'
-                                              : 'Rejected',
-                                      style: TextStyle(
-                                        color: withdraw['status'] == 1
-                                            ? Colors.green
-                                            : withdraw['status'] == 2
-                                                ? Colors.red
-                                                : Colors.grey,
-                                      ),
-                                    ),
-                                  ],
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.asset(
+                                    "assets/images/credit_card.png",
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${withdraw['created_at']}",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                    if (withdraw['status'] ==
-                                        2) // Only show reason if status is 2
+                              ),
+                              Positioned(
+                                left: 20,
+                                bottom: isMobile ? 55 : 65,
+                                child: Text(
+                                  "$userBankNumber",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: isMobile ? 14 : 16,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 20,
+                                bottom: isMobile ? 30 : 45,
+                                child: Text(
+                                  "$userBankName",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: isMobile ? 16 : 18,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 20,
+                                bottom: isMobile ? 40 : 50,
+                                child: Text(
+                                  "Valid Till\n$validity",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: isMobile ? 14 : 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: isMobile ? 10 : 15),
+                        BalanceSection(balance: walletBalance, loan: walletLoan),
+                        Container(
+                          width: screenWidth > 600 ? 600 : screenWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => WithdrawScreen()),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  // Set background color to transparent
+                                  //onPrimary: Colors.blue, // Text color (you can change it to any color you want)
+                                  shadowColor:
+                                      Colors.transparent, // Optional: removes shadow
+                                ),
+                                child: Text("রিচার্জ"),
+                              ),
+                              SizedBox(width: 50),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GetWithdraw()),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  // Set background color to transparent
+                                  //onPrimary: Colors.blue, // Text color (set it as needed)
+                                  shadowColor: Colors
+                                      .transparent, // Optional: remove button shadow
+                                ),
+                                child: Text("উত্তোলন"),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: screenWidth > 600 ? 600 : screenWidth,
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "বিস্তারিত",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        SizedBox(
+                          width: screenWidth > 600 ? 600 : screenWidth,
+                          height: 300, // You can adjust the height as needed
+                          child: ListView.builder(
+                            itemCount: withdrawList.length,
+                            itemBuilder: (context, index) {
+                              var withdraw = withdrawList[index];
+                              return Card(
+                                margin: EdgeInsets.symmetric(vertical: 4),
+                                elevation: 5,
+                                child: ListTile(
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
                                       Text(
-                                        "${withdraw['reason']}",
-                                        style: TextStyle(
-                                            color: Colors.red, fontSize: 14),
+                                        "টাকা: ${withdraw['amount']}",
+                                        style:
+                                            TextStyle(fontWeight: FontWeight.bold),
                                       ),
-                                  ],
+                                      Text(
+                                        withdraw['status'] == 0
+                                            ? 'Pending'
+                                            : withdraw['status'] == 1
+                                                ? 'Accepted'
+                                                : 'Rejected',
+                                        style: TextStyle(
+                                          color: withdraw['status'] == 1
+                                              ? Colors.green
+                                              : withdraw['status'] == 2
+                                                  ? Colors.red
+                                                  : Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${withdraw['created_at']}",
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                      if (withdraw['status'] ==
+                                          2) // Only show reason if status is 2
+                                        Text(
+                                          "${withdraw['reason']}",
+                                          style: TextStyle(
+                                              color: Colors.red, fontSize: 14),
+                                        ),
+                                    ],
+                                  ),
+                                  //trailing:
                                 ),
-                                //trailing:
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+            ),
           ),
         ),
       ),
@@ -490,9 +501,12 @@ class BalanceSection extends StatelessWidget {
 
   BalanceSection({required this.balance, required this.loan});
 
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
+      width: screenWidth > 600 ? 600 : screenWidth,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Color(0xFF29ABE2),

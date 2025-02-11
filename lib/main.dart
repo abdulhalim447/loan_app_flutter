@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
 import 'package:world_bank_loan/screens/splash_screen/splash_screen.dart';
 
 void main() {

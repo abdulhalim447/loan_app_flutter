@@ -99,7 +99,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 SizedBox(height: 16.0),
                 _buildPasswordField(
-                  label: 'নতুন পাসওয়ারড',
+                  label: 'নতুন পাসওয়ার্ড',
                   controller: newPasswordController,
                   obscureText: _obscureNewPassword,
                   toggleObscureText: () {
@@ -110,7 +110,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 SizedBox(height: 16.0),
                 _buildPasswordField(
-                  label: 'কনফার্ম পাসওয়াররড',
+                  label: 'কনফার্ম পাসওয়ার্ড',
                   controller: confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
                   toggleObscureText: () {

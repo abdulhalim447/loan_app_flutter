@@ -110,7 +110,8 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
       appBar: AppBar(
         title: const Text('User Agreements'),
       ),
-      body: Center(
+      body: Align(
+        alignment: Alignment.topCenter,
         child: Container(
           width: screenWidth > 600 ? 600 : screenWidth,
           child: SingleChildScrollView(
@@ -121,18 +122,18 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
                 // যদি লোন পাওয়া যায়, তাহলে তথ্যগুলো দেখাবে
                 hasLoan
                     ? LoanTableWidget(
-                        borrowerName: borrowerName,
-                        loanTime: loanTime,
-                        loanAmount: loanAmount,
-                        loanInstallments: loanInstallments,
-                        monthlyInterestRate: monthlyInterestRate,
-                        contactNumber: contactNumber,
-                      )
+                  borrowerName: borrowerName,
+                  loanTime: loanTime,
+                  loanAmount: loanAmount,
+                  loanInstallments: loanInstallments,
+                  monthlyInterestRate: monthlyInterestRate,
+                  contactNumber: contactNumber,
+                )
                     : Center(
-                        child: const Text(
-                        'No active loan found',
-                        style: TextStyle(color: Colors.white),
-                      )),
+                    child: const Text(
+                      'No active loan found',
+                      style: TextStyle(color: Colors.white),
+                    )),
                 // এই লাইনটি যুক্ত হয়েছে
 
                 const SizedBox(height: 20),
@@ -147,9 +148,9 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
                 // যদি লোন থাকে, তখন SignatureTableWidget দেখানো হবে
                 hasLoan
                     ? SignatureTableWidget(
-                        borrowerSignature: borrowerSignature,
-                        loanStamp: loanStamp,
-                      )
+                  borrowerSignature: borrowerSignature,
+                  loanStamp: loanStamp,
+                )
                     : const SizedBox.shrink(),
                 // signature টেবিল শুধুমাত্র তখনই দেখাবে যদি লোন থাকে
               ],
@@ -249,7 +250,7 @@ class LoanTableWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child:
-                Text(loanInstallments, style: TextStyle(color: Colors.white)),
+            Text(loanInstallments, style: TextStyle(color: Colors.white)),
           ),
         ]),
         TableRow(children: [
@@ -322,6 +323,7 @@ class SignatureTableWidget extends StatelessWidget {
   }
 }
 
+
 class LoanTextDetailsWidget extends StatelessWidget {
   const LoanTextDetailsWidget({Key? key}) : super(key: key);
 
@@ -339,8 +341,8 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
               'Option A: Automatic deduction by the system on the 10th of every month.\n'
-              'Option B: Transfer via electronic banking system; bank & Ewallet\n'
-              'Option C: Direct bank transaction & NEFT',
+                  'Option B: Transfer via electronic banking system; bank & Ewallet\n'
+                  'Option C: Direct bank transaction & NEFT',
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
@@ -350,11 +352,9 @@ class LoanTextDetailsWidget extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-              'The Reserve Bank of India has mandated savings for loans, requiring clients to accumulate savings to avail loans. '
-              'The clients\' deposited money will be credited to the wallet along with the loan amount. '
-              'After repayment of the loan, the accumulated savings will be returned to the clients. '
-              'The savings deposited by the clients for taking the loan will be recorded in the loan agreement form. '
-              'The company will be obliged to return the savings to the clients after repayment of the loan.',
+              'The Central Bank of Bangladesh has made savings mandatory for loans, to get a loan, the customer will have to deposit savings. '
+                  'The money deposited by the customers will be deposited in the wallet along with the loan amount, and after the loan is repaid, the saved money will be returned to the customers. '
+                  'The savings deposited by the customer for taking a loan will be recorded in the loan agreement form, after the loan is repaid, the company will be obliged to return the customer\'s savings.',
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
@@ -365,7 +365,7 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
               'Borrower has the right to pay back the whole exceptional amount at any time. If Borrower pays before time, or if this loan is refinanced or replaced by a new note, '
-              'Lender will refund the unearned finance charge, figured by the Rule of 78—a commonly used formula for figuring rebates on installment loans.',
+                  'Lender will refund the unearned finance charge, figured by the Rule of 78—a commonly used formula for figuring rebates on installment loans.',
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
@@ -379,7 +379,7 @@ class LoanTextDetailsWidget extends StatelessWidget {
             style: TextStyle(
                 fontWeight: FontWeight.normal, fontSize: 16, color: Colors.white),
           ),
-          SizedBox(height: 16, ),
+          SizedBox(height: 16),
           Text(
             'Security:',
             style: TextStyle(
@@ -388,7 +388,7 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
               'To protect Lender, the loan company working online different from another bank that\'s why Party A does not require collateral for this loan. '
-              'Party A only requires the deposit in advance to verify the repayment ability of customers.',
+                  'Party A only requires the deposit in advance to verify the repayment ability of customers.',
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
@@ -399,7 +399,7 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
               'If Party B provides wrong bank information or ID information, then Party A should ask for a deposit from Party B 20% of the loan amount to solve this problem. '
-              'This amount will be refunded to Party B along with the loan amount later.',
+                  'This amount will be refunded to Party B along with the loan amount later.',
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
@@ -420,7 +420,7 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
               'If for any reason Borrower does not succeed in making any payment on time, Borrower shall be in default. The Lender can then order instant payment of the entire remaining unpaid balance of this loan, without giving anyone further notices. '
-              'If Borrower has not paid the full amount of the loan when the final payment is due, the Lender will charge Borrower interest on the unpaid balance at 6% per year.',
+                  'If Borrower has not paid the full amount of the loan when the final payment is due, the Lender will charge Borrower interest on the unpaid balance at 6% per year.',
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
@@ -434,16 +434,6 @@ class LoanTextDetailsWidget extends StatelessWidget {
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
-            'Collection fees:',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
-          ),
-          SizedBox(height: 8),
-          Text(
-              'If this note is placed with a legal representative for collection, then Borrower agrees to pay an attorney\'s fee of fifteen percent (15%) of the voluntary balance. This fee will be added to the unpaid balance of the loan.',
-              style: TextStyle(color: Colors.white)),
-          SizedBox(height: 16),
-          Text(
             'Rights & Obligations:',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
@@ -451,7 +441,7 @@ class LoanTextDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
               'The signed contract has a strong and valid legal force. All parties, both Party A and Party B, must follow all the rules and conditions contained in the contract agreement. '
-              'All parties to the contract will strictly carry out their obligations under the credit contract. Both parties are fully responsible for the contents of the agreed contract.',
+                  'All parties to the contract will strictly carry out their obligations under the credit contract. Both parties are fully responsible for the contents of the agreed contract.',
               style: TextStyle(color: Colors.white)),
           SizedBox(height: 16),
           Text(
@@ -468,3 +458,4 @@ class LoanTextDetailsWidget extends StatelessWidget {
     );
   }
 }
+
