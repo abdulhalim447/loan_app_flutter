@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:asian_development_bank/auth/SignupScreen.dart';
 import 'package:asian_development_bank/auth/saved_login/user_session.dart';
 import 'package:asian_development_bank/bottom_navigation/MainNavigationScreen.dart';
+import 'package:asian_development_bank/services/connection_service.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -15,8 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool passwordVisible = false;
-  String countryCode = "+880"; // Default country code
-  bool isLoading = false; // Flag for loading state
+  String countryCode = "+880";
+  bool isLoading = false;
+  final ConnectionService connectionService = ConnectionService();
 
   @override
   void initState() {
@@ -39,12 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Use countryCode in camelCase as the parameter name
-    String formattedCountryCode =
-        countryCode; // Keep the '+' in the country code
-
     setState(() {
-      isLoading = true; // Set loading state
+      isLoading = true;
     });
 
     try {
@@ -55,47 +53,43 @@ class _LoginScreenState extends State<LoginScreen> {
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          'countryCode': formattedCountryCode,
-          // Use countryCode instead of country_code
+          'countryCode': countryCode,
           'phone': phone,
           'password': password,
         }),
       );
 
       setState(() {
-        isLoading = false; // End loading
+        isLoading = false;
       });
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        print(
-            'Response Data: $responseData'); // Log response body for debugging
 
         if (responseData['success'] != null && responseData['success']) {
-          // Save token and phone after successful login
           String token = responseData['token'];
-          UserSession.saveSession(token, phone); // Save token and phone
+          await UserSession.saveSession(token, phone);
 
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => MainNavigationScreen()),
-            (Route<dynamic> route) => false, // This removes all previous routes
+            (Route<dynamic> route) => false,
           );
         } else {
-          print('Login Failed: ${responseData['message']}');
           _showErrorDialog(responseData['message'] ?? 'Login failed');
         }
       } else {
-        print('Request failed with status: ${response.statusCode}');
-        print('Response body: ${response.body}');
         _showErrorDialog('Failed to login. Please try again later.');
       }
-    } catch (error) {
+    } catch (e) {
       setState(() {
-        isLoading = false; // End loading in case of error
+        isLoading = false;
       });
-      print('Error: $error');
-      _showErrorDialog('An error occurred. Please try again.');
+      // Check if the error is due to internet connection
+      bool hasConnection = await connectionService.checkConnection(context);
+      if (hasConnection) {
+        _showErrorDialog('An error occurred. Please try again.');
+      }
     }
   }
 
@@ -142,7 +136,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "assets/icons/app_logo.png", height: 120,width: 120,
+                      "assets/icons/app_logo.png",
+                      height: 120,
+                      width: 120,
                     ),
                     Text(
                       'Asian Development Bank',
@@ -203,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   obscureText: !passwordVisible,
                   decoration: InputDecoration(
-                    labelText: 'পাসওয়ার্ড',
+                    labelText: 'পাসওর্ড',
                     suffixIcon: IconButton(
                       icon: Icon(
                         passwordVisible

@@ -4,7 +4,8 @@ import 'dart:convert'; // for JSON decoding
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../auth/saved_login/user_session.dart';
-
+import '../home_section/withdraw/withdraw_screen.dart';
+import 'get_withdraw.dart';
 
 class CardScreen extends StatefulWidget {
   const CardScreen({super.key});
@@ -155,9 +156,11 @@ class _CardScreenState extends State<CardScreen> {
   }
 
   Widget _buildCardSection() {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isMobile = screenWidth < 600;
     return Container(
-      height: 280,
-      width: 600,
+      height: isMobile ? 170 : 280,
+      width: isMobile ? double.infinity : 600,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
       child: Stack(
         children: [
@@ -200,6 +203,52 @@ class _CardScreenState extends State<CardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
+          Container(
+            width: screenWidth > 600 ? 600 : screenWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WithdrawScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    // Set background color to transparent
+                    //onPrimary: Colors.blue, // Text color (you can change it to any color you want)
+                    shadowColor:
+                    Colors.transparent, // Optional: removes shadow
+                  ),
+                  child: Text("রিচার্জ"),
+                ),
+                SizedBox(width: 50),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GetWithdraw()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    // Set background color to transparent
+                    //onPrimary: Colors.blue, // Text color (set it as needed)
+                    shadowColor: Colors
+                        .transparent, // Optional: remove button shadow
+                  ),
+                  child: Text("উত্তোলন"),
+                ),
+              ],
+            ),
+          ),
+
+
           Text("বিস্তারিত",
               style: TextStyle(
                   color: Colors.white,
@@ -207,38 +256,63 @@ class _CardScreenState extends State<CardScreen> {
                   fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
           SizedBox(
-            height: 300,
-            child: ListView.builder(
-              itemCount: withdrawList.length,
-              itemBuilder: (context, index) {
-                var withdraw = withdrawList[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 4),
-                  elevation: 5,
-                  child: ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("টাকা: ${withdraw['amount']}",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(
+            width: screenWidth > 600 ? 600 : screenWidth,
+            height: 300, // Fixed height
+            child: SingleChildScrollView(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(), // Prevent double scrolling
+                itemCount: withdrawList.length,
+                itemBuilder: (context, index) {
+                  var withdraw = withdrawList[index];
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 4),
+                    elevation: 5,
+                    child: ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "টাকা: ${withdraw['amount']}",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
                             withdraw['status'] == 0
                                 ? 'Pending'
                                 : withdraw['status'] == 1
-                                    ? 'Accepted'
-                                    : 'Rejected',
+                                ? 'Accepted'
+                                : 'Rejected',
                             style: TextStyle(
-                                color: withdraw['status'] == 1
-                                    ? Colors.green
-                                    : Colors.red)),
-                      ],
+                              color: withdraw['status'] == 1
+                                  ? Colors.green
+                                  : withdraw['status'] == 2
+                                  ? Colors.red
+                                  : Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${withdraw['created_at']}",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          if (withdraw['status'] == 2)
+                            Text(
+                              "${withdraw['reason'] ?? ''}",
+                              style: TextStyle(color: Colors.red, fontSize: 14),
+                            ),
+                        ],
+                      ),
                     ),
-                    subtitle: Text("${withdraw['created_at']}"),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
+
         ],
       ),
     );

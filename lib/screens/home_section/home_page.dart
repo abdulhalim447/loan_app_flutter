@@ -7,6 +7,7 @@ import 'package:asian_development_bank/slider/home_screen_slider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../auth/saved_login/user_session.dart';
+import '../../services/connection_service.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -18,15 +19,72 @@ class _HomeScreenState extends State<HomeScreen> {
   int loanStatus = 0;
   int status = 0;
   String name = "";
+  final ConnectionService _connectionService = ConnectionService();
 
   @override
   void initState() {
     super.initState();
-    _loadStoredUserData(); // Load user data from SharedPreferences
-    _getUserData(); // Call API to fetch updated data
+    _initializeData();
   }
 
-  // ডাটা সেভ করার ফাংশন
+  Future<void> _initializeData() async {
+    _loadStoredUserData(); // First load cached data
+    await _getUserData(); // Then try to fetch fresh data
+  }
+
+  Future<void> _loadStoredUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      balance = prefs.getString('balance') ?? "0";
+      name = prefs.getString('name') ?? "No Name";
+      loanStatus = prefs.getInt('loanStatus') ?? 0;
+      status = prefs.getInt('status') ?? 0;
+    });
+  }
+
+  Future<void> _getUserData() async {
+    // First check internet connection
+    bool hasConnection = await _connectionService.checkConnection(context);
+    if (!hasConnection) return;
+
+    try {
+      String? token = await UserSession.getToken();
+      if (token == null) {
+        setState(() {
+          balance = "0";
+          name = "Session expired";
+          loanStatus = 0;
+          status = 0;
+        });
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse('https://app.wbli.org/api/index'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        String newBalance = data['balance'];
+        String newName = data['name'] ?? "No Name";
+        int newLoanStatus = data['loan_status'];
+        int newStatus = data['status'];
+
+        await saveUserData(newBalance, newName, newLoanStatus, newStatus);
+        setState(() {
+          balance = newBalance;
+          name = newName;
+          loanStatus = newLoanStatus;
+          status = newStatus;
+        });
+      }
+    } catch (e) {
+      // If any error occurs during API call, check internet connection again
+      _connectionService.checkConnection(context);
+    }
+  }
+
   Future<void> saveUserData(
       String balance, String name, int loanStatus, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -36,67 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setInt('status', status);
   }
 
-  // ডাটা লোড করার ফাংশন
-  Future<void> _loadStoredUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? storedBalance = prefs.getString('balance') ?? "0";
-    String? storedName = prefs.getString('name') ?? "No Name";
-    int storedLoanStatus = prefs.getInt('loanStatus') ?? 0;
-    int storedStatus = prefs.getInt('status') ?? 0;
-
-    setState(() {
-      balance = storedBalance;
-      name = storedName;
-      loanStatus = storedLoanStatus;
-      status = storedStatus;
-    });
-  }
-
-  // API কল এবং ডাটা আপডেট করার ফাংশন
-  Future<void> _getUserData() async {
-    String? token = await UserSession.getToken();
-    if (token != null) {
-      final response = await http.get(
-        Uri.parse('https://app.wbli.org/api/index'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        String newBalance = data['balance'];
-        String newName = data['name'] ?? "No Name";
-        int newLoanStatus = data['loan_status'];
-        int newStatus = data['status'];
-
-        // Only update if data has changed
-        if (balance != newBalance ||
-            name != newName ||
-            loanStatus != newLoanStatus ||
-            status != newStatus) {
-          await saveUserData(newBalance, newName, newLoanStatus, newStatus);
-          setState(() {
-            balance = newBalance;
-            name = newName;
-            loanStatus = newLoanStatus;
-            status = newStatus;
-          });
-        }
-      } else {
-        // Handle error
-        setState(() {
-          balance = "0";
-          name = "Failed to load data";
-          loanStatus = 0;
-          status = 0;
-        });
-      }
-    }
+  Future<void> _onRefresh() async {
+    await _getUserData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Responsive layout design
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isMobile = screenWidth < 600;
 
@@ -106,20 +109,24 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Asian Development Bank', style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
-      body: Align(
-        alignment: Alignment.topCenter,
-        child: Container(
-          width: isMobile ? double.infinity : 600,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                BalanceSection(balance: balance, name: name),
-                SliderSection(),
-                LoanApplicationSection(
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: isMobile ? double.infinity : 600,
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  BalanceSection(balance: balance, name: name),
+                  SliderSection(),
+                  LoanApplicationSection(
                     loanStatus: loanStatus.toString(),
-                    status: status.toString()),
-                // Convert to string for passing to the widget
-              ],
+                    status: status.toString(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -260,7 +267,7 @@ class LoanApplicationSection extends StatelessWidget {
                 // If user is status '1' (Information verified)
                 else if (status == '1') ...[
                   Text(
-                    'আপনার ব্যক্তিগত তথ্য জমা দেওয়া হয়েছে। ঋণের জন্য আবেদন করুন।',
+                    'আপনার ব্যক্তিগত তথ্য জমা দেওয়া হয়েছে। ঋণের জন্য আবেদন করুন।',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: Colors.white),
                   ),
