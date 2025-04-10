@@ -109,8 +109,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               children: [
                 _buildBalanceCard(withdrawProvider),
                 SizedBox(height: 24),
-                if (withdrawProvider.message != null &&
-                    withdrawProvider.message.isNotEmpty)
+                if (withdrawProvider.message.isNotEmpty)
                   Column(
                     children: [
                       _buildMessageCard(withdrawProvider),
@@ -119,8 +118,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   ),
                 _buildMobilePaymentOptions(withdrawProvider),
                 SizedBox(height: 16),
-                if (withdrawProvider.fee != null)
-                  _buildFeeCard(withdrawProvider),
+                _buildFeeCard(withdrawProvider),
                 SizedBox(height: 24),
                 _buildTransactionUpload(withdrawProvider),
                 SizedBox(height: 24),

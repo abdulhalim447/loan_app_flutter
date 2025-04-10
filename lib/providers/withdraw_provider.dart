@@ -28,8 +28,8 @@ class WithdrawProvider extends ChangeNotifier {
   String _adminBankName = "N/A";
   String _adminAccountName = "N/A";
   String _adminAccountNumber = "N/A";
-  String _adminIfc = "N/A";
-  String _adminUpi = "N/A";
+  final String _adminIfc = "N/A";
+  final String _adminUpi = "N/A";
   String _bkashNumber = "N/A";
   String _nagadNumber = "N/A";
   File? _image;
@@ -198,11 +198,10 @@ class WithdrawProvider extends ChangeNotifier {
 
       // Add required form fields
       request.fields['method'] = 'mobile_banking'; // Add payment method
-      request.fields['transaction_id'] = 'MB' +
-          DateTime.now()
+      request.fields['transaction_id'] = 'MB${DateTime.now()
               .millisecondsSinceEpoch
               .toString()
-              .substring(0, 8); // Generated transaction ID
+              .substring(0, 8)}'; // Generated transaction ID
       request.fields['amount'] = _fee; // Add the fee amount
 
       var streamedResponse = await request.send().timeout(

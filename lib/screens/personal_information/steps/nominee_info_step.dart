@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:world_bank_loan/providers/personal_info_provider.dart';
 
 class NomineeInfoStepScreen extends StatelessWidget {
-  const NomineeInfoStepScreen({Key? key}) : super(key: key);
+  const NomineeInfoStepScreen({super.key});
 
   String? validateNomineeName(String? value) {
     if (value == null || value.isEmpty) {

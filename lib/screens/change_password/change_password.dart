@@ -93,9 +93,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     String? token = await UserSession.getToken();
 
     if (token == null) {
-      if (mounted)
+      if (mounted) {
         _showSnackBar('User not logged in. Please log in again.',
             isError: true);
+      }
       return;
     }
 

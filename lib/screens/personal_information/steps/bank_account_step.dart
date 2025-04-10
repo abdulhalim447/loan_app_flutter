@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:world_bank_loan/providers/personal_info_provider.dart';
 
 class BankAccountStepScreen extends StatelessWidget {
-  const BankAccountStepScreen({Key? key}) : super(key: key);
+  const BankAccountStepScreen({super.key});
 
   String? validateAccountHolder(String? value) {
     if (value == null || value.isEmpty) {

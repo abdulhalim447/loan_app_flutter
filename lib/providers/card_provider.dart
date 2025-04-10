@@ -1,109 +1,83 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../auth/saved_login/user_session.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:world_bank_loan/auth/saved_login/user_session.dart';
 import 'package:world_bank_loan/core/api/api_endpoints.dart';
 
 enum CardLoadingStatus { initial, loading, loaded, error }
 
 class CardProvider extends ChangeNotifier {
   CardLoadingStatus _status = CardLoadingStatus.initial;
-  String _cardHolderName = 'N/A';
-  String _cardNumber = 'N/A';
-  String _validity = 'N/A';
-  String _errorMessage = '';
-  bool _imageLoadError = false;
+  String _cardNumber = '';
+  String _cardHolderName = '';
+  String _validity = '';
+  String _cvv = '';
+  String _userBankName = '';
+  String _userBankNumber = '';
+  String? _errorMessage;
 
   // Getters
   CardLoadingStatus get status => _status;
-  String get cardHolderName => _cardHolderName;
   String get cardNumber => _cardNumber;
+  String get cardHolderName => _cardHolderName;
   String get validity => _validity;
-  String get errorMessage => _errorMessage;
-  bool get isLoading => _status == CardLoadingStatus.loading;
-  bool get hasError => _status == CardLoadingStatus.error;
-  bool get imageLoadError => _imageLoadError;
+  String get cvv => _cvv;
+  String get userBankName => _userBankName;
+  String get userBankNumber => _userBankNumber;
+  String? get errorMessage => _errorMessage;
 
-  // Set image load error
-  void setImageLoadError(bool value) {
-    _imageLoadError = value;
-    notifyListeners();
-  }
-
-  // Fetch card data from API
+  // Fetch card data from the API
   Future<void> fetchCardData() async {
-    if (_status == CardLoadingStatus.loading) return;
-
-    _status = CardLoadingStatus.loading;
-    _errorMessage = '';
-    notifyListeners();
-
     try {
-      // Retrieve the authentication token
-      String? token;
-      try {
-        token = await UserSession.getToken();
-      } catch (tokenError) {
-        debugPrint("Error getting token: $tokenError");
-        _setError('Authentication error');
-        notifyListeners();
-        return;
-      }
+      _status = CardLoadingStatus.loading;
+      notifyListeners();
+
+      final token = await UserSession.getToken();
 
       if (token == null) {
-        _setError('User not authenticated');
-        notifyListeners();
-        return;
+        throw Exception('User not authenticated');
       }
 
       final response = await http.get(
         Uri.parse(ApiEndpoints.card),
         headers: {
-          "Authorization": "Bearer $token",
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
         },
-      ).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () => throw Exception('Connection timeout'),
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final jsonResponse = json.decode(response.body);
 
-        try {
-          var card = data['card'][0];
-          _cardHolderName = card['cardHolderName'] ?? 'N/A';
-          _cardNumber = card['cardNumber'] ?? 'N/A';
-          _validity = card['validity'] ?? 'N/A';
+        if (jsonResponse['cards'] != null && jsonResponse['cards'].isNotEmpty) {
+          final cardData = jsonResponse['cards'][0];
+
+          _cardNumber = cardData['cardNumber'] ?? '';
+          _cardHolderName = cardData['cardHolderName'] ?? '';
+          _validity = cardData['validity'] ?? '';
+          _cvv = cardData['cvv'] ?? '';
+
+          // Get bank information if available
+          _userBankName = jsonResponse['userBankName'] ?? '';
+          _userBankNumber = jsonResponse['userBankNumber'] ?? '';
+
           _status = CardLoadingStatus.loaded;
-        } catch (e) {
-          _setError('Failed to parse data: $e');
+        } else {
+          _errorMessage = 'No card data found';
+          _status = CardLoadingStatus.error;
         }
-      } else if (response.statusCode == 401) {
-        _setError('Session expired. Please login again');
       } else {
-        _setError('Server error: ${response.statusCode}');
+        _errorMessage = 'Failed to load card data: ${response.statusCode}';
+        _status = CardLoadingStatus.error;
       }
     } catch (e) {
-      _setError('Connection error: $e');
+      _errorMessage = 'Error: ${e.toString()}';
+      _status = CardLoadingStatus.error;
+      if (kDebugMode) {
+        print('Error fetching card data: $e');
+      }
     }
 
     notifyListeners();
-  }
-
-  // Reset data
-  void reset() {
-    _status = CardLoadingStatus.initial;
-    _cardHolderName = 'N/A';
-    _cardNumber = 'N/A';
-    _validity = 'N/A';
-    _errorMessage = '';
-    _imageLoadError = false;
-    notifyListeners();
-  }
-
-  // Set error state
-  void _setError(String message) {
-    _status = CardLoadingStatus.error;
-    _errorMessage = message;
   }
 }

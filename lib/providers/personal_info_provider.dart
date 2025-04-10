@@ -296,15 +296,19 @@ class PersonalInfoProvider extends ChangeNotifier {
       await prefs.setString('pi_ifcCode', ifcCodeController.text);
 
       // Save image paths
-      if (frontIdImagePath != null)
+      if (frontIdImagePath != null) {
         await prefs.setString('pi_frontIdImagePath', frontIdImagePath!);
-      if (backIdImagePath != null)
+      }
+      if (backIdImagePath != null) {
         await prefs.setString('pi_backIdImagePath', backIdImagePath!);
-      if (selfieWithIdImagePath != null)
+      }
+      if (selfieWithIdImagePath != null) {
         await prefs.setString(
             'pi_selfieWithIdImagePath', selfieWithIdImagePath!);
-      if (signatureImagePath != null)
+      }
+      if (signatureImagePath != null) {
         await prefs.setString('pi_signatureImagePath', signatureImagePath!);
+      }
 
       // Save step and completion status
       await prefs.setInt('pi_currentStep', _currentStep.index);

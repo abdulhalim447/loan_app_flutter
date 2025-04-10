@@ -8,7 +8,7 @@ import 'dart:math' as math;
 import 'package:flutter/services.dart' show rootBundle;
 
 class CardScreen extends StatefulWidget {
-  const CardScreen({Key? key}) : super(key: key);
+  const CardScreen({super.key});
 
   @override
   _CardScreenState createState() => _CardScreenState();
@@ -293,7 +293,9 @@ class _CardScreenState extends State<CardScreen>
                     children: [
                       _buildCardDetails(provider),
                       SizedBox(height: 24),
-                      _buildTransactionHistory(),
+                      _buildBankInformation(provider),
+                      SizedBox(height: 24),
+                      _buildCardServices(),
                     ],
                   ),
                 ),
@@ -590,16 +592,40 @@ class _CardScreenState extends State<CardScreen>
         Icons.calendar_today_outlined,
         Colors.green,
       ),
-      _buildDetailItem(
-        "Card Type",
-        "Visa Debit",
-        Icons.credit_score_outlined,
-        Colors.purple,
-      ),
+      if (provider.cvv.isNotEmpty)
+        _buildDetailItem(
+          "CVV",
+          provider.cvv,
+          Icons.security_outlined,
+          Colors.purple,
+        ),
     ]);
   }
 
-  Widget _buildTransactionHistory() {
+  Widget _buildBankInformation(CardProvider provider) {
+    if (provider.userBankName.isEmpty && provider.userBankNumber.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return _buildDetailSection("Bank Information", [
+      if (provider.userBankName.isNotEmpty)
+        _buildDetailItem(
+          "Bank Name",
+          provider.userBankName,
+          Icons.account_balance_outlined,
+          Colors.indigo,
+        ),
+      if (provider.userBankNumber.isNotEmpty)
+        _buildDetailItem(
+          "Account Number",
+          provider.userBankNumber,
+          Icons.account_balance_wallet_outlined,
+          Colors.teal,
+        ),
+    ]);
+  }
+
+  Widget _buildCardServices() {
     return _buildDetailSection("Card Services", [
       _buildFeatureItem(
         "Balance Check",

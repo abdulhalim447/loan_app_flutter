@@ -101,8 +101,9 @@ class _LoanCertificatePageState extends State<LoanCertificatePage>
     try {
       // Retrieve token
       String? token = await UserSession.getToken();
-      if (token == null)
+      if (token == null) {
         throw Exception('No token found. Please log in again.');
+      }
 
       // Set up headers
       final headers = {

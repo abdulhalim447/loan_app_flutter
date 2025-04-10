@@ -496,7 +496,7 @@ class ProfileHeader extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              "$number",
+              number,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.white,

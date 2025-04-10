@@ -235,7 +235,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               // Banner slider
-                              Container(
+                              SizedBox(
                                 height: screenSize.height * 0.22,
                                 child: HomeBannerSlider(),
                               ),
@@ -325,7 +325,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                 ),
                                                 SizedBox(height: 8),
                                                 Text(
-                                                  "${selectedLoanAmount > 0 ? (selectedLoanAmount + (selectedLoanAmount * interestRate / 100 * selectedLoanTerm / 12)).toStringAsFixed(0) : '0'}",
+                                                  selectedLoanAmount > 0 ? (selectedLoanAmount + (selectedLoanAmount * interestRate / 100 * selectedLoanTerm / 12)).toStringAsFixed(0) : '0',
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,
@@ -389,7 +389,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                 ),
                                                 SizedBox(height: 8),
                                                 Text(
-                                                  "${selectedLoanTerm} months",
+                                                  "$selectedLoanTerm months",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,
@@ -423,7 +423,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                             SizedBox(width: 6),
                                             Expanded(
                                               child: Text(
-                                                "Your monthly payment will be ${calculateInstallment(selectedLoanAmount, selectedLoanTerm).toStringAsFixed(0)} for ${selectedLoanTerm} months",
+                                                "Your monthly payment will be ${calculateInstallment(selectedLoanAmount, selectedLoanTerm).toStringAsFixed(0)} for $selectedLoanTerm months",
                                                 style: TextStyle(
                                                   fontSize: 11,
                                                   color: Colors.grey.shade700,
@@ -622,7 +622,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                 ),
                                                 SizedBox(height: 2),
                                                 Text(
-                                                  "${interestRate}% per annum (fixed)",
+                                                  "$interestRate% per annum (fixed)",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodySmall
@@ -765,11 +765,11 @@ class TermSelectionCard extends StatefulWidget {
   final AnimationController animationController;
 
   const TermSelectionCard({
-    Key? key,
+    super.key,
     required this.term,
     required this.isSelected,
     required this.animationController,
-  }) : super(key: key);
+  });
 
   @override
   _TermSelectionCardState createState() => _TermSelectionCardState();
@@ -893,11 +893,11 @@ class AmountSelectionCard extends StatefulWidget {
   final bool isSelected;
 
   const AmountSelectionCard({
-    Key? key,
+    super.key,
     required this.amount,
     required this.installment,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   _AmountSelectionCardState createState() => _AmountSelectionCardState();
@@ -1051,7 +1051,7 @@ class _AmountSelectionCardState extends State<AmountSelectionCard>
                         ),
                   ),
                   Text(
-                    '${widget.installment.toStringAsFixed(0)}',
+                    widget.installment.toStringAsFixed(0),
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontSize: installmentFontSize,
                           fontWeight: FontWeight.bold,

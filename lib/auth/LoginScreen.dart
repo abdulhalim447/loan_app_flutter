@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:shimmer/shimmer.dart';
 import 'package:world_bank_loan/auth/SignupScreen.dart';
 import 'package:world_bank_loan/auth/saved_login/user_session.dart';
 import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
 import 'package:world_bank_loan/core/theme/fintech_theme.dart';
 import 'package:world_bank_loan/core/api/api_endpoints.dart';
-import 'package:lottie/lottie.dart';
 import 'package:world_bank_loan/services/notification_service.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -506,11 +506,11 @@ class SupportHoursRow extends StatelessWidget {
   final bool isClosed;
 
   const SupportHoursRow({
-    Key? key,
+    super.key,
     required this.day,
     required this.hours,
     this.isClosed = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

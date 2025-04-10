@@ -199,7 +199,7 @@ class _TermsContentState extends State<_TermsContent> {
           ),
         ),
         const SizedBox(height: 8),
-        ...points.map((point) => _buildBulletPoint(point)).toList(),
+        ...points.map((point) => _buildBulletPoint(point)),
       ],
     );
   }

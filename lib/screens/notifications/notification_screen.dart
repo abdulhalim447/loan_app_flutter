@@ -11,7 +11,7 @@ import 'package:world_bank_loan/core/api/api_endpoints.dart';
 import 'package:world_bank_loan/auth/saved_login/user_session.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  const NotificationScreen({super.key});
 
   @override
   _NotificationScreenState createState() => _NotificationScreenState();
@@ -392,10 +392,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadNotifications,
-            child: Text('Try Again'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.authorityBlue,
             ),
+            child: Text('Try Again'),
           ),
         ],
       ),

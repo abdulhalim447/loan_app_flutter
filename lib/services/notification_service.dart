@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:world_bank_loan/auth/saved_login/user_session.dart';
+import 'package:world_bank_loan/core/widgets/custom_notification_overlay.dart';
 import 'package:world_bank_loan/services/notification_navigation_service.dart';
+
+// Global key to access the navigator context for showing notifications
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications =
-      FlutterLocalNotificationsPlugin();
 
   // This will be used to determine if we've already sent the token
   String? _currentToken;
@@ -21,9 +22,6 @@ class NotificationService {
   final _navigationService = NotificationNavigationService();
 
   Future<void> initialize() async {
-    // Initialize local notifications
-    await _initializeLocalNotifications();
-
     // Request permission for notifications
     final settings = await _firebaseMessaging.requestPermission(
       alert: true,
@@ -55,90 +53,6 @@ class NotificationService {
     } else {
       debugPrint('User declined or has not accepted notification permission');
     }
-  }
-
-  // Initialize the local notifications plugin for Android only
-  Future<void> _initializeLocalNotifications() async {
-    // Initialize settings for Android
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    // Initialize settings for Android only
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
-
-    // Initialize the plugin
-    await _localNotifications.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _onLocalNotificationTap,
-    );
-
-    // Create the notification channel for Android
-    await _createNotificationChannel();
-  }
-
-  // Create notification channel for Android
-  Future<void> _createNotificationChannel() async {
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'loan_app_channel',
-      'Loan App Notifications',
-      description: 'Channel for loan app notifications',
-      importance: Importance.high,
-      enableLights: true,
-      enableVibration: true,
-    );
-
-    await _localNotifications
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-  }
-
-  // Handle local notification tap
-  void _onLocalNotificationTap(NotificationResponse response) {
-    // Extract payload data
-    if (response.payload != null) {
-      try {
-        final Map<String, dynamic> data = json.decode(response.payload!);
-        _navigationService.navigateBasedOnNotification(data);
-      } catch (e) {
-        debugPrint('Error parsing notification payload: $e');
-      }
-    }
-  }
-
-  // Show a local notification (Android only)
-  Future<void> _showLocalNotification(
-      String title, String body, Map<String, dynamic> payload) async {
-    // Android specific notification details
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-      'loan_app_channel',
-      'Loan App Notifications',
-      channelDescription: 'Channel for loan app notifications',
-      importance: Importance.high,
-      priority: Priority.high,
-      enableLights: true,
-      enableVibration: true,
-      color: Colors.cyan,
-      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-    );
-
-    // General notification details with Android only
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidDetails,
-    );
-
-    // Show the notification
-    await _localNotifications.show(
-      DateTime.now().millisecond, // Unique ID for the notification
-      title,
-      body,
-      notificationDetails,
-      payload: json.encode(payload),
-    );
   }
 
   // Get and send token to server
@@ -197,12 +111,31 @@ class NotificationService {
       debugPrint('Notification Title: ${message.notification?.title}');
       debugPrint('Notification Body: ${message.notification?.body}');
 
-      // Show a local notification
-      _showLocalNotification(
+      // Show custom in-app notification
+      _showCustomInAppNotification(
         message.notification?.title ?? 'New Notification',
         message.notification?.body ?? 'You have a new notification',
         message.data,
       );
+    }
+  }
+
+  // Show a custom in-app notification using our overlay
+  void _showCustomInAppNotification(
+      String title, String body, Map<String, dynamic> data) {
+    // Only show if navigator context is available
+    if (navigatorKey.currentContext != null) {
+      CustomNotificationOverlay.show(
+        navigatorKey.currentContext!,
+        title: title,
+        message: body,
+        onTap: () {
+          // Handle notification tap
+          _navigationService.navigateBasedOnNotification(data);
+        },
+      );
+    } else {
+      debugPrint('Cannot show notification: No valid context available');
     }
   }
 
@@ -245,15 +178,21 @@ class NotificationService {
     await _firebaseMessaging.unsubscribeFromTopic(topic);
   }
 
-  // For debugging: Send a test notification
-  Future<void> sendTestNotification() async {
-    await _showLocalNotification(
-      'Test Notification',
-      'This is a test notification to verify everything is working correctly',
-      {
+  // For debugging: Send a test notification (simulated)
+  void sendTestNotification() {
+    // In this simplified approach, we just simulate receiving a notification
+    final fakeMessage = RemoteMessage(
+      notification: RemoteNotification(
+        title: 'Test Notification',
+        body: 'This is a test notification to verify functionality',
+      ),
+      data: {
         'type': 'test_notification',
         'timestamp': DateTime.now().toIso8601String(),
       },
     );
+
+    // Handle it like a real notification
+    _handleForegroundMessage(fakeMessage);
   }
 }

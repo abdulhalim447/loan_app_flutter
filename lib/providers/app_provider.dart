@@ -9,7 +9,7 @@ import 'personal_info_provider.dart';
 class AppProviders extends StatelessWidget {
   final Widget child;
 
-  const AppProviders({Key? key, required this.child}) : super(key: key);
+  const AppProviders({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

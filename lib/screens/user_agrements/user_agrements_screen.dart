@@ -16,7 +16,7 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen>
   late Animation<Offset> _slideAnimation;
   bool _isDisposed = false;
   String _currentDate = '';
-  String _loanTime = 'Dec 20, 2024, 01:33 PM';
+  final String _loanTime = 'Dec 20, 2024, 01:33 PM';
 
   @override
   void initState() {
@@ -553,7 +553,7 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen>
                             'assets/borrower_signature.png',
                             height: 80,
                             errorBuilder: (context, error, stackTrace) =>
-                                Container(
+                                SizedBox(
                               height: 80,
                               child: Center(
                                 child: Icon(

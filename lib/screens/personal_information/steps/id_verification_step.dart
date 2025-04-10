@@ -10,7 +10,7 @@ import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'dart:ui' as ui;
 
 class IdVerificationStepScreen extends StatefulWidget {
-  const IdVerificationStepScreen({Key? key}) : super(key: key);
+  const IdVerificationStepScreen({super.key});
 
   @override
   _IdVerificationStepScreenState createState() =>
@@ -561,8 +561,9 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
     BuildContext context,
     VoidCallback? onUpload,
   ) {
-    if (onUpload == null)
+    if (onUpload == null) {
       return SizedBox(); // Return empty container if read-only
+    }
 
     return InkWell(
       onTap: onUpload,

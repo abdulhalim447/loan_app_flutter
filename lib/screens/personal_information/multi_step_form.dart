@@ -12,7 +12,7 @@ import 'steps/bank_account_step.dart';
 import 'package:path_provider/path_provider.dart';
 
 class MultiStepPersonalInfoForm extends StatefulWidget {
-  const MultiStepPersonalInfoForm({Key? key}) : super(key: key);
+  const MultiStepPersonalInfoForm({super.key});
 
   @override
   _MultiStepPersonalInfoFormState createState() =>

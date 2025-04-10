@@ -873,7 +873,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(20),
         child: hasProfilePic
             ? Image.network(
-                "${baseUrl}${homeProvider.profilePicUrl!}",
+                "$baseUrl${homeProvider.profilePicUrl!}",
                 width: 40,
                 height: 40,
                 fit: BoxFit.cover,
