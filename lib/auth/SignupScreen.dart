@@ -676,9 +676,10 @@ class _SignupScreenState extends State<SignupScreen>
         Row(
           children: [
             Container(
+              constraints: BoxConstraints(maxWidth: 90),
               decoration: BoxDecoration(
                 color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: CountryCodePicker(
@@ -692,9 +693,15 @@ class _SignupScreenState extends State<SignupScreen>
                 showCountryOnly: false,
                 showOnlyCountryWhenClosed: false,
                 alignLeft: false,
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                textStyle: TextStyle(color: Color(0xFF2C3E50)),
-                flagWidth: 28,
+                padding: EdgeInsets.zero,
+                textStyle: TextStyle(
+                  color: Color(0xFF2C3E50),
+                  fontSize: 14,
+                ),
+                flagWidth: 24,
+                showFlag: true,
+                showFlagDialog: true,
+                showDropDownButton: false,
               ),
             ),
             SizedBox(width: 12),
@@ -710,29 +717,27 @@ class _SignupScreenState extends State<SignupScreen>
                 decoration: InputDecoration(
                   hintText: 'Enter phone number',
                   hintStyle: TextStyle(color: Colors.grey.shade400),
-                  prefixIcon: Icon(Icons.phone_android,
-                      color: Color(0xFF3498DB), size: 22),
                   filled: true,
                   fillColor: Colors.grey.shade50,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(color: Colors.grey.shade200),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(color: Colors.grey.shade200),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                     borderSide:
                         BorderSide(color: Color(0xFF3498DB), width: 1.5),
                   ),
                   errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(color: Colors.red.shade300),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(color: Colors.red.shade300),
                   ),
                   contentPadding:

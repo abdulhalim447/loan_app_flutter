@@ -5,14 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http; // Import http package
 import 'package:world_bank_loan/auth/LoginScreen.dart';
-import 'package:world_bank_loan/screens/ComplaintFormScreen/ComplaintFormScreen.dart';
+import 'package:world_bank_loan/screens/bank_account/bank_account.dart';
 import 'package:world_bank_loan/screens/change_password/change_password.dart';
 import 'package:world_bank_loan/screens/personal_information/personal_information.dart';
 import 'package:world_bank_loan/screens/terms_and_condition/terms_and_condition.dart';
 import '../../auth/saved_login/user_session.dart';
 import '../../core/theme/app_theme.dart';
-import '../AboutMeScreen/AboutMeScreen.dart';
-import '../bank_account/bank_account.dart';
 import '../loan_certifacte/loan_certificate.dart';
 import '../user_agrements/user_agrements_screen.dart';
 import 'package:world_bank_loan/core/api/api_endpoints.dart';
@@ -266,19 +264,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 PersonalInfoScreen()));
                                   },
                                 ),
-                                // ProfileOption(
-                                //   icon: FontAwesomeIcons.moneyBill,
-                                //   text: 'Bank Account',
-                                //   subtitle: 'Manage your bank details',
-                                //   color: Colors.green,
-                                //   onTap: () {
-                                //     Navigator.push(
-                                //         context,
-                                //         MaterialPageRoute(
-                                //             builder: (builder) =>
-                                //                 BankAccountScreen()));
-                                //   },
-                                // ),
+                                ProfileOption(
+                                  icon: FontAwesomeIcons.moneyBill,
+                                  text: 'Bank Account',
+                                  subtitle: 'Manage your bank details',
+                                  color: Colors.green,
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) =>
+                                                BankAccountScreen()));
+                                  },
+                                ),
 
                                 ProfileOption(
                                   icon: FontAwesomeIcons.lock,
@@ -310,19 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                 ),
 
-                                ProfileOption(
-                                  icon: FontAwesomeIcons.certificate,
-                                  text: 'Loan Certificate',
-                                  subtitle: 'View your loan documentation',
-                                  color: AppTheme.authorityBlue,
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (builder) =>
-                                                LoanCertificatePage()));
-                                  },
-                                ),
+                                
                                 ProfileOption(
                                   icon: FontAwesomeIcons.userLarge,
                                   text: 'Agreements',

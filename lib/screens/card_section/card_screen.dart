@@ -1,11 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../providers/card_provider.dart';
 import '../../core/theme/app_theme.dart';
-import 'dart:math' as math;
-import 'package:flutter/services.dart' show rootBundle;
 
 class CardScreen extends StatefulWidget {
   const CardScreen({super.key});
@@ -93,7 +90,7 @@ class _CardScreenState extends State<CardScreen>
             backgroundColor: AppTheme.authorityBlue,
             centerTitle: true,
             title: Text(
-              'My Card',
+              'My Banking',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -292,10 +289,10 @@ class _CardScreenState extends State<CardScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildCardDetails(provider),
-                      SizedBox(height: 24),
-                      _buildBankInformation(provider),
-                      SizedBox(height: 24),
-                      _buildCardServices(),
+                      //SizedBox(height: 24),
+                      //_buildBankInformation(provider),
+                      // SizedBox(height: 24),
+                      // _buildCardServices(),
                     ],
                   ),
                 ),
@@ -341,7 +338,7 @@ class _CardScreenState extends State<CardScreen>
           Padding(
             padding: EdgeInsets.only(left: 8, bottom: 16),
             child: Text(
-              "Your Debit Card",
+              "Your Bank Account",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -466,8 +463,8 @@ class _CardScreenState extends State<CardScreen>
 
                           // Card number with styling
                           Text(
-                            provider.cardNumber.isNotEmpty
-                                ? _formatCardNumber(provider.cardNumber)
+                            provider.userBankNumber.isNotEmpty
+                                ? _formatCardNumber(provider.userBankNumber)
                                 : '**** **** **** ****',
                             style: TextStyle(
                               color: Colors.white,
@@ -493,7 +490,7 @@ class _CardScreenState extends State<CardScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'CARD HOLDER',
+                                    'BANK NAME',
                                     style: TextStyle(
                                       color: Colors.white.withOpacity(0.7),
                                       fontSize: 11,
@@ -502,9 +499,9 @@ class _CardScreenState extends State<CardScreen>
                                   ),
                                   SizedBox(height: 5),
                                   Text(
-                                    provider.cardHolderName.isNotEmpty
-                                        ? provider.cardHolderName.toUpperCase()
-                                        : 'YOUR NAME',
+                                    provider.userBankName.isNotEmpty
+                                        ? provider.userBankName.toUpperCase()
+                                        : 'BANK NAME',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -573,16 +570,16 @@ class _CardScreenState extends State<CardScreen>
   }
 
   Widget _buildCardDetails(CardProvider provider) {
-    return _buildDetailSection("Card Information", [
+    return _buildDetailSection("Account Information", [
       _buildDetailItem(
-        "Card Holder",
-        provider.cardHolderName,
-        Icons.person_outline,
+        "Bank Name",
+        provider.userBankName,
+        Icons.account_balance_outlined,
         AppTheme.authorityBlue,
       ),
       _buildDetailItem(
-        "Card Number",
-        provider.cardNumber,
+        "Account Number",
+        provider.userBankNumber,
         Icons.credit_card_outlined,
         AppTheme.trustCyan,
       ),
@@ -603,22 +600,22 @@ class _CardScreenState extends State<CardScreen>
   }
 
   Widget _buildBankInformation(CardProvider provider) {
-    if (provider.userBankName.isEmpty && provider.userBankNumber.isEmpty) {
+    if (provider.cardHolderName.isEmpty && provider.cardNumber.isEmpty) {
       return SizedBox.shrink();
     }
 
-    return _buildDetailSection("Bank Information", [
-      if (provider.userBankName.isNotEmpty)
+    return _buildDetailSection("Card Information", [
+      if (provider.cardHolderName.isNotEmpty)
         _buildDetailItem(
-          "Bank Name",
-          provider.userBankName,
-          Icons.account_balance_outlined,
+          "Card Holder",
+          provider.cardHolderName,
+          Icons.person_outline,
           Colors.indigo,
         ),
-      if (provider.userBankNumber.isNotEmpty)
+      if (provider.cardNumber.isNotEmpty)
         _buildDetailItem(
-          "Account Number",
-          provider.userBankNumber,
+          "Card Number",
+          provider.cardNumber,
           Icons.account_balance_wallet_outlined,
           Colors.teal,
         ),

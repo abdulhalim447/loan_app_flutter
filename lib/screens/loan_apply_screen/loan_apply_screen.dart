@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:world_bank_loan/screens/home_section/home_page.dart';
+import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
 import 'dart:convert';
 import '../../auth/saved_login/user_session.dart';
 import '../../slider/home_screen_slider.dart';
@@ -119,9 +119,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
         body: jsonEncode(loanData),
       );
 
-      print('Token: $token');
-      print(response.statusCode);
-      print(response.body);
+    
 
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -129,7 +127,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
           backgroundColor: Colors.green,
         ));
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => MainNavigationScreen()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Failed to submit loan application'),

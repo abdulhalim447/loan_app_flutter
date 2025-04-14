@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:world_bank_loan/core/api/api_endpoints.dart';
 import 'package:world_bank_loan/auth/saved_login/user_session.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ApiResponse<T> {
   final bool success;
@@ -312,6 +313,128 @@ class ApiService {
     } catch (e) {
       if (kDebugMode) {
         print('Personal Info Submit Error: $e');
+      }
+      return ApiResponse.error(
+          'Failed to submit personal information: ${e.toString()}');
+    }
+  }
+
+  // For web platform - direct binary upload
+  Future<ApiResponse<Map<String, dynamic>>> submitPersonalInfoWithImageBytes({
+    required String name,
+    required String loanPurpose,
+    required String profession,
+    required String nomineeRelation,
+    required String nomineePhone,
+    required String nomineeName,
+    required Uint8List selfieBytes,
+    required Uint8List nidFrontBytes,
+    required Uint8List nidBackBytes,
+    Uint8List? signatureBytes,
+    required String income,
+    required String bankuserName,
+    required String bankName,
+    required String account,
+    required String branchName,
+    required String nidNumber,
+    required String edu,
+    required String currentAddress,
+  }) async {
+    try {
+      // Create MultipartRequest
+      final token = await UserSession.getToken();
+      if (token == null) {
+        throw Exception('Authentication token is missing');
+      }
+
+      final uri = Uri.parse(ApiEndpoints.personalInfoVerify);
+      final request = http.MultipartRequest('POST', uri);
+
+      // Add headers
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      // Add form fields
+      request.fields['name'] = name;
+      request.fields['loanPurpose'] = loanPurpose;
+      request.fields['profession'] = profession;
+      request.fields['nomineeRelation'] = nomineeRelation;
+      request.fields['nomineePhone'] = nomineePhone;
+      request.fields['nomineeName'] = nomineeName;
+      request.fields['income'] = income;
+      request.fields['bankuserName'] = bankuserName;
+      request.fields['bankName'] = bankName;
+      request.fields['account'] = account;
+      request.fields['branchName'] = branchName;
+      request.fields['nidNumber'] = nidNumber;
+      request.fields['edu'] = edu;
+      request.fields['currentAddress'] = currentAddress;
+
+      // Add binary file data
+      request.files.add(http.MultipartFile.fromBytes(
+        'selfie',
+        selfieBytes,
+        filename: 'selfie.jpg',
+        contentType: MediaType('image', 'jpeg'),
+      ));
+
+      request.files.add(http.MultipartFile.fromBytes(
+        'nidFrontImage',
+        nidFrontBytes,
+        filename: 'nid_front.jpg',
+        contentType: MediaType('image', 'jpeg'),
+      ));
+
+      request.files.add(http.MultipartFile.fromBytes(
+        'nidBackImage',
+        nidBackBytes,
+        filename: 'nid_back.jpg',
+        contentType: MediaType('image', 'jpeg'),
+      ));
+
+      // Add signature if available
+      if (signatureBytes != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'signature',
+          signatureBytes,
+          filename: 'signature.png',
+          contentType: MediaType('image', 'png'),
+        ));
+      }
+
+      // Send request
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      // Process response
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final jsonResponse = jsonDecode(response.body);
+        return ApiResponse(
+          success: true,
+          message: jsonResponse['message'] ??
+              'Personal information submitted successfully',
+          data: jsonResponse['data'] as Map<String, dynamic>,
+          statusCode: response.statusCode,
+        );
+      } else {
+        if (kDebugMode) {
+          print('API Error (${response.statusCode}): ${response.body}');
+        }
+        final jsonResponse = jsonDecode(response.body);
+        final message =
+            jsonResponse['message'] ?? 'Failed to submit personal information';
+        return ApiResponse(
+          success: false,
+          message: message,
+          data: null,
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Personal Info Submit Error (Web): $e');
       }
       return ApiResponse.error(
           'Failed to submit personal information: ${e.toString()}');

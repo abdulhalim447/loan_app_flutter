@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:world_bank_loan/core/api/api_service.dart';
-import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
 enum PersonalInfoStep {
   personalInfo,
@@ -51,6 +49,12 @@ class PersonalInfoProvider extends ChangeNotifier {
   String? backIdImageUrl;
   String? selfieWithIdImageUrl;
   String? signatureImageUrl;
+
+  // Image bytes for web platform
+  Uint8List? frontIdImageBytes;
+  Uint8List? backIdImageBytes;
+  Uint8List? selfieWithIdImageBytes;
+  Uint8List? signatureImageBytes;
 
   // Verification status
   bool _isVerified = false;
@@ -218,6 +222,31 @@ class PersonalInfoProvider extends ChangeNotifier {
         break;
       case 'signature':
         signatureImagePath = path;
+        break;
+    }
+
+    saveData();
+    notifyListeners();
+  }
+
+  // Save image bytes for web platform
+  void saveImageBytes(String type, Uint8List bytes) {
+    switch (type) {
+      case 'front':
+        frontIdImageBytes = bytes;
+        frontIdImagePath = 'image_selected'; // Use a placeholder path
+        break;
+      case 'back':
+        backIdImageBytes = bytes;
+        backIdImagePath = 'image_selected'; // Use a placeholder path
+        break;
+      case 'selfie':
+        selfieWithIdImageBytes = bytes;
+        selfieWithIdImagePath = 'image_selected'; // Use a placeholder path
+        break;
+      case 'signature':
+        signatureImageBytes = bytes;
+        signatureImagePath = 'image_selected'; // Use a placeholder path
         break;
     }
 
@@ -429,16 +458,17 @@ class PersonalInfoProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  void clearSignature() {
-    signatureImagePath = null;
-    notifyListeners();
-  }
-
+  // Check if signature exists
   bool get hasSignature =>
       signatureImagePath != null &&
-      signatureImagePath!.isNotEmpty &&
-      (signatureImagePath == 'signature_provided' ||
-          File(signatureImagePath!).existsSync());
+      (signatureImagePath!.isNotEmpty || signatureImageBytes != null);
+
+  // Clear signature
+  void clearSignature() {
+    signatureImagePath = null;
+    signatureImageBytes = null;
+    notifyListeners();
+  }
 
   bool validatePersonalInfo() {
     return nameController.text.isNotEmpty &&

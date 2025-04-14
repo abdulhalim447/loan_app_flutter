@@ -5,6 +5,7 @@ import 'package:world_bank_loan/providers/app_provider.dart';
 import 'package:world_bank_loan/screens/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:world_bank_loan/services/notification_service.dart';
+import 'package:world_bank_loan/services/connectivity_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,10 @@ void main() async {
   // Initialize notification service
   final notificationService = NotificationService();
   await notificationService.initialize();
+
+  // Initialize connectivity service
+  final connectivityService = ConnectivityService();
+  connectivityService.initialize();
 
   runApp(
     ProviderScope(
@@ -43,6 +48,16 @@ class MyApp extends StatelessWidget {
           actionsIconTheme: IconThemeData(color: Colors.white),
         ),
       ),
+      builder: (context, child) {
+        // Add the ConnectivityBanner at the app level
+        return MediaQuery(
+          // Set data in MediaQuery to ensure proper sizing
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.noScaling,
+          ),
+          child: child!,
+        );
+      },
       home: SplashScreen(),
     );
   }

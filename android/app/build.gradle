@@ -31,14 +31,15 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     signingConfigs {
         release {
             storeFile file("release-keystore.jks")
-            storePassword "your-keystore-password"
+            storePassword "H01775389447"
             keyAlias "release-key-alias"
-            keyPassword "your-key-password"
+            keyPassword "H01775389447"
         }
     }
 
@@ -48,6 +49,31 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters "armeabi-v7a", "arm64-v8a"
+            }
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds true
+        disable 'InvalidPackage'
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = true
         }
     }
 }
@@ -61,4 +87,5 @@ dependencies {
     implementation 'androidx.browser:browser:1.6.0'
     implementation 'androidx.window:window:1.2.0'
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 }

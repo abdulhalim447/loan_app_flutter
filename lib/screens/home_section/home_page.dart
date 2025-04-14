@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 import 'package:world_bank_loan/core/theme/app_theme.dart';
 import 'package:world_bank_loan/core/widgets/custom_button.dart';
 import 'package:world_bank_loan/core/widgets/data_card.dart';
-import 'package:world_bank_loan/core/widgets/progress_tracker.dart';
 import 'package:world_bank_loan/providers/home_provider.dart';
 import 'package:world_bank_loan/screens/home_section/withdraw/withdraw_screen.dart';
 import 'package:world_bank_loan/screens/loan_apply_screen/loan_apply_screen.dart';
@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _animationController;
   late ScrollController _scrollController;
   final ValueNotifier<bool> _isBalanceVisible = ValueNotifier<bool>(false);
+  Timer? _refreshTimer;
 
   @override
   void initState() {
@@ -39,6 +40,14 @@ class _HomeScreenState extends State<HomeScreen>
     // Use Future.microtask to ensure the context is ready for Provider
     Future.microtask(() {
       context.read<HomeProvider>().initialize();
+
+      // Set up periodic refresh timer - using 3 seconds instead of 1 second
+      // to balance between real-time updates and resource usage
+      _refreshTimer = Timer.periodic(Duration(seconds: 3), (timer) {
+        if (mounted) {
+          context.read<HomeProvider>().fetchUserData(silent: true);
+        }
+      });
     });
   }
 
@@ -47,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen>
     _animationController.dispose();
     _scrollController.dispose();
     _isBalanceVisible.dispose();
+    _refreshTimer?.cancel();
     super.dispose();
   }
 
@@ -303,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen>
                           opacity: isVisible ? 1.0 : 0.0,
                           duration: Duration(milliseconds: 400),
                           child: Text(
-                            '₹ ${homeProvider.balance}',
+                            '৳${homeProvider.balance}',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -349,20 +359,31 @@ class _HomeScreenState extends State<HomeScreen>
             isGradient: true,
             hasGlow: true,
             subtitle: 'Tap to view transactions',
-            trailing: IconButton(
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 16,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WithdrawScreen(),
+            trailing: Row(
+              children: [
+                Text(
+                  'Withdraw',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
                   ),
-                );
-              },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WithdrawScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
             onTap: () {
               Navigator.push(

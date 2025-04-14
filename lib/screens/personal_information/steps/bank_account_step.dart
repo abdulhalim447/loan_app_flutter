@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:world_bank_loan/providers/personal_info_provider.dart';
 
-class BankAccountStepScreen extends StatelessWidget {
+class BankAccountStepScreen extends StatefulWidget {
   const BankAccountStepScreen({super.key});
+
+  @override
+  _BankAccountStepScreenState createState() => _BankAccountStepScreenState();
+}
+
+class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
+  // Add a state variable to track whether bank details are visible
+  bool _showBankDetails = false;
 
   String? validateAccountHolder(String? value) {
     if (value == null || value.isEmpty) {
@@ -53,6 +61,20 @@ class BankAccountStepScreen extends StatelessWidget {
     return null;
   }
 
+  // Helper method to mask sensitive information
+  String maskSensitiveInfo(String text, {bool keepEnds = true}) {
+    if (text.isEmpty) return '';
+    if (text.length <= 4) return '*' * text.length;
+
+    if (keepEnds) {
+      return text.substring(0, 2) +
+          '*' * (text.length - 4) +
+          text.substring(text.length - 2);
+    } else {
+      return '*' * text.length;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PersonalInfoProvider>(
@@ -67,6 +89,36 @@ class BankAccountStepScreen extends StatelessWidget {
               children: [
                 _buildInfoCard(context),
                 SizedBox(height: 24),
+
+                // Show toggle button only if user is verified
+                // This ensures the button only appears after verification
+                if (isVerified && _hasValidBankDetails(provider))
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(bottom: 16),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _showBankDetails = !_showBankDetails;
+                        });
+                      },
+                      icon: Icon(_showBankDetails
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      label: Text(_showBankDetails
+                          ? 'Hide Bank Details'
+                          : 'Show Bank Details'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal.shade700,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ),
+
                 _buildTextField(
                   context,
                   'Account Holder Name',
@@ -74,6 +126,7 @@ class BankAccountStepScreen extends StatelessWidget {
                   prefixIcon: Icons.person_outline,
                   validator: validateAccountHolder,
                   isReadOnly: isVerified,
+                  isHidden: isVerified && !_showBankDetails,
                 ),
                 SizedBox(height: 16),
                 _buildTextField(
@@ -83,6 +136,7 @@ class BankAccountStepScreen extends StatelessWidget {
                   prefixIcon: Icons.account_balance_outlined,
                   validator: validateBankName,
                   isReadOnly: isVerified,
+                  isHidden: isVerified && !_showBankDetails,
                 ),
                 SizedBox(height: 16),
                 _buildTextField(
@@ -93,6 +147,7 @@ class BankAccountStepScreen extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   validator: validateAccountNumber,
                   isReadOnly: isVerified,
+                  isHidden: isVerified && !_showBankDetails,
                 ),
                 SizedBox(height: 16),
                 _buildTextField(
@@ -103,6 +158,7 @@ class BankAccountStepScreen extends StatelessWidget {
                   textCapitalization: TextCapitalization.words,
                   validator: validateBranchName,
                   isReadOnly: isVerified,
+                  isHidden: isVerified && !_showBankDetails,
                 ),
                 SizedBox(height: 24),
                 _buildSecurityNotice(context),
@@ -112,6 +168,146 @@ class BankAccountStepScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildTextField(
+    BuildContext context,
+    String label,
+    TextEditingController controller, {
+    IconData? prefixIcon,
+    int maxLines = 1,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+    bool isReadOnly = false,
+    bool isHidden = false,
+    TextCapitalization textCapitalization = TextCapitalization.none,
+  }) {
+    // If the field should be hidden, create a masked value
+    String displayValue = '';
+    if (isHidden) {
+      // Different masking for different field types
+      if (label == 'Account Number') {
+        displayValue = maskSensitiveInfo(controller.text, keepEnds: true);
+      } else {
+        displayValue = maskSensitiveInfo(controller.text, keepEnds: false);
+      }
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isReadOnly ? Colors.grey[50] : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: isHidden
+          ? _buildMaskedField(context, label, displayValue, prefixIcon)
+          : TextFormField(
+              controller: controller,
+              maxLines: maxLines,
+              keyboardType: keyboardType,
+              readOnly: isReadOnly,
+              enabled: !isReadOnly,
+              textCapitalization: textCapitalization,
+              decoration: InputDecoration(
+                labelText: label,
+                prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: isReadOnly ? Colors.grey[50] : Colors.white,
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                errorStyle: TextStyle(
+                  color: Colors.red.shade400,
+                  fontSize: 12,
+                ),
+                suffix: isReadOnly
+                    ? Icon(Icons.lock, size: 16, color: Colors.grey)
+                    : null,
+              ),
+              onChanged: (value) {
+                if (!isReadOnly) {
+                  Provider.of<PersonalInfoProvider>(context, listen: false)
+                      .saveData();
+                }
+              },
+              validator: isReadOnly ? null : validator,
+              autovalidateMode: isReadOnly
+                  ? AutovalidateMode.disabled
+                  : AutovalidateMode.onUserInteraction,
+            ),
+    );
+  }
+
+  // New widget for displaying masked fields
+  Widget _buildMaskedField(
+    BuildContext context,
+    String label,
+    String maskedValue,
+    IconData? prefixIcon,
+  ) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+      ),
+      child: Row(
+        children: [
+          if (prefixIcon != null) ...[
+            Icon(prefixIcon, color: Colors.grey),
+            SizedBox(width: 12),
+          ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  maskedValue,
+                  style: TextStyle(
+                    fontSize: 16,
+                    letterSpacing: 2.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.lock, size: 16, color: Colors.grey),
+              SizedBox(width: 4),
+              Text(
+                'HIDDEN',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey.shade500,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -162,68 +358,6 @@ class BankAccountStepScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    BuildContext context,
-    String label,
-    TextEditingController controller, {
-    IconData? prefixIcon,
-    int maxLines = 1,
-    TextInputType keyboardType = TextInputType.text,
-    String? Function(String?)? validator,
-    bool isReadOnly = false,
-    TextCapitalization textCapitalization = TextCapitalization.none,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isReadOnly ? Colors.grey[50] : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        controller: controller,
-        maxLines: maxLines,
-        keyboardType: keyboardType,
-        readOnly: isReadOnly,
-        enabled: !isReadOnly,
-        textCapitalization: textCapitalization,
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: isReadOnly ? Colors.grey[50] : Colors.white,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          errorStyle: TextStyle(
-            color: Colors.red.shade400,
-            fontSize: 12,
-          ),
-          suffix: isReadOnly
-              ? Icon(Icons.lock, size: 16, color: Colors.grey)
-              : null,
-        ),
-        onChanged: (value) {
-          if (!isReadOnly) {
-            Provider.of<PersonalInfoProvider>(context, listen: false)
-                .saveData();
-          }
-        },
-        validator: isReadOnly ? null : validator,
-        autovalidateMode: isReadOnly
-            ? AutovalidateMode.disabled
-            : AutovalidateMode.onUserInteraction,
       ),
     );
   }
@@ -298,5 +432,14 @@ class BankAccountStepScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool _hasValidBankDetails(PersonalInfoProvider provider) {
+    // Implement the logic to check if there's valid bank details
+    // This is a placeholder and should be replaced with the actual implementation
+    return provider.accountHolderController.text.isNotEmpty &&
+        provider.bankNameController.text.isNotEmpty &&
+        provider.accountNumberController.text.isNotEmpty &&
+        provider.ifcCodeController.text.isNotEmpty;
   }
 }

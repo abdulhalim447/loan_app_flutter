@@ -123,12 +123,14 @@ class HomeProvider extends ChangeNotifier {
   }
 
   // Fetch user data from API
-  Future<void> fetchUserData() async {
-    if (_loadingStatus == HomeLoadingStatus.loading) return;
+  Future<void> fetchUserData({bool silent = false}) async {
+    if (_loadingStatus == HomeLoadingStatus.loading && !silent) return;
 
-    _loadingStatus = HomeLoadingStatus.loading;
-    _errorMessage = '';
-    notifyListeners();
+    if (!silent) {
+      _loadingStatus = HomeLoadingStatus.loading;
+      _errorMessage = '';
+      notifyListeners();
+    }
 
     try {
       String? token = await UserSession.getToken();
@@ -176,6 +178,7 @@ class HomeProvider extends ChangeNotifier {
             _profilePicUrl = newProfilePicUrl;
 
             await _saveUserData();
+            notifyListeners();
           }
 
           _loadingStatus = HomeLoadingStatus.loaded;
@@ -191,7 +194,9 @@ class HomeProvider extends ChangeNotifier {
       _setError('Connection error: $e');
     }
 
-    notifyListeners();
+    if (!silent) {
+      notifyListeners();
+    }
   }
 
   // Reset data

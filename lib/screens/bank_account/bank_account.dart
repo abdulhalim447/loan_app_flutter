@@ -59,7 +59,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
         accountHolderController.text = data['bankUserName'] ?? '';
         bankNameController.text = data['bankName'] ?? '';
         accountNumberController.text = data['account'] ?? '';
-        ifcCode.text = data['ifc'] ?? '';
+        ifcCode.text = data['branchName'] ?? '';
         setState(() {
           isEditable = false;
         });
@@ -95,6 +95,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
     }
 
     final String apiUrl = ApiEndpoints.saveBank;
+   
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -110,6 +111,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
         'bankUserName': accountHolderController.text,
       }),
     );
+     print(response.body);
 
     if (response.statusCode == 200) {
       Navigator.pushReplacement(context,
@@ -164,7 +166,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                       _buildTextField('Account Number', accountNumberController,
                           keyboardType: TextInputType.number),
                       SizedBox(height: 8.0),
-                      _buildTextField('IFC Code', ifcCode),
+                      _buildTextField('Branch Name', ifcCode),
                       SizedBox(height: 16.0),
                       _buildSaveButton(),
                     ],

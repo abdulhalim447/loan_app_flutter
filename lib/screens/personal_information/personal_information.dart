@@ -48,10 +48,23 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     }
   }
 
+  String _getStepTitle(PersonalInfoStep step) {
+    switch (step) {
+      case PersonalInfoStep.personalInfo:
+        return 'Personal Information';
+      case PersonalInfoStep.nomineeInfo:
+        return 'Nominee Information';
+      case PersonalInfoStep.idVerification:
+        return 'ID Verification';
+      case PersonalInfoStep.bankAccount:
+        return 'Bank Account';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get provider here safely, not in initState
-    final provider = Provider.of<PersonalInfoProvider>(context, listen: false);
+    final provider = Provider.of<PersonalInfoProvider>(context);
 
     // Initialize provider on first build if needed
     if (_needsInitialization) {
@@ -61,62 +74,55 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       });
     }
 
+    Widget content;
     if (_isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Personal Information'),
+      content = Center(
+        child: CircularProgressIndicator(
+          color: Colors.cyan,
         ),
-        body: Center(
-          child: CircularProgressIndicator(
-            color: Colors.cyan,
+      );
+    } else if (_errorMessage != null) {
+      content = Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
+              SizedBox(height: 16),
+              Text(
+                "Something went wrong",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                _errorMessage!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+              SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _needsInitialization = true;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.cyan,
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+                child: Text('Try Again'),
+              ),
+            ],
           ),
         ),
       );
+    } else {
+      content = MultiStepPersonalInfoForm();
     }
 
-    if (_errorMessage != null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Personal Information'),
-        ),
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
-                SizedBox(height: 16),
-                Text(
-                  "Something went wrong",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  _errorMessage!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-                SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _needsInitialization = true;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan,
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  ),
-                  child: Text('Try Again'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return MultiStepPersonalInfoForm();
+    return Scaffold(
+      body: SafeArea(child: content),
+    );
   }
 }

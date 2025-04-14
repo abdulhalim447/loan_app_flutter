@@ -49,6 +49,10 @@ class CardProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
 
+        // Get bank information first as it's now the priority
+        _userBankName = jsonResponse['userBankName'] ?? '';
+        _userBankNumber = jsonResponse['userBankNumber'] ?? '';
+
         if (jsonResponse['cards'] != null && jsonResponse['cards'].isNotEmpty) {
           final cardData = jsonResponse['cards'][0];
 
@@ -57,24 +61,23 @@ class CardProvider extends ChangeNotifier {
           _validity = cardData['validity'] ?? '';
           _cvv = cardData['cvv'] ?? '';
 
-          // Get bank information if available
-          _userBankName = jsonResponse['userBankName'] ?? '';
-          _userBankNumber = jsonResponse['userBankNumber'] ?? '';
-
+          _status = CardLoadingStatus.loaded;
+        } else if (_userBankName.isNotEmpty || _userBankNumber.isNotEmpty) {
+          // If we have bank information but no card, still consider it loaded
           _status = CardLoadingStatus.loaded;
         } else {
-          _errorMessage = 'No card data found';
+          _errorMessage = 'No banking data found';
           _status = CardLoadingStatus.error;
         }
       } else {
-        _errorMessage = 'Failed to load card data: ${response.statusCode}';
+        _errorMessage = 'Failed to load banking data: ${response.statusCode}';
         _status = CardLoadingStatus.error;
       }
     } catch (e) {
       _errorMessage = 'Error: ${e.toString()}';
       _status = CardLoadingStatus.error;
       if (kDebugMode) {
-        print('Error fetching card data: $e');
+        print('Error fetching banking data: $e');
       }
     }
 

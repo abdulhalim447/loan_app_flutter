@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
@@ -173,13 +172,13 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                 Row(
                   children: [
                     _buildBalanceItem(
-                        "Available Balance", provider.balance, "₹"),
+                        "Available Balance", provider.balance, "৳"),
                     Container(
                       height: 40,
                       width: 1,
                       color: Colors.white.withOpacity(0.3),
                     ),
-                    _buildBalanceItem("Loan Amount", provider.loan, "₹"),
+                    _buildBalanceItem("Loan Amount", provider.loan, "৳"),
                   ],
                 ),
               ],
@@ -645,7 +644,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           Icon(Icons.account_balance_wallet, color: Colors.white),
           SizedBox(width: 12),
           Text(
-            "Processing Fee: ${provider.fee ?? '0'}",
+            "Fee: ${provider.fee ?? '0'}",
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
