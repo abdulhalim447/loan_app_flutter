@@ -6,6 +6,7 @@ import 'package:world_bank_loan/screens/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:world_bank_loan/services/notification_service.dart';
 import 'package:world_bank_loan/services/connectivity_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,13 +37,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
-      theme: AppTheme.lightTheme().copyWith(
+      theme: AppTheme.lightTheme(useBanglaFont: true).copyWith(
         appBarTheme: AppBarTheme(
           foregroundColor: Colors.white,
           titleTextStyle: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 18,
+            fontFamily: GoogleFonts.hindSiliguri().fontFamily,
           ),
           iconTheme: IconThemeData(color: Colors.white),
           actionsIconTheme: IconThemeData(color: Colors.white),

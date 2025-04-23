@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:world_bank_loan/auth/LoginScreen.dart';
+import 'package:world_bank_loan/auth/SignupScreen.dart';
 import 'package:world_bank_loan/bottom_navigation/MainNavigationScreen.dart';
 
 import '../../auth/saved_login/user_session.dart';
@@ -74,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen>
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => SignupScreen()),
       );
     }
   }

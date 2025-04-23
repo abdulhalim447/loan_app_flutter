@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http; // Import http package
+import 'package:http/http.dart' as http; // এইচটিটিপি প্যাকেজ ইমপোর্ট করুন
 import 'package:world_bank_loan/auth/LoginScreen.dart';
 import 'package:world_bank_loan/screens/bank_account/bank_account.dart';
 import 'package:world_bank_loan/screens/change_password/change_password.dart';
@@ -11,7 +11,6 @@ import 'package:world_bank_loan/screens/personal_information/personal_informatio
 import 'package:world_bank_loan/screens/terms_and_condition/terms_and_condition.dart';
 import '../../auth/saved_login/user_session.dart';
 import '../../core/theme/app_theme.dart';
-import '../loan_certifacte/loan_certificate.dart';
 import '../user_agrements/user_agrements_screen.dart';
 import 'package:world_bank_loan/core/api/api_endpoints.dart';
 
@@ -24,8 +23,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
-  String number = "0";
-  String name = "Loading...";
+  String number = "০";
+  String name = "লোড হচ্ছে...";
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -57,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     _animationController.forward();
 
-    // Set status bar icons to white
+    // স্ট্যাটাস বার আইকন সাদা করুন
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -87,21 +86,21 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         setState(() {
-          number = data['number'] ?? "0"; // Safe null check
-          name = data['name'] ?? "No Name"; // Safe null check
+          number = data['number'] ?? "০"; // Safe null check
+          name = data['name'] ?? "কোন নাম নেই"; // Safe null check
         });
       } else {
         // Handle error
         setState(() {
-          number = "0";
-          name = "Failed to load data";
+          number = "০";
+          name = "ডাটা লোড করতে ব্যর্থ হয়েছে";
         });
       }
     }
   }
 
   void _logout(BuildContext context) async {
-    // Show confirmation dialog
+    // নিশ্চিতকরণ ডায়ালগ দেখান
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -110,39 +109,39 @@ class _ProfileScreenState extends State<ProfileScreen>
             borderRadius: BorderRadius.circular(16),
           ),
           title: Text(
-            "Confirm Logout",
+            "লগআউট নিশ্চিত করুন",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: AppTheme.authorityBlue,
             ),
           ),
           content: Text(
-            "Are you sure you want to log out?",
+            "আপনি কি নিশ্চিত যে আপনি লগআউট করতে চান?",
             style: TextStyle(color: AppTheme.neutral700),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // ডায়ালগ বন্ধ করুন
               },
               child: Text(
-                "Cancel",
+                "বাতিল করুন",
                 style: TextStyle(color: AppTheme.neutral600),
               ),
             ),
             ElevatedButton(
               onPressed: () async {
-                // Remove user session from SharedPreferences
+                // SharedPreferences থেকে ইউজার সেশন সরান
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove('token');
                 prefs.remove('phone');
 
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // ডায়ালগ বন্ধ করুন
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (builder) =>
-                            LoginScreen())); // Redirect to login screen
+                            LoginScreen())); // লগইন স্ক্রিনে রিডাইরেক্ট করুন
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.authorityBlue,
@@ -151,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text("Yes, Logout"),
+              child: Text("হ্যাঁ, লগআউট করুন"),
             ),
           ],
         );
@@ -168,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         backgroundColor: AppTheme.authorityBlue,
         centerTitle: true,
         title: Text(
-          'Profile',
+          'প্রোফাইল',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -182,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       ),
       body: Stack(
         children: [
-          // Gradient background
+          // গ্রেডিয়েন্ট ব্যাকগ্রাউন্ড
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -207,10 +206,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                   position: _slideAnimation,
                   child: Column(
                     children: [
-                      // Profile Header with updated styling
+                      // আপডেট করা স্টাইলিং সহ প্রোফাইল হেডার
                       ProfileHeader(number: number, name: name),
 
-                      // Profile Options in a scrollable list
+                      // স্ক্রোলযোগ্য তালিকায় প্রোফাইল অপশন
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(top: 16),
@@ -237,12 +236,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                               padding: EdgeInsets.symmetric(
                                   vertical: 16, horizontal: 16),
                               children: [
-                                // Section Title - Account
+                                // বিভাগ শিরোনাম - অ্যাকাউন্ট
                                 Padding(
                                   padding: EdgeInsets.only(
                                       left: 8, bottom: 8, top: 8),
                                   child: Text(
-                                    'Account Settings',
+                                    'অ্যাকাউন্ট সেটিংস',
                                     style: TextStyle(
                                       color: AppTheme.neutral700,
                                       fontWeight: FontWeight.w600,
@@ -253,8 +252,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 ProfileOption(
                                   icon: FontAwesomeIcons.university,
-                                  text: 'Personal Information',
-                                  subtitle: 'Manage your personal details',
+                                  text: 'ব্যক্তিগত তথ্য',
+                                  subtitle:
+                                      'আপনার ব্যক্তিগত বিবরণ পরিচালনা করুন',
                                   color: AppTheme.authorityBlue,
                                   onTap: () {
                                     Navigator.push(
@@ -266,8 +266,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                                 ProfileOption(
                                   icon: FontAwesomeIcons.moneyBill,
-                                  text: 'Bank Account',
-                                  subtitle: 'Manage your bank details',
+                                  text: 'ব্যাংক অ্যাকাউন্ট',
+                                  subtitle: 'আপনার ব্যাংক বিবরণ পরিচালনা করুন',
                                   color: Colors.green,
                                   onTap: () {
                                     Navigator.push(
@@ -280,8 +280,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 ProfileOption(
                                   icon: FontAwesomeIcons.lock,
-                                  text: 'Change Password',
-                                  subtitle: 'Update your security credentials',
+                                  text: 'পাসওয়ার্ড পরিবর্তন করুন',
+                                  subtitle:
+                                      'আপনার নিরাপত্তা শংসাপত্র আপডেট করুন',
                                   color: Colors.orange,
                                   onTap: () {
                                     Navigator.push(
@@ -294,12 +295,12 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 SizedBox(height: 4),
 
-                                // Section Title - Documentation
+                                // বিভাগ শিরোনাম - ডকুমেন্টেশন
                                 Padding(
                                   padding: EdgeInsets.only(
                                       left: 8, bottom: 8, top: 16),
                                   child: Text(
-                                    'Documents & Certificates',
+                                    'ডকুমেন্টস এবং সার্টিফিকেট',
                                     style: TextStyle(
                                       color: AppTheme.neutral700,
                                       fontWeight: FontWeight.w600,
@@ -308,11 +309,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                 ),
 
-                                
                                 ProfileOption(
                                   icon: FontAwesomeIcons.userLarge,
-                                  text: 'Agreements',
-                                  subtitle: 'View your loan agreements',
+                                  text: 'চুক্তিসমূহ',
+                                  subtitle: 'আপনার লোন চুক্তিগুলি দেখুন',
                                   color: Colors.purple,
                                   onTap: () {
                                     Navigator.push(
@@ -325,12 +325,12 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 SizedBox(height: 4),
 
-                                // Section Title - Support
+                                // বিভাগ শিরোনাম - সাপোর্ট
                                 Padding(
                                   padding: EdgeInsets.only(
                                       left: 8, bottom: 8, top: 16),
                                   child: Text(
-                                    'Support & Legal',
+                                    'সাপোর্ট এবং আইনি',
                                     style: TextStyle(
                                       color: AppTheme.neutral700,
                                       fontWeight: FontWeight.w600,
@@ -342,9 +342,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 /*
                                 ProfileOption(
                                   icon: FontAwesomeIcons.plusCircle,
-                                  text: 'Complain',
+                                  text: 'অভিযোগ',
                                   subtitle:
-                                      'Submit feedback or file a complaint',
+                                      'মতামত জমা দিন বা অভিযোগ দায়ের করুন',
                                   color: Colors.red,
                                   onTap: () {
                                     Navigator.push(
@@ -358,8 +358,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 ProfileOption(
                                   icon: FontAwesomeIcons.shieldAlt,
-                                  text: 'Terms and Condition',
-                                  subtitle: 'View app terms and conditions',
+                                  text: 'শর্তাবলী',
+                                  subtitle: 'অ্যাপের শর্তাবলী দেখুন',
                                   color: AppTheme.trustCyan,
                                   onTap: () {
                                     Navigator.push(
@@ -372,7 +372,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 SizedBox(height: 24),
 
-                                // Logout Button
+                                // লগআউট বাটন
                                 Container(
                                   margin: EdgeInsets.symmetric(
                                       horizontal: 32, vertical: 8),
@@ -383,7 +383,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       size: 18,
                                     ),
                                     label: Text(
-                                      'Logout',
+                                      'লগআউট',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

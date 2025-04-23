@@ -90,7 +90,7 @@ class _CardScreenState extends State<CardScreen>
             backgroundColor: AppTheme.authorityBlue,
             centerTitle: true,
             title: Text(
-              'My Banking',
+              'আমার ব্যাংকিং',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -168,7 +168,7 @@ class _CardScreenState extends State<CardScreen>
               ),
               SizedBox(height: 16),
               Text(
-                "Loading your card details...",
+                "আপনার কার্ডের বিবরণ লোড হচ্ছে...",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -213,7 +213,7 @@ class _CardScreenState extends State<CardScreen>
                 ),
                 SizedBox(height: 24),
                 Text(
-                  "Couldn't load card details",
+                  "কার্ডের বিবরণ লোড করা যায়নি",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -222,7 +222,7 @@ class _CardScreenState extends State<CardScreen>
                 ),
                 SizedBox(height: 12),
                 Text(
-                  provider.errorMessage ?? "An unknown error occurred",
+                  provider.errorMessage ?? "একটি অজানা ত্রুটি ঘটেছে",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppTheme.neutral600,
@@ -250,7 +250,7 @@ class _CardScreenState extends State<CardScreen>
                     elevation: 2,
                   ),
                   child: Text(
-                    'Try Again',
+                    'আবার চেষ্টা করুন',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -291,7 +291,7 @@ class _CardScreenState extends State<CardScreen>
                       _buildCardDetails(provider),
                       //SizedBox(height: 24),
                       //_buildBankInformation(provider),
-                      // SizedBox(height: 24),
+                      // Sized Box(height: 24),
                       // _buildCardServices(),
                     ],
                   ),
@@ -312,7 +312,7 @@ class _CardScreenState extends State<CardScreen>
               ),
               SizedBox(height: 16),
               Text(
-                "Initializing...",
+                "আরম্ভ করা হচ্ছে...",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -338,7 +338,7 @@ class _CardScreenState extends State<CardScreen>
           Padding(
             padding: EdgeInsets.only(left: 8, bottom: 16),
             child: Text(
-              "Your Bank Account",
+              "আপনার ব্যাংক অ্যাকাউন্ট",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -570,7 +570,7 @@ class _CardScreenState extends State<CardScreen>
   }
 
   Widget _buildCardDetails(CardProvider provider) {
-    return _buildDetailSection("Account Information", [
+    return _buildDetailSection("অ্যাকাউন্টের তথ্য", [
       _buildDetailItem(
         "Bank Name",
         provider.userBankName,

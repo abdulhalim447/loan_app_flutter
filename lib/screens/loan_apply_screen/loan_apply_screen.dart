@@ -66,7 +66,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
 
     _animationController.forward();
 
-    // Set status bar icons to white
+    // স্ট্যাটাস বার আইকন সাদা করুন
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -82,21 +82,21 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     super.dispose();
   }
 
-  // Installment calculation function
+  // কিস্তি হিসাব করার ফাংশন
   double calculateInstallment(int loanAmount, int term) {
     double totalInterest = loanAmount * interestRate / 100 * term / 12;
     double totalAmount = loanAmount + totalInterest;
     return totalAmount / term;
   }
 
-  // API submit function
+  // এপিআই জমা দেওয়ার ফাংশন
   Future<void> submitLoanApplication() async {
     setState(() => isLoading = true);
 
     String? token = await UserSession.getToken();
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: User token not found!')));
+          SnackBar(content: Text('ত্রুটি: ব্যবহারকারীর টোকেন পাওয়া যায়নি!')));
       setState(() => isLoading = false);
       return;
     }
@@ -119,40 +119,38 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
         body: jsonEncode(loanData),
       );
 
-    
-
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Loan application submitted successfully'),
+          content: Text('ঋণের আবেদন সফলভাবে জমা হয়েছে'),
           backgroundColor: Colors.green,
         ));
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainNavigationScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => MainNavigationScreen()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to submit loan application'),
+          content: Text('ঋণের আবেদন জমা দিতে ব্যর্থ হয়েছে'),
           backgroundColor: Colors.red,
         ));
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error: $e'),
+        content: Text('ত্রুটি: $e'),
         backgroundColor: Colors.red,
       ));
     }
     setState(() => isLoading = false);
   }
 
-  // UI build
+  // ইউআই তৈরি
   @override
   Widget build(BuildContext context) {
-    // Get screen size for responsiveness
+    // প্রতিক্রিয়াশীলতার জন্য স্ক্রিন আকার নিন
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Loan Application',
+          'ঋণের আবেদন',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -170,7 +168,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
       ),
       body: Stack(
         children: [
-          // Gradient background
+          // গ্রেডিয়েন্ট ব্যাকগ্রাউন্ড
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -210,7 +208,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'Processing your application...',
+                          'আপনার আবেদন প্রক্রিয়া করা হচ্ছে...',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w500,
@@ -232,13 +230,13 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              // Banner slider
+                              // ব্যানার স্লাইডার
                               SizedBox(
                                 height: screenSize.height * 0.22,
                                 child: HomeBannerSlider(),
                               ),
 
-                              // Loan Details Card
+                              // ঋণের বিবরণ কার্ড
                               Container(
                                 margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
                                 padding: EdgeInsets.all(16),
@@ -257,7 +255,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Loan Details",
+                                      "ঋণের বিবরণ",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -268,10 +266,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                           ),
                                     ),
                                     SizedBox(height: 12),
-                                    // New row containing total amount paid and total installments
+                                    // মোট পরিমাণ এবং মোট কিস্তি সম্বলিত নতুন সারি
                                     Row(
                                       children: [
-                                        // Total Amount Paid
+                                        // মোট পরিশোধ অংশ
                                         Expanded(
                                           child: Container(
                                             padding: EdgeInsets.all(12),
@@ -311,7 +309,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                     ),
                                                     SizedBox(width: 6),
                                                     Text(
-                                                      "Total Repayment",
+                                                      "মোট পরিশোধ",
                                                       style: TextStyle(
                                                         fontSize: 8,
                                                         fontWeight:
@@ -323,7 +321,15 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                 ),
                                                 SizedBox(height: 8),
                                                 Text(
-                                                  selectedLoanAmount > 0 ? (selectedLoanAmount + (selectedLoanAmount * interestRate / 100 * selectedLoanTerm / 12)).toStringAsFixed(0) : '0',
+                                                  selectedLoanAmount > 0
+                                                      ? (selectedLoanAmount +
+                                                              (selectedLoanAmount *
+                                                                  interestRate /
+                                                                  100 *
+                                                                  selectedLoanTerm /
+                                                                  12))
+                                                          .toStringAsFixed(0)
+                                                      : '০',
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,
@@ -335,7 +341,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                           ),
                                         ),
                                         SizedBox(width: 12),
-                                        // Total Installments
+                                        // মোট কিস্তি
                                         Expanded(
                                           child: Container(
                                             padding: EdgeInsets.all(12),
@@ -375,7 +381,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                     ),
                                                     SizedBox(width: 6),
                                                     Text(
-                                                      "Installments",
+                                                      "কিস্তি সময়কাল",
                                                       style: TextStyle(
                                                         fontSize: 9,
                                                         fontWeight:
@@ -387,7 +393,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                 ),
                                                 SizedBox(height: 8),
                                                 Text(
-                                                  "$selectedLoanTerm months",
+                                                  "$selectedLoanTerm মাস",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,
@@ -401,7 +407,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                       ],
                                     ),
                                     SizedBox(height: 10),
-                                    // Monthly payment overview
+                                    // মাসিক পরিশোধের বিবরণ
                                     if (selectedLoanAmount > 0)
                                       Container(
                                         padding: EdgeInsets.symmetric(
@@ -421,7 +427,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                             SizedBox(width: 6),
                                             Expanded(
                                               child: Text(
-                                                "Your monthly payment will be ${calculateInstallment(selectedLoanAmount, selectedLoanTerm).toStringAsFixed(0)} for $selectedLoanTerm months",
+                                                "আপনার মাসিক পরিশোধ হবে ${calculateInstallment(selectedLoanAmount, selectedLoanTerm).toStringAsFixed(0)} টাকা $selectedLoanTerm মাসের জন্য",
                                                 style: TextStyle(
                                                   fontSize: 11,
                                                   color: Colors.grey.shade700,
@@ -435,14 +441,14 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                 ),
                               ),
 
-                              // Select Loan Term
+                              // ঋণের মেয়াদ নির্বাচন করুন
                               Container(
                                 margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Select Loan Term",
+                                      "ঋণের মেয়াদ নির্বাচন করুন",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -452,7 +458,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                           ),
                                     ),
                                     SizedBox(height: 12),
-                                    // Term selection grid - two rows with three tiles
+                                    // মেয়াদ নির্বাচন গ্রিড - তিনটি টাইল সহ দুই সারি
                                     GridView.builder(
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
@@ -485,7 +491,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                 ),
                               ),
 
-                              // Select Loan Amount
+                              // ঋণের পরিমাণ নির্বাচন করুন
                               Container(
                                 margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
                                 padding: EdgeInsets.all(16),
@@ -504,7 +510,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Select Loan Amount",
+                                      "ঋণের পরিমাণ নির্বাচন করুন",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -543,7 +549,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                 ),
                               ),
 
-                              // Loan Information Section
+                              // ঋণ সম্পর্কিত তথ্য বিভাগ
                               Container(
                                 margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
                                 padding: EdgeInsets.all(16),
@@ -566,7 +572,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Loan Information",
+                                      "ঋণের তথ্য",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -577,7 +583,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                     ),
                                     SizedBox(height: 12),
 
-                                    // Interest Rate Info
+                                    // সুদের হার তথ্য
                                     Container(
                                       margin: EdgeInsets.only(bottom: 12),
                                       padding: EdgeInsets.all(10),
@@ -607,7 +613,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "Interest Rate",
+                                                  "সুদের হার",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyMedium
@@ -620,7 +626,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                 ),
                                                 SizedBox(height: 2),
                                                 Text(
-                                                  "$interestRate% per annum (fixed)",
+                                                  "বার্ষিক $interestRate% (স্থির)",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodySmall
@@ -636,7 +642,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                       ),
                                     ),
 
-                                    // Processing Time Info
+                                    // প্রক্রিয়াকরণ সময় তথ্য
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
@@ -665,7 +671,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "Fast Processing",
+                                                  "দ্রুত প্রক্রিয়াকরণ",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyMedium
@@ -678,7 +684,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                                 ),
                                                 SizedBox(height: 2),
                                                 Text(
-                                                  "Applications are typically approved within 24 hours",
+                                                  "আবেদনগুলি সাধারণত ২৪ ঘন্টার মধ্যে অনুমোদিত হয়",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodySmall
@@ -697,7 +703,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                 ),
                               ),
 
-                              // Submit Application Button
+                              // আবেদন জমা দেওয়ার বাটন
                               Container(
                                 margin: EdgeInsets.all(16),
                                 child: ElevatedButton(
@@ -729,7 +735,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                                       ),
                                       SizedBox(width: 12),
                                       Text(
-                                        'Submit Application',
+                                        'আবেদন জমা দিন',
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleMedium
@@ -869,7 +875,7 @@ class _TermSelectionCardState extends State<TermSelectionCard>
                 ),
                 SizedBox(height: 4),
                 Text(
-                  "months",
+                  "মাস",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: widget.isSelected
                             ? Colors.white70
@@ -944,7 +950,7 @@ class _AmountSelectionCardState extends State<AmountSelectionCard>
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width for responsive text sizing
+    // প্রতিক্রিয়াশীল টেক্সট সাইজের জন্য স্ক্রিন প্রস্থ নিন
     final screenWidth = MediaQuery.of(context).size.width;
     final amountFontSize = screenWidth < 360 ? 14.0 : 16.0;
     final installmentFontSize = screenWidth < 360 ? 14.0 : 16.0;
@@ -1040,7 +1046,7 @@ class _AmountSelectionCardState extends State<AmountSelectionCard>
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Monthly Installment',
+                    'মাসিক কিস্তি',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: labelFontSize,
                           color: widget.isSelected

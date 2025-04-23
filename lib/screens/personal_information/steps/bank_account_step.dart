@@ -15,48 +15,44 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
 
   String? validateAccountHolder(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Account holder name is required';
+      return 'অ্যাকাউন্ট হোল্ডারের নাম আবশ্যক';
     }
     if (value.length < 3) {
-      return 'Name must be at least 3 characters';
+      return 'নাম কমপক্ষে ৩ অক্ষর হতে হবে';
     }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-      return 'Name can only contain letters and spaces';
-    }
+    
     return null;
   }
 
   String? validateBankName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Bank name is required';
+      return 'ব্যাংকের নাম আবশ্যক';
     }
     if (value.length < 3) {
-      return 'Please enter a valid bank name';
+      return 'দয়া করে একটি বৈধ ব্যাংকের নাম লিখুন';
     }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-      return 'Bank name can only contain letters and spaces';
-    }
+    
     return null;
   }
 
   String? validateAccountNumber(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Account number is required';
+      return 'অ্যাকাউন্ট নম্বর আবশ্যক';
     }
     // Remove any spaces or special characters
     String cleanAccount = value.replaceAll(RegExp(r'\s'), '');
-    if (!RegExp(r'^\d{9,18}$').hasMatch(cleanAccount)) {
-      return 'Please enter a valid account number (9-18 digits)';
+    if (!RegExp(r'^\d{5,18}$').hasMatch(cleanAccount)) {
+      return 'দয়া করে একটি বৈধ অ্যাকাউন্ট নম্বর লিখুন (৫-১৮ ডিজিট)';
     }
     return null;
   }
 
   String? validateBranchName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Branch name is required';
+      return 'শাখার নাম আবশ্যক';
     }
     if (value.length < 2) {
-      return 'Please enter a valid branch name';
+      return 'দয়া করে একটি বৈধ শাখার নাম লিখুন';
     }
     return null;
   }
@@ -106,8 +102,8 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
                           ? Icons.visibility_off
                           : Icons.visibility),
                       label: Text(_showBankDetails
-                          ? 'Hide Bank Details'
-                          : 'Show Bank Details'),
+                          ? 'ব্যাংক বিবরণ লুকান'
+                          : 'ব্যাংক বিবরণ দেখান'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal.shade700,
                         foregroundColor: Colors.white,
@@ -121,7 +117,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
 
                 _buildTextField(
                   context,
-                  'Account Holder Name',
+                  'অ্যাকাউন্ট হোল্ডারের নাম',
                   provider.accountHolderController,
                   prefixIcon: Icons.person_outline,
                   validator: validateAccountHolder,
@@ -131,7 +127,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
                 SizedBox(height: 16),
                 _buildTextField(
                   context,
-                  'Bank Name',
+                  'ব্যাংকের নাম',
                   provider.bankNameController,
                   prefixIcon: Icons.account_balance_outlined,
                   validator: validateBankName,
@@ -141,7 +137,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
                 SizedBox(height: 16),
                 _buildTextField(
                   context,
-                  'Account Number',
+                  'অ্যাকাউন্ট নম্বর',
                   provider.accountNumberController,
                   prefixIcon: Icons.credit_card_outlined,
                   keyboardType: TextInputType.number,
@@ -152,7 +148,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
                 SizedBox(height: 16),
                 _buildTextField(
                   context,
-                  'Branch Name',
+                  'শাখার নাম',
                   provider.ifcCodeController,
                   prefixIcon: Icons.business_outlined,
                   textCapitalization: TextCapitalization.words,
@@ -187,7 +183,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
     String displayValue = '';
     if (isHidden) {
       // Different masking for different field types
-      if (label == 'Account Number') {
+      if (label == 'অ্যাকাউন্ট নম্বর') {
         displayValue = maskSensitiveInfo(controller.text, keepEnds: true);
       } else {
         displayValue = maskSensitiveInfo(controller.text, keepEnds: false);
@@ -297,7 +293,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
               Icon(Icons.lock, size: 16, color: Colors.grey),
               SizedBox(width: 4),
               Text(
-                'HIDDEN',
+                'গোপন',
                 style: TextStyle(
                   fontSize: 10,
                   color: Colors.grey.shade500,
@@ -340,7 +336,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
               ),
               SizedBox(width: 8),
               Text(
-                'Bank Account Details',
+                'ব্যাংক অ্যাকাউন্টের বিবরণ',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -351,7 +347,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
           ),
           SizedBox(height: 8),
           Text(
-            'Please provide your bank account details. This is where we will disburse your loan amount.',
+            'দয়া করে আপনার ব্যাংক অ্যাকাউন্টের বিবরণ প্রদান করুন। আমরা এখানে আপনার ঋণের অর্থ পাঠাব।',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -378,7 +374,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
               Icon(Icons.security, color: Colors.teal),
               SizedBox(width: 8),
               Text(
-                'Security Notice',
+                'নিরাপত্তা বিজ্ঞপ্তি',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -395,7 +391,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Your bank details are secured with bank-level encryption',
+                  'আপনার ব্যাংক বিবরণ ব্যাংক-স্তরের এনক্রিপশন দিয়ে সুরক্ষিত করা হয়েছে',
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -409,7 +405,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'We will only use this information to disburse your loan amount',
+                  'আমরা শুধুমাত্র আপনার ঋণের অর্থ প্রদানের জন্য এই তথ্য ব্যবহার করব',
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -423,7 +419,7 @@ class _BankAccountStepScreenState extends State<BankAccountStepScreen> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Please verify the details before submitting to avoid delays',
+                  'বিলম্ব এড়াতে জমা দেওয়ার আগে দয়া করে বিবরণ যাচাই করুন',
                   style: TextStyle(fontSize: 14),
                 ),
               ),

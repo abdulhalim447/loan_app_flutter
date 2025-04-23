@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen>
         title: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            'WORLD BANK',
+            'ওয়ার্ল্ড ব্যাংক',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                         // Greeting section
                         Text(
-                          'Hello,',
+                          'হ্যালো,',
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: AppTheme.neutral600,
@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                         // Section Title
                         Text(
-                          'Quick Actions',
+                          'দ্রুত কার্যক্রম',
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen>
     return homeProvider.isLoading
         ? _buildShimmerBalanceCard()
         : DataCard(
-            title: 'Available Balance',
+            title: 'উপলব্ধ ব্যালেন্স',
             value: ValueListenableBuilder<bool>(
               valueListenable: _isBalanceVisible,
               builder: (context, isVisible, child) {
@@ -338,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  'Tap to view balance',
+                                  'ব্যালেন্স দেখতে ট্যাপ করুন',
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Colors.black,
@@ -358,11 +358,11 @@ class _HomeScreenState extends State<HomeScreen>
             icon: Icons.account_balance_wallet,
             isGradient: true,
             hasGlow: true,
-            subtitle: 'Tap to view transactions',
+            subtitle: 'লেনদেন দেখতে ট্যাপ করুন',
             trailing: Row(
               children: [
                 Text(
-                  'Withdraw',
+                  'উত্তোলন',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -421,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Loan Status',
+                    'ঋণের অবস্থা',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -550,8 +550,8 @@ class _HomeScreenState extends State<HomeScreen>
             crossAxisSpacing: 16,
             children: [
               _buildQuickActionItem(
-                'Apply Loan',
-                'Get Financing',
+                'ঋণের আবেদন',
+                'অর্থায়ন পান',
                 Icons.monetization_on,
                 () {
                   if (homeProvider.userStatus == 1 &&
@@ -572,8 +572,8 @@ class _HomeScreenState extends State<HomeScreen>
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content:
-                            Text('You already have a pending or active loan'),
+                        content: Text(
+                            'আপনার ইতিমধ্যে একটি পেন্ডিং বা সক্রিয় ঋণ আছে'),
                         backgroundColor: AppTheme.textDark,
                       ),
                     );
@@ -583,8 +583,8 @@ class _HomeScreenState extends State<HomeScreen>
                 100,
               ),
               _buildQuickActionItem(
-                'Withdraw',
-                'Transfer Funds',
+                'উত্তোলন',
+                'অর্থ স্থানান্তর',
                 Icons.account_balance,
                 () {
                   Navigator.push(
@@ -598,8 +598,8 @@ class _HomeScreenState extends State<HomeScreen>
                 200,
               ),
               _buildQuickActionItem(
-                'My Info',
-                'Update Profile',
+                'আমার তথ্য',
+                'প্রোফাইল আপডেট করুন',
                 Icons.person_outline,
                 () {
                   Navigator.push(
@@ -613,8 +613,8 @@ class _HomeScreenState extends State<HomeScreen>
                 300,
               ),
               _buildQuickActionItem(
-                'Support',
-                'Get Help',
+                'সহায়তা',
+                'সাহায্য নিন',
                 Icons.headset_mic_outlined,
                 () {
                   // Navigate to support screen
@@ -713,9 +713,9 @@ class _HomeScreenState extends State<HomeScreen>
     switch (homeProvider.loanStatus.toString()) {
       case '0':
         if (homeProvider.userStatus == 0) {
-          title = 'Complete Your Profile';
-          message = 'Submit your personal information to apply for a loan';
-          buttonText = 'Personal Information';
+          title = 'আপনার প্রোফাইল সম্পূর্ণ করুন';
+          message = 'ঋণের জন্য আবেদন করতে আপনার ব্যক্তিগত তথ্য জমা দিন';
+          buttonText = 'ব্যক্তিগত তথ্য';
           onPressed = () {
             Navigator.push(
               context,
@@ -725,10 +725,10 @@ class _HomeScreenState extends State<HomeScreen>
             );
           };
         } else {
-          title = 'Ready for Financing';
+          title = 'অর্থায়নের জন্য প্রস্তুত';
           message =
-              'Your personal information has been verified. Apply for a loan now.';
-          buttonText = 'Apply For Loan';
+              'আপনার ব্যক্তিগত তথ্য যাচাই করা হয়েছে। এখন ঋণের জন্য আবেদন করুন।';
+          buttonText = 'ঋণের জন্য আবেদন করুন';
           onPressed = () {
             Navigator.push(
               context,
@@ -740,17 +740,17 @@ class _HomeScreenState extends State<HomeScreen>
         }
         break;
       case '1':
-        title = 'Application In Review';
+        title = 'আবেদন পর্যালোচনা চলছে';
         message =
-            'Your loan application is being processed. We will notify you once it\'s approved.';
+            'আপনার ঋণের আবেদন প্রক্রিয়াধীন আছে। অনুমোদিত হলে আমরা আপনাকে অবহিত করব।';
         buttonText = null;
         onPressed = null;
         break;
       case '2':
-        title = 'Loan Approved';
+        title = 'ঋণ অনুমোদিত';
         message =
-            'Congratulations! Your loan has been approved. You can withdraw the funds now.';
-        buttonText = 'Withdraw Funds';
+            'অভিনন্দন! আপনার ঋণ অনুমোদিত হয়েছে। আপনি এখন অর্থ উত্তোলন করতে পারেন।';
+        buttonText = 'অর্থ উত্তোলন করুন';
         onPressed = () {
           Navigator.push(
             context,
@@ -761,105 +761,66 @@ class _HomeScreenState extends State<HomeScreen>
         };
         break;
       case '3':
-        title = 'Active Loan';
+        title = 'সক্রিয় ঋণ';
         message =
-            'You currently have an active loan. Make timely repayments to maintain a good credit score.';
+            'আপনার বর্তমানে একটি সক্রিয় ঋণ আছে। একটি ভালো ক্রেডিট স্কোর বজায় রাখতে সময়মত পরিশোধ করুন।';
         buttonText = null;
         onPressed = null;
         break;
       default:
-        title = 'Unknown Status';
-        message = 'There was an error determining your loan status.';
+        title = 'অজানা অবস্থা';
+        message = 'আপনার ঋণের অবস্থা নির্ধারণে একটি ত্রুটি হয়েছে।';
         buttonText = null;
         onPressed = null;
     }
 
-    return homeProvider.isLoading
-        ? _buildShimmerLoanSection()
-        : Container(
-            padding: EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  offset: Offset(0, 4),
-                  blurRadius: 12,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppTheme.authorityBlue.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        _getLoanStatusIcon(homeProvider),
-                        color: AppTheme.authorityBlue,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.only(left: 52.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        message,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      if (buttonText != null && onPressed != null)
-                        CustomButton(
-                          text: buttonText,
-                          onPressed: onPressed,
-                          width: double.infinity,
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-  }
-
-  IconData _getLoanStatusIcon(HomeProvider homeProvider) {
-    switch (homeProvider.loanStatus.toString()) {
-      case '0':
-        return homeProvider.userStatus == 0
-            ? Icons.person_outline
-            : Icons.credit_card;
-      case '1':
-        return Icons.access_time;
-      case '2':
-        return Icons.check_circle_outline;
-      case '3':
-        return Icons.payments_outlined;
-      default:
-        return Icons.error_outline;
+    if (homeProvider.isLoading) {
+      return _buildShimmerLoanSection();
     }
+
+    return Container(
+      padding: EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: Offset(0, 4),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16),
+          Text(
+            message,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16),
+          if (buttonText != null && onPressed != null)
+            CustomButton(
+              text: buttonText,
+              onPressed: onPressed,
+              width: double.infinity,
+            ),
+        ],
+      ),
+    );
   }
 
   Widget _buildShimmerLoanSection() {

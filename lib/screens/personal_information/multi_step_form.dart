@@ -148,7 +148,7 @@ class _MultiStepPersonalInfoFormState extends State<MultiStepPersonalInfoForm> {
               ),
               SizedBox(width: 12),
               Text(
-                'Step ${currentStep.index + 1} of $stepCount',
+                'ধাপ ${currentStep.index + 1} মধ্যে $stepCount',
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: 14,
@@ -303,7 +303,7 @@ class _MultiStepPersonalInfoFormState extends State<MultiStepPersonalInfoForm> {
                   child: OutlinedButton.icon(
                     onPressed: () => provider.previousStep(),
                     icon: Icon(Icons.arrow_back),
-                    label: Text('Back'),
+                    label: Text('পেছনে'),
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 12),
                       side: BorderSide(color: Colors.cyan),
@@ -380,7 +380,7 @@ class _MultiStepPersonalInfoFormState extends State<MultiStepPersonalInfoForm> {
                           }
                         },
                   icon: Icon(isLastStep ? Icons.check : Icons.arrow_forward),
-                  label: Text(isLastStep ? 'Submit' : 'Continue'),
+                  label: Text(isLastStep ? 'জমা দিন' : 'পরবর্তী'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.cyan,
                     foregroundColor: Colors.white,
@@ -403,26 +403,26 @@ class _MultiStepPersonalInfoFormState extends State<MultiStepPersonalInfoForm> {
   String _getStepTitle(PersonalInfoStep step) {
     switch (step) {
       case PersonalInfoStep.personalInfo:
-        return 'Personal Information';
+        return 'ব্যক্তিগত তথ্য';
       case PersonalInfoStep.nomineeInfo:
-        return 'Nominee Information';
+        return 'মনোনীত ব্যক্তির তথ্য';
       case PersonalInfoStep.idVerification:
-        return 'ID Verification';
+        return 'আইডি যাচাইকরণ';
       case PersonalInfoStep.bankAccount:
-        return 'Bank Account';
+        return 'ব্যাংক অ্যাকাউন্ট';
     }
   }
 
   String _getStepSubtitle(PersonalInfoStep step) {
     switch (step) {
       case PersonalInfoStep.personalInfo:
-        return 'Your basic details';
+        return 'আপনার মৌলিক বিবরণ';
       case PersonalInfoStep.nomineeInfo:
-        return 'Add a nominee for your account';
+        return 'আপনার অ্যাকাউন্টের জন্য একজন মনোনীত ব্যক্তি যোগ করুন';
       case PersonalInfoStep.idVerification:
-        return 'Upload your ID documents';
+        return 'আপনার আইডি ডকুমেন্ট আপলোড করুন';
       case PersonalInfoStep.bankAccount:
-        return 'Add your bank account details';
+        return 'আপনার ব্যাংক অ্যাকাউন্টের বিবরণ যোগ করুন';
     }
   }
 
@@ -669,7 +669,30 @@ class _MultiStepPersonalInfoFormState extends State<MultiStepPersonalInfoForm> {
 
   // Helper method to handle API response
   void _handleSubmissionResponse(dynamic response) {
+    // Add debugging information
+    debugPrint(
+        "API Response received: success=${response.success}, message=${response.message}");
+
     if (response.success) {
+      final provider =
+          Provider.of<PersonalInfoProvider>(context, listen: false);
+
+      // 1. Set the verified flag to true to reflect server verification
+      provider.isVerified = true;
+
+      // 2. Clear locally stored personal information data
+      debugPrint(
+          "Clearing personal information data after successful submission");
+      provider.clearData();
+
+      // 3. Initialize the provider to load the verified data from the API
+      debugPrint("Reloading provider data from API");
+      provider.initialize().then((_) {
+        debugPrint("Provider data reloaded successfully");
+      }).catchError((error) {
+        debugPrint("Error reloading provider data: $error");
+      });
+
       // Show a success toast message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

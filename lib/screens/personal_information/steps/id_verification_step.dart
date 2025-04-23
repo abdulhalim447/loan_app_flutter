@@ -8,7 +8,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
-import 'dart:typed_data';
 // Use dart:convert for base64Encode
 // Add math import
 // Add dart:typed_data for Uint8List
@@ -154,20 +153,20 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
 
   String? validateNidName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Name as per ID is required';
+      return 'আইডি অনুযায়ী নাম আবশ্যক';
     }
     if (value.length < 3) {
-      return 'Name must be at least 3 characters';
+      return 'নাম কমপক্ষে ৩ অক্ষর হতে হবে';
     }
     return null;
   }
 
   String? validateNidNumber(String? value) {
     if (value == null || value.isEmpty) {
-      return 'ID number is required';
+      return 'আইডি নম্বর আবশ্যক';
     }
     if (value.length < 5) {
-      return 'Please enter a valid ID number';
+      return 'দয়া করে একটি বৈধ আইডি নম্বর লিখুন';
     }
     return null;
   }
@@ -178,7 +177,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
         provider.frontIdImagePath!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please upload front side of your NID'),
+          content: Text('দয়া করে আপনার এনআইডির সামনের দিকের ছবি আপলোড করুন'),
           backgroundColor: Colors.red,
         ),
       );
@@ -187,7 +186,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
     if (provider.backIdImagePath == null || provider.backIdImagePath!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please upload back side of your NID'),
+          content: Text('দয়া করে আপনার এনআইডির পিছনের দিকের ছবি আপলোড করুন'),
           backgroundColor: Colors.red,
         ),
       );
@@ -197,7 +196,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
         provider.selfieWithIdImagePath!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please take a selfie with your ID'),
+          content: Text('দয়া করে আপনার আইডির সাথে একটি সেলফি তুলুন'),
           backgroundColor: Colors.red,
         ),
       );
@@ -242,7 +241,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               SizedBox(height: 24),
               _buildTextField(
                 context,
-                'Name (as per ID)',
+                'নাম (আইডি অনুযায়ী)',
                 provider.nidNameController,
                 prefixIcon: Icons.badge_outlined,
                 validator: validateNidName,
@@ -251,7 +250,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'ID Number',
+                'আইডি নম্বর',
                 provider.idController,
                 prefixIcon: Icons.credit_card_outlined,
                 validator: validateNidNumber,
@@ -262,8 +261,8 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               // Front ID image
               _buildImageSection(
                 context,
-                'Front of ID',
-                'Upload a clear photo of the front side of your ID card',
+                'আইডির সামনের দিক',
+                'আপনার আইডি কার্ডের সামনের দিকের একটি পরিষ্কার ছবি আপলোড করুন',
                 provider.frontIdImagePath,
                 imageUrl: provider.frontIdImageUrl,
                 onUpload: isVerified
@@ -280,8 +279,8 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               // Back ID image
               _buildImageSection(
                 context,
-                'Back of ID',
-                'Upload a clear photo of the back side of your ID card',
+                'আইডির পিছনের দিক',
+                'আপনার আইডি কার্ডের পিছনের দিকের একটি পরিষ্কার ছবি আপলোড করুন',
                 provider.backIdImagePath,
                 imageUrl: provider.backIdImageUrl,
                 onUpload: isVerified
@@ -298,8 +297,8 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               // Selfie with ID
               _buildImageSection(
                 context,
-                'Selfie with ID',
-                'Take a selfie while holding your ID card',
+                'আইডির সাথে সেলফি',
+                'আপনার আইডি কার্ড ধরে একটি সেলফি তুলুন',
                 provider.selfieWithIdImagePath,
                 imageUrl: provider.selfieWithIdImageUrl,
                 onUpload: isVerified
@@ -353,7 +352,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               ),
               SizedBox(width: 8),
               Text(
-                'ID Verification',
+                'আইডি যাচাইকরণ',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -364,7 +363,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
           ),
           SizedBox(height: 8),
           Text(
-            'We need to verify your identity to process your loan application. Please provide clear photos of your ID card.',
+            'আপনার ঋণের আবেদন প্রক্রিয়া করতে আমাদের আপনার পরিচয় যাচাই করতে হবে। দয়া করে আপনার আইডি কার্ডের পরিষ্কার ছবি প্রদান করুন।',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -606,7 +605,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                       Icon(Icons.touch_app, color: Colors.white, size: 16),
                       SizedBox(width: 4),
                       Text(
-                        'Tap to change',
+                        'পরিবর্তন করতে ট্যাপ করুন',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12,
@@ -648,7 +647,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               Icon(Icons.error_outline, size: 40, color: Colors.red),
               SizedBox(height: 8),
               Text(
-                'Failed to load image',
+                'ছবি লোড করতে ব্যর্থ',
                 style: TextStyle(color: Colors.red),
               ),
             ],
@@ -741,7 +740,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
         Icon(Icons.image_not_supported_outlined, size: 40, color: Colors.grey),
         SizedBox(height: 8),
         Text(
-          'No image available',
+          'কোনো ছবি নেই',
           style: TextStyle(color: Colors.grey),
         ),
       ],
@@ -755,7 +754,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
         Icon(Icons.error_outline, size: 40, color: Colors.red),
         SizedBox(height: 8),
         Text(
-          'Failed to load image',
+          'ছবি লোড করতে ব্যর্থ',
           style: TextStyle(color: Colors.red),
         ),
       ],
@@ -769,7 +768,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
         Icon(Icons.error_outline, size: 40, color: Colors.red),
         SizedBox(height: 8),
         Text(
-          'Invalid image file',
+          'অবৈধ ছবি ফাইল',
           style: TextStyle(color: Colors.red),
         ),
       ],
@@ -810,7 +809,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               ),
               SizedBox(width: 8),
               Text(
-                'Signature',
+                'স্বাক্ষর',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -831,7 +830,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                   },
                   icon: Icon(Icons.change_circle_outlined, size: 18),
                   label: Text(
-                    'Change',
+                    'পরিবর্তন করুন',
                     style: TextStyle(fontSize: 12),
                   ),
                   style: TextButton.styleFrom(
@@ -847,7 +846,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
           ),
           SizedBox(height: 8),
           Text(
-            'Draw your signature or upload from gallery',
+            'আপনার স্বাক্ষর আঁকুন অথবা গ্যালারি থেকে আপলোড করুন',
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 12,
@@ -910,7 +909,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
             Icon(Icons.add_photo_alternate, size: 40, color: Colors.grey),
             SizedBox(height: 8),
             Text(
-              'Tap to upload',
+              'গ্যালারি থেকে আপলোড করুন',
               style: TextStyle(color: Colors.grey[600]),
             ),
           ],
@@ -977,7 +976,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Draw your signature here",
+                    "এখানে আপনার স্বাক্ষর আঁকুন",
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade600,
@@ -1003,7 +1002,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                 child: ElevatedButton.icon(
                   onPressed: () => _saveWebSignature(context),
                   icon: Icon(Icons.save),
-                  label: Text('Save Signature'),
+                  label: Text('স্বাক্ষর সংরক্ষণ করুন'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.cyan,
                     foregroundColor: Colors.white,
@@ -1021,7 +1020,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                     _webSignatureKey.currentState?.clear();
                   },
                   icon: Icon(Icons.clear),
-                  label: Text('Clear'),
+                  label: Text('মুছুন'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade200,
                     foregroundColor: Colors.black,
@@ -1034,9 +1033,37 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               ),
             ],
           ),
+          SizedBox(height: 8),
+          // Add note about saving signature
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.amber.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.amber.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline,
+                    color: Colors.amber.shade800, size: 18),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'অবশ্যই স্বাক্ষর সংরক্ষণ করতে ভুলবেন না!',
+                    style: TextStyle(
+                      color: Colors.amber.shade800,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           SizedBox(height: 24),
           Text(
-            '- OR -',
+            '- অথবা -',
             style: TextStyle(
               color: Colors.grey.shade600,
               fontWeight: FontWeight.bold,
@@ -1069,7 +1096,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                   Icon(Icons.photo_library, size: 40, color: Colors.grey),
                   SizedBox(height: 8),
                   Text(
-                    'Upload from gallery',
+                    'গ্যালারি থেকে আপলোড করুন',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                 ],
@@ -1101,7 +1128,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Draw your signature here",
+                  "এখানে আপনার স্বাক্ষর আঁকুন",
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1128,7 +1155,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
               child: ElevatedButton.icon(
                 onPressed: () => _saveSignature(context),
                 icon: Icon(Icons.save),
-                label: Text('Save Signature'),
+                label: Text('স্বাক্ষর সংরক্ষণ করুন'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.cyan,
                   foregroundColor: Colors.white,
@@ -1146,7 +1173,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                   _signaturePadKey.currentState?.clear();
                 },
                 icon: Icon(Icons.clear),
-                label: Text('Clear'),
+                label: Text('মুছুন'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.shade200,
                   foregroundColor: Colors.black,
@@ -1159,9 +1186,36 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
             ),
           ],
         ),
+        SizedBox(height: 8),
+        // Add note about saving signature
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.amber.shade50,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.amber.shade200),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.info_outline, color: Colors.amber.shade800, size: 18),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'অবশ্যই স্বাক্ষর সংরক্ষণ করতে ভুলবেন না!',
+                  style: TextStyle(
+                    color: Colors.amber.shade800,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         SizedBox(height: 24),
         Text(
-          '- OR -',
+          '- অথবা -',
           style: TextStyle(
             color: Colors.grey.shade600,
             fontWeight: FontWeight.bold,
@@ -1193,7 +1247,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                 Icon(Icons.photo_library, size: 40, color: Colors.grey),
                 SizedBox(height: 8),
                 Text(
-                  'Upload from gallery',
+                  'গ্যালারি থেকে আপলোড করুন',
                   style: TextStyle(color: Colors.grey[700]),
                 ),
               ],
@@ -1214,7 +1268,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
       if (signatureData == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please draw your signature first'),
+            content: Text('দয়া করে আগে আপনার স্বাক্ষর আঁকুন'),
             backgroundColor: Colors.red,
           ),
         );
@@ -1256,7 +1310,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Signature saved successfully'),
+            content: Text('স্বাক্ষর সফলভাবে সংরক্ষিত হয়েছে'),
             backgroundColor: Colors.green,
           ),
         );
@@ -1317,7 +1371,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
       if (_webSignatureKey.currentState?.isEmpty ?? true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please draw your signature first'),
+            content: Text('দয়া করে আগে আপনার স্বাক্ষর আঁকুন'),
             backgroundColor: Colors.red,
           ),
         );
@@ -1345,7 +1399,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Signature saved successfully'),
+          content: Text('স্বাক্ষর সফলভাবে সংরক্ষিত হয়েছে'),
           backgroundColor: Colors.green,
         ),
       );
@@ -1458,7 +1512,7 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Select Image Source',
+                    'ছবির উৎস নির্বাচন করুন',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -1471,13 +1525,13 @@ class _IdVerificationStepScreenState extends State<IdVerificationStepScreen> {
                       _buildImageSourceOption(
                         context,
                         Icons.camera_alt,
-                        'Camera',
+                        'ক্যামেরা',
                         () => Navigator.pop(context, ImageSource.camera),
                       ),
                       _buildImageSourceOption(
                         context,
                         Icons.photo_library,
-                        'Gallery',
+                        'গ্যালারি',
                         () => Navigator.pop(context, ImageSource.gallery),
                       ),
                     ],

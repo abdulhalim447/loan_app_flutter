@@ -19,7 +19,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
   final TextEditingController bankNameController = TextEditingController();
   final TextEditingController ifcCode = TextEditingController();
 
-  bool isEditable = true; // To control whether the form is editable
+  bool isEditable = false; // To control whether the form is editable
   bool isLoading = false; // To show a loading spinner while fetching data
 
   // Method to fetch bank details from API
@@ -32,7 +32,8 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
     if (token == null) {
       // If token is not found, show an error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Token not found! Please login again.')),
+        SnackBar(
+            content: Text('টোকেন পাওয়া যায়নি! অনুগ্রহ করে আবার লগইন করুন।')),
       );
       setState(() {
         isLoading = false;
@@ -73,7 +74,8 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       // If the API call failed
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Failed to fetch bank details. Please try again.')),
+            content: Text(
+                'ব্যাংক বিবরণ আনতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।')),
       );
     }
 
@@ -89,13 +91,13 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
     if (token == null) {
       // If token is not found, show an error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Token not found! Please login again.')),
+        SnackBar(
+            content: Text('টোকেন পাওয়া যায়নি! অনুগ্রহ করে আবার লগইন করুন।')),
       );
       return;
     }
 
     final String apiUrl = ApiEndpoints.saveBank;
-   
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -107,11 +109,11 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
         'BankuserName': accountHolderController.text,
         'bankName': bankNameController.text,
         'account': accountNumberController.text,
-        'ifc': ifcCode.text,
+        'branchName': ifcCode.text,
         'bankUserName': accountHolderController.text,
       }),
     );
-     print(response.body);
+    print(response.body);
 
     if (response.statusCode == 200) {
       Navigator.pushReplacement(context,
@@ -122,14 +124,15 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       bankNameController.clear();
       ifcCode.clear();
       final message =
-          responseBody['message'] ?? 'Bank details updated successfully';
+          responseBody['message'] ?? 'ব্যাংক বিবরণ সফলভাবে আপডেট করা হয়েছে';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Failed to update bank details. Please try again.')),
+            content: Text(
+                'ব্যাংক বিবরণ আপডেট করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।')),
       );
     }
   }
@@ -144,7 +147,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bank Account'),
+        title: Text('ব্যাংক অ্যাকাউন্ট'),
       ),
       body: SingleChildScrollView(
         child: isLoading
@@ -156,17 +159,18 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionTitle('Your bank details'),
+                      _buildSectionTitle('আপনার ব্যাংক বিবরণ'),
                       SizedBox(height: 16.0),
                       _buildTextField(
-                          'Account Holder Name', accountHolderController),
+                          'অ্যাকাউন্ট হোল্ডারের নাম', accountHolderController),
                       SizedBox(height: 8.0),
-                      _buildTextField('Bank Name', bankNameController),
+                      _buildTextField('ব্যাংকের নাম', bankNameController),
                       SizedBox(height: 8.0),
-                      _buildTextField('Account Number', accountNumberController,
+                      _buildTextField(
+                          'অ্যাকাউন্ট নম্বর', accountNumberController,
                           keyboardType: TextInputType.number),
                       SizedBox(height: 8.0),
-                      _buildTextField('Branch Name', ifcCode),
+                      _buildTextField('শাখার নাম', ifcCode),
                       SizedBox(height: 16.0),
                       _buildSaveButton(),
                     ],
@@ -206,7 +210,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'This field is required';
+          return 'এই ক্ষেত্রটি আবশ্যক';
         }
         return null;
       },
@@ -226,7 +230,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                 }
               }
             : null, // Disable button if not editable
-        child: Text('Save'),
+        child: Text('সংরক্ষণ করুন'),
       ),
     );
   }

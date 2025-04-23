@@ -32,7 +32,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Withdraw",
+          "উত্তোলন",
           style: TextStyle(
             color: Color(0xFF2D3142),
             fontSize: 20,
@@ -50,7 +50,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text("Uploading payment screenshot...",
+                  Text("পেমেন্ট স্ক্রিনশট আপলোড হচ্ছে...",
                       style: TextStyle(fontSize: 16)),
                 ],
               ),
@@ -65,7 +65,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   Icon(Icons.check_circle, color: Colors.green, size: 80),
                   SizedBox(height: 24),
                   Text(
-                    "Payment proof submitted successfully!",
+                    "পেমেন্ট প্রমাণ সফলভাবে জমা দেওয়া হয়েছে!",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "We will process your withdrawal request shortly.",
+                    "আমরা শীঘ্রই আপনার উত্তোলন অনুরোধ প্রক্রিয়া করব।",
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     textAlign: TextAlign.center,
                   ),
@@ -91,7 +91,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text("Back to Home"),
+                    child: Text("হোম পেজে ফিরুন"),
                   ),
                 ],
               ),
@@ -156,7 +156,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Withdraw Details",
+                  "উত্তোলন বিবরণ",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -172,13 +172,13 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                 Row(
                   children: [
                     _buildBalanceItem(
-                        "Available Balance", provider.balance, "৳"),
+                        "উপলব্ধ ব্যালেন্স", provider.balance, "৳"),
                     Container(
                       height: 40,
                       width: 1,
                       color: Colors.white.withOpacity(0.3),
                     ),
-                    _buildBalanceItem("Loan Amount", provider.loan, "৳"),
+                    _buildBalanceItem("ঋণের পরিমাণ", provider.loan, "৳"),
                   ],
                 ),
               ],
@@ -333,7 +333,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Mobile Payment Options",
+                  "মোবাইল পেমেন্ট অপশন",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -353,14 +353,14 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   child: Column(
                     children: [
                       _buildPaymentMethodRow(
-                        "bKash",
+                        "বিকাশ",
                         provider.bkashNumber,
                         Icons.account_balance_wallet,
                         Color(0xFFE2136E),
                       ),
                       SizedBox(height: 16),
                       _buildPaymentMethodRow(
-                        "Nagad",
+                        "নগদ",
                         provider.nagadNumber,
                         Icons.account_balance_wallet,
                         Color(0xFFFF6A00),
@@ -370,7 +370,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  "Please make payment to one of these mobile accounts and upload the screenshot below.",
+                  "অনুগ্রহ করে এই মোবাইল অ্যাকাউন্টগুলির মধ্যে একটিতে পেমেন্ট করুন এবং নীচে স্ক্রিনশট আপলোড করুন।",
                   style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF2D3142).withOpacity(0.7),
@@ -457,7 +457,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         // Copy to clipboard
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$title number copied to clipboard'),
+            content: Text('$title নম্বর ক্লিপবোর্ডে কপি করা হয়েছে'),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -527,7 +527,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Upload Payment Proof",
+            "পেমেন্ট প্রমাণ আপলোড করুন",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -566,7 +566,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         ),
                         SizedBox(height: 12),
                         Text(
-                          "Tap to select a screenshot",
+                          "স্ক্রিনশট নির্বাচন করতে ট্যাপ করুন",
                           style: TextStyle(
                             color: Color(0xFF2D3142),
                             fontSize: 14,
@@ -575,7 +575,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          "Upload screenshot of your payment to mobile banking",
+                          "মোবাইল ব্যাংকিংয়ে আপনার পেমেন্টের স্ক্রিনশট আপলোড করুন",
                           style: TextStyle(
                             color: Color(0xFF2D3142).withOpacity(0.6),
                             fontSize: 12,
@@ -609,7 +609,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               ),
             ),
             child: Text(
-              "Submit Payment Proof",
+              "পেমেন্ট প্রমাণ জমা দিন",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -644,7 +644,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           Icon(Icons.account_balance_wallet, color: Colors.white),
           SizedBox(width: 12),
           Text(
-            "Fee: ${provider.fee ?? '0'}",
+            "ফি: ${provider.fee ?? '0'}",
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,

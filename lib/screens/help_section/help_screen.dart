@@ -158,7 +158,7 @@ class _ContactScreenState extends State<ContactScreen>
         backgroundColor: AppTheme.authorityBlue,
         centerTitle: true,
         title: Text(
-          'Contact Us',
+          'যোগাযোগ করুন',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -239,7 +239,7 @@ class _ContactScreenState extends State<ContactScreen>
 
                                     // Support heading
                                     Text(
-                                      "Customer Support",
+                                      "গ্রাহক সহায়তা",
                                       style: TextStyle(
                                         fontSize: isMobile ? 22 : 24,
                                         fontWeight: FontWeight.bold,
@@ -250,7 +250,7 @@ class _ContactScreenState extends State<ContactScreen>
 
                                     // Support description
                                     Text(
-                                      "You can contact us through any of the methods below or make an appointment to visit the office directly.",
+                                      "আপনি নিচের যেকোনো পদ্ধতির মাধ্যমে আমাদের সাথে যোগাযোগ করতে পারেন অথবা সরাসরি অফিস পরিদর্শন করার জন্য অ্যাপয়েন্টমেন্ট নিতে পারেন।",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: isMobile ? 14 : 16,
@@ -295,7 +295,7 @@ class _ContactScreenState extends State<ContactScreen>
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "Office Address",
+                                                  "অফিসের ঠিকানা",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
@@ -304,7 +304,7 @@ class _ContactScreenState extends State<ContactScreen>
                                                 ),
                                                 SizedBox(height: 6),
                                                 Text(
-                                                  "The World Bank, No 11, Taramani Link Rd, Tharamani, Chennai, Tamil Nadu 600113, India",
+                                                  "The World Bank, E-32, Agargaon, Sher-e-Bangla Nagar, Dhaka-1207",
                                                   style: TextStyle(
                                                     fontSize:
                                                         isMobile ? 12 : 14,
@@ -331,7 +331,7 @@ class _ContactScreenState extends State<ContactScreen>
                                           ),
                                           SizedBox(height: 16),
                                           Text(
-                                            "Loading contact details...",
+                                            "যোগাযোগের বিবরণ লোড হচ্ছে...",
                                             style: TextStyle(
                                               color: AppTheme.neutral600,
                                               fontSize: 14,
@@ -346,7 +346,7 @@ class _ContactScreenState extends State<ContactScreen>
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Direct Contact Options",
+                                            "সরাসরি যোগাযোগের বিকল্পসমূহ",
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
@@ -357,7 +357,8 @@ class _ContactScreenState extends State<ContactScreen>
                                           ContactOption(
                                             icon: FontAwesomeIcons.whatsapp,
                                             color: Colors.green,
-                                            title: "Contact via WhatsApp",
+                                            title:
+                                                "হোয়াটসঅ্যাপ দিয়ে যোগাযোগ করুন",
                                             contact: whatsappContact!,
                                             onTap: () => _launchURL(
                                                 "https://wa.me/$whatsappContact"),
@@ -367,7 +368,8 @@ class _ContactScreenState extends State<ContactScreen>
                                           ContactOption(
                                             icon: FontAwesomeIcons.telegram,
                                             color: Colors.blueAccent,
-                                            title: "Contact via Telegram",
+                                            title:
+                                                "টেলিগ্রাম দিয়ে যোগাযোগ করুন",
                                             contact: telegramContact!,
                                             onTap: () => _launchURL(
                                                 "https://t.me/$telegramContact"),
@@ -392,7 +394,7 @@ class _ContactScreenState extends State<ContactScreen>
                                             SizedBox(width: 12),
                                             Expanded(
                                               child: Text(
-                                                "Contact information not available. Please try again later.",
+                                                "যোগাযোগের তথ্য উপলব্ধ নেই। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
                                                 style: TextStyle(
                                                   color: Colors.orange.shade800,
                                                   fontSize: 14,
@@ -427,7 +429,7 @@ class _ContactScreenState extends State<ContactScreen>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Support Hours",
+                                        "সহায়তা সময়সূচী",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -436,18 +438,15 @@ class _ContactScreenState extends State<ContactScreen>
                                       ),
                                       SizedBox(height: 12),
                                       SupportHoursRow(
-                                        day: "Monday - Friday",
-                                        hours: "9:00 AM - 6:00 PM",
+                                        day: "শনিবার - বৃহস্পতিবার",
+                                        hours: "9:00 AM - 8:00 PM",
                                       ),
+                                      
+                                      
                                       SizedBox(height: 8),
                                       SupportHoursRow(
-                                        day: "Saturday",
-                                        hours: "10:00 AM - 4:00 PM",
-                                      ),
-                                      SizedBox(height: 8),
-                                      SupportHoursRow(
-                                        day: "Sunday",
-                                        hours: "Closed",
+                                        day: "শুক্রবার",
+                                        hours: "বন্ধ",
                                         isClosed: true,
                                       ),
                                       SizedBox(height: 16),
@@ -469,7 +468,7 @@ class _ContactScreenState extends State<ContactScreen>
                                             SizedBox(width: 12),
                                             Expanded(
                                               child: Text(
-                                                "Our support team typically responds within 24 hours on business days.",
+                                                "আমাদের সহায়তা দল সাধারণত কার্যদিবসে ২৪ ঘন্টার মধ্যে প্রতিক্রিয়া জানায়।",
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   color: AppTheme.neutral700,
@@ -652,7 +651,7 @@ class ContactOption extends StatelessWidget {
                       ),
                       SizedBox(width: 4),
                       Text(
-                        "Open",
+                        "খুলুন",
                         style: TextStyle(
                           color: color,
                           fontSize: 12,

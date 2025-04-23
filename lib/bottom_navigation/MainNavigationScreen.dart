@@ -6,8 +6,6 @@ import 'package:world_bank_loan/screens/card_section/card_screen.dart';
 import 'package:world_bank_loan/screens/help_section/help_screen.dart';
 import 'package:world_bank_loan/screens/home_section/home_page.dart';
 import 'package:world_bank_loan/screens/profile_section/profile_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:world_bank_loan/providers/home_provider.dart';
 import 'package:world_bank_loan/services/connectivity_service.dart';
 import 'package:world_bank_loan/widgets/connectivity_banner.dart';
 
@@ -41,7 +39,7 @@ class NavigationController {
 }
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({Key? key}) : super(key: key);
+  const MainNavigationScreen({super.key});
 
   @override
   _MainNavigationScreenState createState() => _MainNavigationScreenState();
@@ -77,7 +75,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     // Listen to connectivity changes
     _connectivitySubscription =
         _connectivityService.connectivityStream.listen((isConnected) {
-      if (mounted && context != null) {
+      if (mounted) {
         // Show toast notification for connectivity changes
         _connectivityService.showConnectivityOverlay(context,
             connected: isConnected);

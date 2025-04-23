@@ -7,64 +7,62 @@ class PersonalInfoStepScreen extends StatelessWidget {
 
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Name is required';
+      return 'নাম আবশ্যক';
     }
     if (value.length < 3) {
-      return 'Name must be at least 3 characters';
+      return 'নাম কমপক্ষে ৩ অক্ষর হতে হবে';
     }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-      return 'Name can only contain letters and spaces';
-    }
+
     return null;
   }
 
   String? validateAddress(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Address is required';
+      return 'ঠিকানা আবশ্যক';
     }
-    if (value.length < 10) {
-      return 'Please enter a complete address';
+    if (value.length < 5) {
+      return 'দয়া করে সম্পূর্ণ ঠিকানা লিখুন';
     }
     return null;
   }
 
   String? validateProfession(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Profession is required';
+      return 'পেশা আবশ্যক';
     }
     if (value.length < 3) {
-      return 'Please enter a valid profession';
+      return 'দয়া করে একটি বৈধ পেশা লিখুন';
     }
     return null;
   }
 
   String? validateMonthlyIncome(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Monthly income is required';
+      return 'মাসিক আয় আবশ্যক';
     }
     if (!RegExp(r'^\d+$').hasMatch(value)) {
-      return 'Please enter a valid number';
+      return 'দয়া করে একটি বৈধ সংখ্যা লিখুন';
     }
     final income = int.tryParse(value);
     if (income == null || income < 1000) {
-      return 'Monthly income must be at least 1,000';
+      return 'মাসিক আয় কমপক্ষে ১,০০০ হতে হবে';
     }
     return null;
   }
 
   String? validateLoanPurpose(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Loan purpose is required';
+      return 'ঋণের উদ্দেশ্য আবশ্যক';
     }
-    if (value.length < 10) {
-      return 'Please provide more details about the loan purpose';
+    if (value.length < 5) {
+      return 'দয়া করে ঋণের উদ্দেশ্য সম্পর্কে আরও বিস্তারিত প্রদান করুন';
     }
     return null;
   }
 
   String? validateEducation(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Education information is required';
+      return 'শিক্ষাগত তথ্য আবশ্যক';
     }
     return null;
   }
@@ -82,7 +80,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
               SizedBox(height: 24),
               _buildTextField(
                 context,
-                'Full Name',
+                'পূর্ণ নাম',
                 provider.nameController,
                 prefixIcon: Icons.person_outline,
                 validator: validateName,
@@ -90,7 +88,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'Current Address',
+                'ঠিকানা',
                 provider.currentAddressController,
                 prefixIcon: Icons.location_on_outlined,
                 maxLines: 2,
@@ -99,16 +97,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'Permanent Address',
-                provider.permanentAddressController,
-                prefixIcon: Icons.home_outlined,
-                maxLines: 2,
-                validator: validateAddress,
-              ),
-              SizedBox(height: 16),
-              _buildTextField(
-                context,
-                'Profession',
+                'পেশা',
                 provider.professionController,
                 prefixIcon: Icons.work_outline,
                 validator: validateProfession,
@@ -116,7 +105,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'Monthly Income',
+                'মাসিক আয়',
                 provider.monthlyIncomeController,
                 prefixIcon: Icons.account_balance_wallet_outlined,
                 keyboardType: TextInputType.number,
@@ -125,7 +114,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'Purpose of Loan',
+                'ঋণের উদ্দেশ্য',
                 provider.loanPurposeController,
                 prefixIcon: Icons.assignment_outlined,
                 maxLines: 2,
@@ -134,7 +123,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'Education',
+                'শিক্ষাগত যোগ্যতা',
                 provider.educationController,
                 prefixIcon: Icons.school_outlined,
                 validator: validateEducation,
@@ -176,7 +165,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                'Important',
+                'গুরুত্বপূর্ণ',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -187,7 +176,7 @@ class PersonalInfoStepScreen extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            'Please provide accurate personal information. This information will be used to verify your identity and process your loan application.',
+            'অনুগ্রহ করে সঠিক ব্যক্তিগত তথ্য প্রদান করুন। এই তথ্য আপনার পরিচয় যাচাই করতে এবং আপনার ঋণের আবেদন প্রক্রিয়া করতে ব্যবহার করা হবে।',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,

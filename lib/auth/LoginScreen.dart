@@ -66,20 +66,20 @@ class _LoginScreenState extends State<LoginScreen>
   // Input validation
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required';
+      return 'ফোন নম্বর আবশ্যক';
     }
     if (value.length < 5) {
-      return 'Please enter a valid phone number';
+      return 'দয়া করে একটি বৈধ ফোন নম্বর লিখুন';
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return 'পাসওয়ার্ড আবশ্যক';
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে';
     }
     return null;
   }
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen>
           // Show success animation before navigation
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Login successful! Welcome back.'),
+              content: Text('লগইন সফল! আপনাকে স্বাগতম।'),
               backgroundColor: FintechTheme.success,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -167,10 +167,10 @@ class _LoginScreenState extends State<LoginScreen>
             );
           });
         } else {
-          _showErrorDialog(responseData['message'] ?? 'Login failed');
+          _showErrorDialog(responseData['message'] ?? 'লগইন ব্যর্থ হয়েছে');
         }
       } else {
-        _showErrorDialog('Failed to login. Please try again later.');
+        _showErrorDialog('লগইন করতে ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।');
       }
     } catch (error) {
       if (!mounted) return;
@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen>
         isLoading = false; // End loading in case of error
       });
       _showErrorDialog(
-          'An error occurred. Please check your connection and try again.');
+          'একটি ত্রুটি ঘটেছে। দয়া করে আপনার সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
     }
   }
 
@@ -194,14 +194,14 @@ class _LoginScreenState extends State<LoginScreen>
           children: [
             Icon(Icons.error_outline, color: FintechTheme.error),
             SizedBox(width: 8),
-            Text('Error', style: TextStyle(color: FintechTheme.error)),
+            Text('ত্রুটি', style: TextStyle(color: FintechTheme.error)),
           ],
         ),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('OK'),
+            child: Text('ঠিক আছে'),
           ),
         ],
       ),
@@ -404,7 +404,7 @@ class _LoginScreenState extends State<LoginScreen>
             .shimmer(duration: 2000.ms, delay: 1000.ms),
         SizedBox(height: 24),
         Text(
-          'Welcome Back',
+          'আবারও স্বাগতম',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -423,7 +423,7 @@ class _LoginScreenState extends State<LoginScreen>
             .shimmer(duration: 1200.ms, delay: 600.ms),
         SizedBox(height: 12),
         Text(
-          'Sign in to continue to your account',
+          'আপনার অ্যাকাউন্টে প্রবেশ করতে লগ ইন করুন',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white.withOpacity(0.9),
@@ -445,7 +445,7 @@ class _LoginScreenState extends State<LoginScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Phone Number',
+          'ফোন নম্বর',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
@@ -496,7 +496,7 @@ class _LoginScreenState extends State<LoginScreen>
                   fontSize: 15,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Enter phone number',
+                  hintText: 'ফোন নম্বর লিখুন',
                   hintStyle: TextStyle(color: Colors.grey.shade400),
                   filled: true,
                   fillColor: Colors.grey.shade50,
@@ -537,7 +537,7 @@ class _LoginScreenState extends State<LoginScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Password',
+          'পাসওয়ার্ড',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
@@ -555,7 +555,7 @@ class _LoginScreenState extends State<LoginScreen>
             fontSize: 15,
           ),
           decoration: InputDecoration(
-            hintText: 'Enter your password',
+            hintText: 'আপনার পাসওয়ার্ড লিখুন',
             hintStyle: TextStyle(color: Colors.grey.shade400),
             prefixIcon:
                 Icon(Icons.lock_outline, color: Color(0xFF3498DB), size: 22),
@@ -608,7 +608,7 @@ class _LoginScreenState extends State<LoginScreen>
           minimumSize: Size(0, 36),
         ),
         child: Text(
-          'Forgot Password?',
+          'পাসওয়ার্ড ভুলে গেছেন?',
           style: TextStyle(
             color: Color(0xFF3498DB),
             fontWeight: FontWeight.w600,
@@ -664,7 +664,7 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                   )
                 : Text(
-                    'Login',
+                    'লগইন',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -699,7 +699,7 @@ class _LoginScreenState extends State<LoginScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Don\'t have an account?',
+          'অ্যাকাউন্ট নেই?',
           style: TextStyle(
             color: Color(0xFF2C3E50),
             fontSize: 13,
@@ -731,7 +731,7 @@ class _LoginScreenState extends State<LoginScreen>
             minimumSize: Size(0, 36),
           ),
           child: Text(
-            'Register',
+            'নিবন্ধন করুন',
             style: TextStyle(
               color: Color(0xFF3498DB),
               fontWeight: FontWeight.w600,

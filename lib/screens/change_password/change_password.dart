@@ -94,7 +94,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
     if (token == null) {
       if (mounted) {
-        _showSnackBar('User not logged in. Please log in again.',
+        _showSnackBar('ব্যবহারকারী লগইন করেননি। অনুগ্রহ করে আবার লগইন করুন।',
             isError: true);
       }
       return;
@@ -110,9 +110,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
       final response = await http.post(
         Uri.parse(url),
         body: json.encode({
-          'current_password': oldPassword,
-          'new_password': newPassword,
-          'confirm_password': confirmPasswordController.text,
+          'currentPassword': oldPassword,
+          'newPassword': newPassword,
+          'confirmPassword': confirmPasswordController.text,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -122,11 +122,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
       if (!mounted) return; // Check again after async operation
 
-      print(response.statusCode);
-      print(response.body);
+      debugPrint(response.statusCode.toString());
+      debugPrint(response.body);
 
       if (response.statusCode == 200) {
-        _showSnackBar('Password changed successfully', isSuccess: true);
+        _showSnackBar('পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে',
+            isSuccess: true);
         // Reset fields after successful change
         oldPasswordController.clear();
         newPasswordController.clear();
@@ -136,15 +137,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
         try {
           var errorData = json.decode(response.body);
           String errorMessage =
-              errorData['message'] ?? 'Failed to change password';
+              errorData['message'] ?? 'পাসওয়ার্ড পরিবর্তন করতে ব্যর্থ হয়েছে';
           _showSnackBar(errorMessage, isError: true);
         } catch (e) {
-          _showSnackBar('Failed to change password', isError: true);
+          _showSnackBar('পাসওয়ার্ড পরিবর্তন করতে ব্যর্থ হয়েছে',
+              isError: true);
         }
       }
     } catch (e) {
       if (!mounted) return; // Check again
-      _showSnackBar('Network error: $e', isError: true);
+      _showSnackBar('নেটওয়ার্ক ত্রুটি: $e', isError: true);
     } finally {
       if (mounted) {
         setState(() {
@@ -181,251 +183,256 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppTheme.authorityBlue,
-        centerTitle: true,
-        title: Text(
-          'Change Password',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
+    // Build app bar
+    final passwordAppBar = AppBar(
+      elevation: 0,
+      backgroundColor: AppTheme.authorityBlue,
+      centerTitle: true,
+      title: Text(
+        'পাসওয়ার্ড পরিবর্তন করুন',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      body: Stack(
-        children: [
-          // Gradient background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  AppTheme.authorityBlue,
-                  AppTheme.trustCyan,
-                  AppTheme.backgroundLight,
-                ],
-                stops: [0.0, 0.2, 0.4],
-              ),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+    );
+
+    // Build content
+    final passwordContent = Stack(
+      children: [
+        // Gradient background
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppTheme.authorityBlue,
+                AppTheme.trustCyan,
+                AppTheme.backgroundLight,
+              ],
+              stops: [0.0, 0.2, 0.4],
             ),
           ),
+        ),
 
-          SafeArea(
-            child: AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                return FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Security message
-                          Container(
-                            padding: EdgeInsets.all(16),
-                            margin: EdgeInsets.only(bottom: 24),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
+        SafeArea(
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return FadeTransition(
+                opacity: _fadeAnimation,
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Security message
+                        Container(
+                          padding: EdgeInsets.all(16),
+                          margin: EdgeInsets.only(bottom: 24),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.3),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.shield,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "নিরাপত্তা অনুস্মারক",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "এমন একটি শক্তিশালী পাসওয়ার্ড বেছে নিন যা আপনি অন্য কোথাও ব্যবহার করেন না।",
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.9),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Main content card
+                        Container(
+                          padding: EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 15,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.3),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.shield,
-                                    color: Colors.white,
-                                    size: 24,
+                                Text(
+                                  "বর্তমান পাসওয়ার্ড",
+                                  style: TextStyle(
+                                    color: AppTheme.neutral800,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
                                   ),
                                 ),
-                                SizedBox(width: 12),
-                                Expanded(
+                                SizedBox(height: 8),
+                                _buildPasswordField(
+                                  hint: 'আপনার বর্তমান পাসওয়ার্ড লিখুন',
+                                  controller: oldPasswordController,
+                                  obscureText: _obscureOldPassword,
+                                  toggleObscureText: () {
+                                    setState(() {
+                                      _obscureOldPassword =
+                                          !_obscureOldPassword;
+                                    });
+                                  },
+                                  color: AppTheme.authorityBlue,
+                                ),
+                                SizedBox(height: 24),
+
+                                Text(
+                                  "নতুন পাসওয়ার্ড",
+                                  style: TextStyle(
+                                    color: AppTheme.neutral800,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                _buildPasswordField(
+                                  hint: 'আপনার নতুন পাসওয়ার্ড লিখুন',
+                                  controller: newPasswordController,
+                                  obscureText: _obscureNewPassword,
+                                  toggleObscureText: () {
+                                    setState(() {
+                                      _obscureNewPassword =
+                                          !_obscureNewPassword;
+                                    });
+                                  },
+                                  color: Colors.green,
+                                ),
+                                SizedBox(height: 20),
+
+                                Text(
+                                  "নতুন পাসওয়ার্ড নিশ্চিত করুন",
+                                  style: TextStyle(
+                                    color: AppTheme.neutral800,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                _buildPasswordField(
+                                  hint: 'আপনার নতুন পাসওয়ার্ড নিশ্চিত করুন',
+                                  controller: confirmPasswordController,
+                                  obscureText: _obscureConfirmPassword,
+                                  toggleObscureText: () {
+                                    setState(() {
+                                      _obscureConfirmPassword =
+                                          !_obscureConfirmPassword;
+                                    });
+                                  },
+                                  color: Colors.green,
+                                  isConfirmPassword: true,
+                                ),
+                                SizedBox(height: 32),
+
+                                _buildSaveButton(),
+
+                                SizedBox(height: 16),
+
+                                // Password guidelines
+                                Container(
+                                  padding: EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.backgroundLight,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: AppTheme.neutral200,
+                                      width: 1,
+                                    ),
+                                  ),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Security Reminder",
+                                        "পাসওয়ার্ড নির্দেশিকা",
                                         style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        "Choose a strong password that you don't use elsewhere.",
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.9),
+                                          color: AppTheme.neutral800,
+                                          fontWeight: FontWeight.w600,
                                           fontSize: 14,
                                         ),
                                       ),
+                                      SizedBox(height: 8),
+                                      _buildGuideline("কমপক্ষে ৮ অক্ষর দীর্ঘ"),
+                                      SizedBox(height: 4),
+                                      _buildGuideline(
+                                          "বড় হাতের ও ছোট হাতের অক্ষর থাকতে হবে"),
+                                      SizedBox(height: 4),
+                                      _buildGuideline(
+                                          "কমপক্ষে একটি সংখ্যা থাকতে হবে"),
+                                      SizedBox(height: 4),
+                                      _buildGuideline(
+                                          "কমপক্ষে একটি বিশেষ অক্ষর থাকতে হবে"),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-
-                          // Main content card
-                          Container(
-                            padding: EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(24),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 15,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Current Password",
-                                    style: TextStyle(
-                                      color: AppTheme.neutral800,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  _buildPasswordField(
-                                    hint: 'Enter your current password',
-                                    controller: oldPasswordController,
-                                    obscureText: _obscureOldPassword,
-                                    toggleObscureText: () {
-                                      setState(() {
-                                        _obscureOldPassword =
-                                            !_obscureOldPassword;
-                                      });
-                                    },
-                                    color: AppTheme.authorityBlue,
-                                  ),
-                                  SizedBox(height: 24),
-
-                                  Text(
-                                    "New Password",
-                                    style: TextStyle(
-                                      color: AppTheme.neutral800,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  _buildPasswordField(
-                                    hint: 'Enter your new password',
-                                    controller: newPasswordController,
-                                    obscureText: _obscureNewPassword,
-                                    toggleObscureText: () {
-                                      setState(() {
-                                        _obscureNewPassword =
-                                            !_obscureNewPassword;
-                                      });
-                                    },
-                                    color: Colors.green,
-                                  ),
-                                  SizedBox(height: 20),
-
-                                  Text(
-                                    "Confirm New Password",
-                                    style: TextStyle(
-                                      color: AppTheme.neutral800,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  _buildPasswordField(
-                                    hint: 'Confirm your new password',
-                                    controller: confirmPasswordController,
-                                    obscureText: _obscureConfirmPassword,
-                                    toggleObscureText: () {
-                                      setState(() {
-                                        _obscureConfirmPassword =
-                                            !_obscureConfirmPassword;
-                                      });
-                                    },
-                                    color: Colors.green,
-                                    isConfirmPassword: true,
-                                  ),
-                                  SizedBox(height: 32),
-
-                                  _buildSaveButton(),
-
-                                  SizedBox(height: 16),
-
-                                  // Password guidelines
-                                  Container(
-                                    padding: EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.backgroundLight,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: AppTheme.neutral200,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Password Guidelines",
-                                          style: TextStyle(
-                                            color: AppTheme.neutral800,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        _buildGuideline(
-                                            "At least 8 characters long"),
-                                        SizedBox(height: 4),
-                                        _buildGuideline(
-                                            "Contains uppercase and lowercase letters"),
-                                        SizedBox(height: 4),
-                                        _buildGuideline(
-                                            "Contains at least one number"),
-                                        SizedBox(height: 4),
-                                        _buildGuideline(
-                                            "Contains at least one special character"),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+
+    // Return the complete widget
+    return Scaffold(
+      appBar: passwordAppBar,
+      body: passwordContent,
     );
   }
 
@@ -505,17 +512,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'This field is required';
+          return 'এই ক্ষেত্রটি আবশ্যক';
         }
 
         if (isConfirmPassword && value != newPasswordController.text) {
-          return 'Passwords do not match';
+          return 'পাসওয়ার্ড মিলছে না';
         }
 
         if (!isConfirmPassword && controller == newPasswordController) {
           // Validate password strength
           if (value.length < 8) {
-            return 'Password must be at least 8 characters long';
+            return 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে';
           }
         }
 
@@ -564,7 +571,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                   ),
                   SizedBox(width: 12),
                   Text(
-                    "Updating...",
+                    "আপডেট হচ্ছে...",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -573,7 +580,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                 ],
               )
             : Text(
-                "Update Password",
+                "পাসওয়ার্ড আপডেট করুন",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:world_bank_loan/core/api/api_service.dart';
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 
 enum PersonalInfoStep {
   personalInfo,
@@ -15,8 +15,7 @@ class PersonalInfoProvider extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController currentAddressController =
       TextEditingController();
-  final TextEditingController permanentAddressController =
-      TextEditingController();
+
   final TextEditingController professionController = TextEditingController();
   final TextEditingController monthlyIncomeController = TextEditingController();
   final TextEditingController loanPurposeController = TextEditingController();
@@ -59,6 +58,12 @@ class PersonalInfoProvider extends ChangeNotifier {
   // Verification status
   bool _isVerified = false;
   bool get isVerified => _isVerified;
+
+  // Add setter for isVerified
+  set isVerified(bool value) {
+    _isVerified = value;
+    notifyListeners();
+  }
 
   // API service
   final ApiService _apiService = ApiService();
@@ -231,6 +236,10 @@ class PersonalInfoProvider extends ChangeNotifier {
 
   // Save image bytes for web platform
   void saveImageBytes(String type, Uint8List bytes) {
+    // Debug log to verify the type being set
+    debugPrint(
+        'saveImageBytes called with type: $type, bytes length: ${bytes.length}');
+
     switch (type) {
       case 'front':
         frontIdImageBytes = bytes;
@@ -248,6 +257,9 @@ class PersonalInfoProvider extends ChangeNotifier {
         signatureImageBytes = bytes;
         signatureImagePath = 'image_selected'; // Use a placeholder path
         break;
+      default:
+        debugPrint('Warning: Unknown image type: $type');
+        break;
     }
 
     saveData();
@@ -256,10 +268,15 @@ class PersonalInfoProvider extends ChangeNotifier {
 
   // Clear all data
   void clearData() {
+    debugPrint("PersonalInfoProvider.clearData() called");
+
+    // Save the current verification status
+    bool wasVerified = _isVerified;
+
     // Clear form controllers
     nameController.clear();
     currentAddressController.clear();
-    permanentAddressController.clear();
+   
     professionController.clear();
     monthlyIncomeController.clear();
     loanPurposeController.clear();
@@ -290,8 +307,15 @@ class PersonalInfoProvider extends ChangeNotifier {
     _idVerificationCompleted = false;
     _bankAccountCompleted = false;
 
+    // Restore the verification status
+    _isVerified = wasVerified;
+
     // Clear saved data
-    clearSavedData();
+    clearSavedData().then((_) {
+      debugPrint("SharedPreferences data has been cleared successfully");
+    }).catchError((error) {
+      debugPrint("Error while clearing SharedPreferences: $error");
+    });
 
     notifyListeners();
   }
@@ -304,8 +328,7 @@ class PersonalInfoProvider extends ChangeNotifier {
       // Save form data
       await prefs.setString('pi_name', nameController.text);
       await prefs.setString('pi_currentAddress', currentAddressController.text);
-      await prefs.setString(
-          'pi_permanentAddress', permanentAddressController.text);
+    
       await prefs.setString('pi_profession', professionController.text);
       await prefs.setString('pi_monthlyIncome', monthlyIncomeController.text);
       await prefs.setString('pi_loanPurpose', loanPurposeController.text);
@@ -361,8 +384,7 @@ class PersonalInfoProvider extends ChangeNotifier {
       nameController.text = prefs.getString('pi_name') ?? '';
       currentAddressController.text =
           prefs.getString('pi_currentAddress') ?? '';
-      permanentAddressController.text =
-          prefs.getString('pi_permanentAddress') ?? '';
+   
       professionController.text = prefs.getString('pi_profession') ?? '';
       monthlyIncomeController.text = prefs.getString('pi_monthlyIncome') ?? '';
       loanPurposeController.text = prefs.getString('pi_loanPurpose') ?? '';
@@ -417,14 +439,24 @@ class PersonalInfoProvider extends ChangeNotifier {
   // Clear saved data
   Future<void> clearSavedData() async {
     try {
+      debugPrint("PersonalInfoProvider.clearSavedData() called");
       final prefs = await SharedPreferences.getInstance();
 
       // Clear all personal info related keys
       final keys =
           prefs.getKeys().where((key) => key.startsWith('pi_')).toList();
+
+      debugPrint("Found ${keys.length} personal info keys to remove: $keys");
+
       for (var key in keys) {
         await prefs.remove(key);
+        debugPrint("Removed key: $key");
       }
+
+      // Verify keys were removed
+      final remainingKeys =
+          prefs.getKeys().where((key) => key.startsWith('pi_')).toList();
+      debugPrint("Remaining personal info keys after removal: $remainingKeys");
     } catch (e) {
       debugPrint("Error clearing personal info data: $e");
       // Continue even if data couldn't be cleared
@@ -437,7 +469,7 @@ class PersonalInfoProvider extends ChangeNotifier {
     // Dispose all TextEditingControllers
     nameController.dispose();
     currentAddressController.dispose();
-    permanentAddressController.dispose();
+ 
     professionController.dispose();
     monthlyIncomeController.dispose();
     loanPurposeController.dispose();
@@ -459,9 +491,15 @@ class PersonalInfoProvider extends ChangeNotifier {
   }
 
   // Check if signature exists
-  bool get hasSignature =>
-      signatureImagePath != null &&
-      (signatureImagePath!.isNotEmpty || signatureImageBytes != null);
+  bool get hasSignature {
+    if (kIsWeb) {
+      return signatureImageBytes != null;
+    } else {
+      return signatureImagePath != null &&
+          signatureImagePath!.isNotEmpty &&
+          signatureImagePath != 'image_selected';
+    }
+  }
 
   // Clear signature
   void clearSignature() {
@@ -473,7 +511,7 @@ class PersonalInfoProvider extends ChangeNotifier {
   bool validatePersonalInfo() {
     return nameController.text.isNotEmpty &&
         currentAddressController.text.isNotEmpty &&
-        permanentAddressController.text.isNotEmpty &&
+       
         professionController.text.isNotEmpty &&
         monthlyIncomeController.text.isNotEmpty &&
         loanPurposeController.text.isNotEmpty &&

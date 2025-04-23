@@ -7,38 +7,34 @@ class NomineeInfoStepScreen extends StatelessWidget {
 
   String? validateNomineeName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Nominee name is required';
+      return 'মনোনীত ব্যক্তির নাম আবশ্যক';
     }
     if (value.length < 3) {
-      return 'Name must be at least 3 characters';
+      return 'নাম কমপক্ষে ৩ অক্ষর হতে হবে';
     }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-      return 'Name can only contain letters and spaces';
-    }
+    
     return null;
   }
 
   String? validateNomineeRelation(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Relationship with nominee is required';
+      return 'মনোনীত ব্যক্তির সাথে সম্পর্ক আবশ্যক';
     }
     if (value.length < 3) {
-      return 'Please specify a valid relationship';
+      return 'দয়া করে একটি বৈধ সম্পর্ক উল্লেখ করুন';
     }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-      return 'Relationship can only contain letters and spaces';
-    }
+    
     return null;
   }
 
   String? validateNomineePhone(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Nominee phone number is required';
+      return 'মনোনীত ব্যক্তির ফোন নম্বর আবশ্যক';
     }
     // Remove any spaces or special characters
     String cleanPhone = value.replaceAll(RegExp(r'[\s\-\(\)]'), '');
     if (!RegExp(r'^\d{10,12}$').hasMatch(cleanPhone)) {
-      return 'Please enter a valid phone number (10-12 digits)';
+      return 'দয়া করে একটি বৈধ ফোন নম্বর লিখুন (১০-১২ ডিজিট)';
     }
     return null;
   }
@@ -58,7 +54,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
               SizedBox(height: 24),
               _buildTextField(
                 context,
-                'Nominee Name',
+                'মনোনীত ব্যক্তির নাম',
                 provider.nomineeNameController,
                 prefixIcon: Icons.person_outline,
                 validator: validateNomineeName,
@@ -67,7 +63,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'Relationship with Nominee',
+                'মনোনীত ব্যক্তির সাথে সম্পর্ক',
                 provider.nomineeRelationController,
                 prefixIcon: Icons.people_outline,
                 validator: validateNomineeRelation,
@@ -76,7 +72,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
               SizedBox(height: 16),
               _buildTextField(
                 context,
-                'Nominee Phone Number',
+                'মনোনীত ব্যক্তির ফোন নম্বর',
                 provider.nomineePhoneController,
                 prefixIcon: Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
@@ -121,7 +117,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                'Nominee Information',
+                'মনোনীত ব্যক্তির তথ্য',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -132,7 +128,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            'A nominee is the person who will have the right to your loan account in case of any unforeseen circumstances.',
+            'মনোনীত ব্যক্তি হলেন সেই ব্যক্তি যার কোনো অপ্রত্যাশিত পরিস্থিতিতে আপনার ঋণ অ্যাকাউন্টের অধিকার থাকবে।',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -215,7 +211,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Why nominate someone?',
+            'কেন কাউকে মনোনীত করবেন?',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -231,7 +227,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Ensures your loved ones can access your account if needed',
+                  'প্রয়োজনে আপনার প্রিয়জনদের আপনার অ্যাকাউন্ট অ্যাক্সেস করতে পারবেন',
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -246,7 +242,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Simplifies the fund transfer process in emergency situations',
+                  'জরুরি অবস্থায় অর্থ স্থানান্তর প্রক্রিয়া সহজ করে',
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -261,7 +257,7 @@ class NomineeInfoStepScreen extends StatelessWidget {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Required for loan approval as per our policy',
+                  'আমাদের নীতি অনুসারে ঋণ অনুমোদনের জন্য প্রয়োজনীয়',
                   style: TextStyle(fontSize: 14),
                 ),
               ),

@@ -63,7 +63,117 @@ class AppTheme {
   );
 
   // Text Themes
-  static TextTheme _createTextTheme() {
+  static TextTheme _createTextTheme({bool isBangla = false}) {
+    if (isBangla) {
+      return TextTheme(
+        displayLarge: GoogleFonts.hindSiliguri(
+          fontSize: 57,
+          fontWeight: FontWeight.bold,
+          letterSpacing: -0.25,
+          height: 1.12,
+          color: textDark,
+        ),
+        displayMedium: GoogleFonts.hindSiliguri(
+          fontSize: 45,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0,
+          height: 1.16,
+          color: textDark,
+        ),
+        displaySmall: GoogleFonts.hindSiliguri(
+          fontSize: 36,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0,
+          height: 1.22,
+          color: textDark,
+        ),
+        headlineLarge: GoogleFonts.hindSiliguri(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0,
+          height: 1.25,
+          color: textDark,
+        ),
+        headlineMedium: GoogleFonts.hindSiliguri(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0,
+          height: 1.29,
+          color: textDark,
+        ),
+        headlineSmall: GoogleFonts.hindSiliguri(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0,
+          height: 1.33,
+          color: textDark,
+        ),
+        titleLarge: GoogleFonts.hindSiliguri(
+          fontSize: 22,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0,
+          height: 1.27,
+          color: textDark,
+        ),
+        titleMedium: GoogleFonts.hindSiliguri(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.15,
+          height: 1.5,
+          color: textDark,
+        ),
+        titleSmall: GoogleFonts.hindSiliguri(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.1,
+          height: 1.43,
+          color: textDark,
+        ),
+        labelLarge: GoogleFonts.hindSiliguri(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.1,
+          height: 1.43,
+          color: textDark,
+        ),
+        labelMedium: GoogleFonts.hindSiliguri(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
+          height: 1.33,
+          color: textDark,
+        ),
+        labelSmall: GoogleFonts.hindSiliguri(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
+          height: 1.45,
+          color: textDark,
+        ),
+        bodyLarge: GoogleFonts.hindSiliguri(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 0.5,
+          height: 1.5,
+          color: textDark,
+        ),
+        bodyMedium: GoogleFonts.hindSiliguri(
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 0.25,
+          height: 1.43,
+          color: textDark,
+        ),
+        bodySmall: GoogleFonts.hindSiliguri(
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 0.4,
+          height: 1.33,
+          color: textDark,
+        ),
+      );
+    }
+
     return TextTheme(
       displayLarge: GoogleFonts.poppins(
         fontSize: 57,
@@ -174,15 +284,18 @@ class AppTheme {
   }
 
   // Theme Data
-  static ThemeData lightTheme() {
-    final TextTheme textTheme = _createTextTheme();
+  static ThemeData lightTheme({bool useBanglaFont = true}) {
+    final TextTheme textTheme = _createTextTheme(isBangla: useBanglaFont);
+    final String? fontFamily = useBanglaFont
+        ? GoogleFonts.hindSiliguri().fontFamily
+        : GoogleFonts.inter().fontFamily;
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: lightColorScheme,
       brightness: Brightness.light,
       textTheme: textTheme,
-      fontFamily: GoogleFonts.inter().fontFamily,
+      fontFamily: fontFamily,
 
       // AppBar Theme
       appBarTheme: AppBarTheme(

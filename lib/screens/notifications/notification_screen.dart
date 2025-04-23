@@ -41,7 +41,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       if (token == null) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'You need to be logged in to view notifications';
+          _errorMessage = 'বিজ্ঞপ্তি দেখতে আপনাকে লগ ইন করতে হবে';
         });
         return;
       }
@@ -59,7 +59,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           _notifications = notificationsJson
               .map((item) => {
                     'id': item['id'],
-                    'title': 'Notification', // API doesn't have title field
+                    'title': 'বিজ্ঞপ্তি', // API doesn't have title field
                     'message': item['description'],
                     'date': DateTime.parse(item['created_at']),
                     'isRead': item['status'] == 'read',
@@ -74,14 +74,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
       } else {
         setState(() {
           _isLoading = false;
-          _errorMessage =
-              'Failed to load notifications: ${response.statusCode}';
+          _errorMessage = 'বিজ্ঞপ্তি লোড করতে ব্যর্থ: ${response.statusCode}';
         });
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Error: $e';
+        _errorMessage = 'ত্রুটি: $e';
       });
     }
   }
@@ -120,7 +119,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
     } catch (e) {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to mark notification as read')),
+        SnackBar(
+            content: Text('বিজ্ঞপ্তি পঠিত হিসাবে চিহ্নিত করতে ব্যর্থ হয়েছে')),
       );
     }
   }
@@ -159,7 +159,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('All notifications marked as read')),
+        SnackBar(content: Text('সব বিজ্ঞপ্তি পঠিত হিসাবে চিহ্নিত করা হয়েছে')),
       );
     } catch (e) {
       setState(() {
@@ -167,7 +167,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to mark all notifications as read')),
+        SnackBar(
+            content:
+                Text('সব বিজ্ঞপ্তি পঠিত হিসাবে চিহ্নিত করতে ব্যর্থ হয়েছে')),
       );
     }
   }
@@ -188,7 +190,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Notifications',
+          'বিজ্ঞপ্তিসমূহ',
           style: TextStyle(
             color: AppTheme.authorityBlue,
             fontWeight: FontWeight.bold,
@@ -199,7 +201,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             TextButton(
               onPressed: _markAllAsRead,
               child: Text(
-                'Mark all as read',
+                'সবগুলো পঠিত হিসাবে চিহ্নিত করুন',
                 style: TextStyle(
                   color: AppTheme.authorityBlue,
                   fontWeight: FontWeight.w500,
@@ -306,18 +308,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
   String _generateNotificationTitle(String message) {
     // Generate a title based on the message content
     if (message.toLowerCase().contains('loan')) {
-      return 'Loan Update';
+      return 'ঋণ আপডেট';
     } else if (message.toLowerCase().contains('payment')) {
-      return 'Payment Notification';
+      return 'পেমেন্ট বিজ্ঞপ্তি';
     } else if (message.toLowerCase().contains('account')) {
-      return 'Account Update';
+      return 'অ্যাকাউন্ট আপডেট';
     } else if (message.toLowerCase().contains('approved')) {
-      return 'Application Approved';
+      return 'আবেদন অনুমোদিত';
     } else if (message.toLowerCase().contains('verify') ||
         message.toLowerCase().contains('verification')) {
-      return 'Verification Notice';
+      return 'যাচাইকরণ নোটিশ';
     } else {
-      return 'Notification';
+      return 'বিজ্ঞপ্তি';
     }
   }
 
@@ -325,7 +327,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     // Add logic to navigate to relevant screen based on notification type
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Notification: ${notification['message']}'),
+        content: Text('বিজ্ঞপ্তি: ${notification['message']}'),
         duration: Duration(seconds: 1),
       ),
     );
@@ -352,11 +354,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final difference = now.difference(date);
 
     if (difference.inDays == 0) {
-      return 'Today';
+      return 'আজ';
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return 'গতকাল';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} দিন আগে';
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }
@@ -374,7 +376,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
           SizedBox(height: 16),
           Text(
-            'Error Loading Notifications',
+            'বিজ্ঞপ্তি লোড করতে ত্রুটি',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -395,7 +397,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.authorityBlue,
             ),
-            child: Text('Try Again'),
+            child: Text('আবার চেষ্টা করুন'),
           ),
         ],
       ),
@@ -414,7 +416,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
           SizedBox(height: 16),
           Text(
-            'No notifications yet',
+            'এখনো কোন বিজ্ঞপ্তি নেই',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -423,7 +425,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
           SizedBox(height: 8),
           Text(
-            'We\'ll notify you when something important happens',
+            'কোন গুরুত্বপূর্ণ ঘটনা ঘটলে আমরা আপনাকে জানাব',
             style: TextStyle(
               color: Colors.grey[500],
             ),
